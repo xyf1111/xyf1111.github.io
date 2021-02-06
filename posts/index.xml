@@ -1,14 +1,14 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>所有文章 - 我的全新 Hugo 网站</title>
-        <link>https://xyf1111.com/posts/</link>
+        <link>http://example.org/posts/</link>
         <description>所有文章 | 我的全新 Hugo 网站</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 05 Feb 2021 17:11:24 &#43;0800</lastBuildDate><atom:link href="https://xyf1111.com/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 05 Feb 2021 17:11:24 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
     <title>First_post</title>
-    <link>https://xyf1111.com/first_post/</link>
+    <link>http://example.org/first_post/</link>
     <pubDate>Fri, 05 Feb 2021 17:11:24 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>https://xyf1111.com/first_post/</guid>
+    <guid>http://example.org/first_post/</guid>
     <description><![CDATA[first post ]]></description>
 </item></channel>
 </rss>
