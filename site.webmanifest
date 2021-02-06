@@ -3,7 +3,7 @@
     "short_name": "LoveIt",
     "icons": [
         {
-            "src": "/android-chrome-192x192.png",
+            "src": "/content/images/joker.jpg",
             "sizes": "192x192",
             "type": "image/png"
         },
