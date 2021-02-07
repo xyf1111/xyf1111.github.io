@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Markdown Study01 - CC&#39;s Blog</title><meta name="Description" content="markdown学习01"><meta property="og:title" content="Markdown Study01" />
+<meta property="og:description" content="markdown学习01" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/markdown-study01/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-02-07T10:41:29+08:00" />
+<meta property="article:modified_time" content="2021-02-07T10:41:29+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Markdown Study01"/>
+<meta name="twitter:description" content="markdown学习01"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/markdown-study01/" /><link rel="prev" href="http://example.org/first_post/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Markdown Study01",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/markdown-study01\/"
+        },"genre": "posts","keywords": "markdown","wordcount":  1239 ,
+        "url": "http:\/\/example.org\/markdown-study01\/","datePublished": "2021-02-07T10:41:29+08:00","dateModified": "2021-02-07T10:41:29+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "markdown学习01"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Markdown Study01</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-07">2021-02-07</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1239 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#h2-标题">h2 标题</a>
+      <ul>
+        <li><a href="#h3-标题">h3 标题</a>
+          <ul>
+            <li><a href="#h4-标题">h4 标题</a>
+              <ul>
+                <li><a href="#h5-标题">h5 标题</a>
+                  <ul>
+                    <li><a href="#h6-标题">h6 标题、</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#加粗">加粗</a></li>
+    <li><a href="#斜体">斜体</a></li>
+    <li><a href="#删除线">删除线</a></li>
+    <li><a href="#组合">组合</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#无序列表">无序列表</a></li>
+    <li><a href="#有序列表">有序列表</a></li>
+    <li><a href="#任务列表">任务列表</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="1-标题">1 标题</h1>
+<h2 id="h2-标题">h2 标题</h2>
+<h3 id="h3-标题">h3 标题</h3>
+<h4 id="h4-标题">h4 标题</h4>
+<h5 id="h5-标题">h5 标题</h5>
+<h6 id="h6-标题">h6 标题、</h6>
+<p>要添加自定义标题ID，请在与标题相同的行中将自定义ID放在花括号中</p>
+<!-- 注释 -->
+<blockquote>
+<p>###一个很棒的标题  {#custom-id}</p>
+</blockquote>
+<h1 id="2-注释">2 注释</h1>
+<p>注释和HTML兼容的</p>
+<!-- 这是注释 -->
+<h1 id="3-水平线">3 水平线</h1>
+<p>HTML中的&lt;hr&gt;标签是用来在段落元素之间创建一个“专题间隔”的
+Markdown可以使用以下方式：</p>
+<p>-&ndash;：三个连续的破折号</p>
+<p>___：三个连续的下划线</p>
+<p>***：三个连续的星号</p>
+<hr>
+<hr>
+<hr>
+<h1 id="4-段落">4 段落</h1>
+<p>HTML中将用&lt;p&gt;&lt;/p&gt;标签包裹
+Markdown直接按照纯文本的方式书写段落</p>
+<h1 id="5-内联html元素">5 内联HTML元素</h1>
+<div>
+这是<b>HTML</b>
+</div>
+<h1 id="6-强调">6 强调</h1>
+<h2 id="加粗">加粗</h2>
+<p>用于强调带有较粗字体的文本片段
+以下文本会被渲染为粗体</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown">**渲染为粗体**
+<span class="gs">__渲染为粗体__</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出的HTML看起来像这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>渲染为粗体<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="斜体">斜体</h2>
+<p>用于强调带有斜体的文本片段</p>
+<p>以下文本片段被渲染成斜体</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown">*渲染为斜体*
+<span class="ge">_渲染为斜体_</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出的HTML看起来像这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">em</span><span class="p">&gt;</span>渲染为斜体<span class="p">&lt;/</span><span class="nt">em</span><span class="p">&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="删除线">删除线</h2>
+<p>以下文本片段会被渲染成删除线</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown">~~这段文本带有删除线~~
+</code></pre></td></tr></table>
+</div>
+</div><p>输出的HTML看起来像这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">del</span><span class="p">&gt;</span>这段文本带有删除线<span class="p">&lt;/</span><span class="nt">del</span><span class="p">&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><del>这段文本带有删除线</del></p>
+<h2 id="组合">组合</h2>
+<p>加粗，斜体和删除线可以组合使用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown">***加粗和斜体***
+<span class="gd">~~**删除线和加粗**~~</span>
+<span class="gd">~~*删除和斜体*~~</span>
+<span class="gd">~~***加粗，斜体和删除线***~~</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出的HTML看起来像这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">em</span><span class="p">&gt;&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>加粗和斜体<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;/</span><span class="nt">em</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">del</span><span class="p">&gt;&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>删除线和加粗<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;/</span><span class="nt">em</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">del</span><span class="p">&gt;&lt;</span><span class="nt">em</span><span class="p">&gt;</span>删除线和斜体<span class="p">&lt;</span><span class="nt">em</span><span class="p">&gt;&lt;/</span><span class="nt">del</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">del</span><span class="p">&gt;&lt;</span><span class="nt">em</span><span class="p">&gt;&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>加粗，斜体和删除线<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;/</span><span class="nt">em</span><span class="p">&gt;&lt;/</span><span class="nt">del</span><span class="p">&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><em><strong>加粗和斜体</strong></em>
+<del><strong>删除线和加粗</strong></del>
+<del><em>删除和斜体</em></del>
+<del><em><strong>加粗，斜体和删除线</strong></em></del></p>
+<h1 id="7-引用">7 引用</h1>
+<p>用于在文档中引用其他来源的内容块
+在要引用的任何文本之前添加&gt;:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown"><span class="k">&gt; </span><span class="ge">**Fusion Drive** combines a hard drive with a flash storage
+</span></code></pre></td></tr></table>
+</div>
+</div><p>输出的HTML看起来像这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">blockquote</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>Fusion Drive<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;</span> combines a hard drive with a flash storage
+    <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">blockquote</span><span class="p">&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>引用也可以嵌套</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown"><span class="k">&gt; </span><span class="ge">**Fusion Drive** combines a hard drive with a flash storage
+</span><span class="ge"></span>&gt;&gt; 111
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p><strong>Fusion Drive</strong> combines a hard drive with a flash storage</p>
+<blockquote>
+<p>111</p>
+</blockquote>
+</blockquote>
+<h1 id="8-列表">8 列表</h1>
+<h2 id="无序列表">无序列表</h2>
+<p>一系列项的列表，其中项的顺序没有明显关系
+你可以使用以下任何符号来表示无序列表中的项</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown"><span class="k">*</span> 一项内容
+    <span class="k">*</span> 子内容
+<span class="k">-</span> 一项内容
++ 一项内容
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>一项内容
+<ul>
+<li>子内容</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>一项内容</li>
+</ul>
+<ul>
+<li>一项内容</li>
+</ul>
+<h2 id="有序列表">有序列表</h2>
+<p>一系列项的列表，其中项的顺序确实很重要</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown">    <span class="k">1.</span> a
+    <span class="k">2.</span> b
+    <span class="k">3.</span> c
+</code></pre></td></tr></table>
+</div>
+</div><p>输出的HTML看起来像这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">ol</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>a<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>b<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>c<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">ol</span><span class="p">&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>a</li>
+<li>b</li>
+<li>c</li>
+</ol>
+<h2 id="任务列表">任务列表</h2>
+<p>任务列表使你可以创建带有复选框的列表，要创建列表，请在任务列表项之前添加破折号(-)和带有空格的方括号([ ])，要选择复选框，请在方括号之间添加x([x])</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown">    <span class="k">- [x]</span> a
+    <span class="k">- [ ]</span> b
+    <span class="k">- [ ]</span> c
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><i class="far fa-check-square fa-fw"></i> Write the press release</li>
+<li><i class="far fa-square fa-fw"></i> Update the website</li>
+<li><i class="far fa-square fa-fw"></i> Contact the media</li>
+</ul></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-02-07</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/markdown-study01/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/markdown-study01/" data-title="Markdown Study01" data-via="xxxx" data-hashtags="markdown"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/markdown-study01/" data-hashtag="markdown"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/markdown-study01/" data-title="Markdown Study01" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/markdown-study01/" data-title="Markdown Study01"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/markdown-study01/" data-title="Markdown Study01"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/markdown-study01/" data-title="Markdown Study01" data-description="markdown学习01"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/markdown-study01/" data-title="Markdown Study01" data-description="markdown学习01"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/markdown-study01/" data-title="Markdown Study01"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/markdown/">markdown</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/first_post/" class="prev" rel="prev" title="First_post"><i class="fas fa-angle-left fa-fw"></i>First_post</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

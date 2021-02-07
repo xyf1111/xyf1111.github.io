@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>学习 - 分类 - CC&#39;s Blog</title>
+        <link>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</link>
+        <description>学习 - 分类 - CC&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 07 Feb 2021 10:41:29 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>Markdown Study01</title>
+    <link>http://example.org/markdown-study01/</link>
+    <pubDate>Sun, 07 Feb 2021 10:41:29 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/markdown-study01/</guid>
+    <description><![CDATA[markdown学习01]]></description>
+</item></channel>
+</rss>

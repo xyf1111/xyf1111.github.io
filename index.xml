@@ -3,9 +3,16 @@
         <title>CC&#39;s Blog</title>
         <link>http://example.org/</link>
         <description>这是我的全新 Hugo 网站</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 05 Feb 2021 17:11:24 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 07 Feb 2021 10:41:29 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Markdown Study01</title>
+    <link>http://example.org/markdown-study01/</link>
+    <pubDate>Sun, 07 Feb 2021 10:41:29 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/markdown-study01/</guid>
+    <description><![CDATA[markdown学习01]]></description>
+</item><item>
     <title>First_post</title>
     <link>http://example.org/first_post/</link>
     <pubDate>Fri, 05 Feb 2021 17:11:24 &#43;0800</pubDate>
