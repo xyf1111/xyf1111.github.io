@@ -155,3 +155,151 @@ _渲染为斜体_
 - [x] Write the press release
 - [ ] Update the website
 - [ ] Contact the media
+# 9 代码
+## 行内代码
+用\包装行内代码段
+```markdown
+在这个例子中, \<section>\</section> 会被包裹成 **代码**.
+```
+```html
+<p>
+  在这个例子中, <code>&lt;section&gt;&lt;/section&gt;</code> 会被包裹成 <strong>代码</strong>.
+</p>
+```
+呈现的输出效果如下：
+
+在这个例子中, \<section>\</section> 会被包裹成 **代码**.
+## 缩进代码
+```markdown
+    // Some comments
+    line 1 of code
+    line 2 of code
+    line 3 of code
+```
+输出的HTML看起来像这样：
+```html
+<pre>
+  <code>
+    // Some comments
+    line 1 of code
+    line 2 of code
+    line 3 of code
+  </code>
+</pre>
+```
+呈现的输出效果如下：
+
+    // Some comments
+    line 1 of code
+    line 2 of code
+    line 3 of code
+## 围栏代码块
+使用“围栏”```来生成一段带有语言属性的代码块
+```markdown
+Sample text here...
+```
+<pre language-html>
+  <code>Sample text here...</code>
+</pre>
+# 10 表格
+通过在每个单元格之间添加竖线作为分隔线，并在标题下添加一行破折号(也由竖线分隔)来创建表格，注意竖线不需要垂直对齐
+
+在任何标题下方的破折号右侧添加冒号将使该列的文本右对齐
+
+在任何标题下方的破折号两边添加冒号将使该列的对齐文本居中
+```markdown
+| Option | Description |
+| ------ | ----------- |
+| data   | path to data files to supply the data that will be passed into templates. |
+| engine | engine to be used for processing templates. Handlebars is the default. |
+| ext    | extension to be used for dest files. |
+```
+输出的HTML看起来像这样
+```html
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>data</td>
+      <td>path to data files to supply the data that will be passed into templates.</td>
+    </tr>
+    <tr>
+      <td>engine</td>
+      <td>engine to be used for processing templates. Handlebars is the default.</td>
+    </tr>
+    <tr>
+      <td>ext</td>
+      <td>extension to be used for dest files.</td>
+    </tr>
+  </tbody>
+</table>
+
+```
+| Option | Description |
+| ------ | ----------- |
+| data   | path to data files to supply the data that will be passed into templates. |
+| engine | engine to be used for processing templates. Handlebars is the default. |
+| ext    | extension to be used for dest files. |
+# 链接
+## 基本链接
+```markdown
+<https://assemble.io>
+<contact@revolunet.com>
+[Assemble](https://assemble.io)
+```
+输出的HTML看起来像这样
+```html
+<a href="https://assemble.io">https://assemble.io</a>
+<a href="mailto:contact@revolunet.com">contact@revolunet.com</a>
+<a href="https://assemble.io">Assemble</a>
+```
+
+呈现的输出效果如下(将鼠标悬停在链接上，没有提示)
+<https://assemble.io>
+
+<contact@revolunet.com>
+
+[Assemble](https://assemble.io)
+## 添加一个标题
+```markdown
+[Upstage](https://github.com/upstage/ "Visit Upstage!")
+```
+输出的HTML看起来像这样
+```html
+<a href="https://github.com/upstage/" title="Visit Upstage!">Upstage</a>
+```
+呈现的输出效果如下(将鼠标悬停在链接上，会有一行提示)
+
+[Upstage](https://github.com/upstage/ "Visit Upstage!")
+# 12 脚注
+脚注使你可以添加注释和参考，而不会使文档正文混乱，当你使用脚注时，会在添加脚注引用的位置出现带有链接的上标标号，读者可以单击链接以跳至页面底部的脚注内容
+
+要创建脚注引用，请在方括号中添加插入符号和标识符 ([^1])，标识符可以是数字或单词，但不能包含空格或制表符。标识符仅将脚注引用与脚注本身相关联 - 在脚注输出中, 脚注按顺序编号。
+
+在中括号内使用插入符号和数字以及用冒号和文本来添加脚注内容 ([^1]：这是一段脚注)。你不一定要在文档末尾添加脚注. 可以将它们放在除列表，引用和表格等元素之外的任何位置。
+```markdown
+这是一个数字脚注[^1].
+这是一个带标签的脚注[^label]
+
+[^1]: 这是一个数字脚注
+[^label]: 这是一个带标签的脚注
+```
+
+这是一个数字脚注[^1].
+这是一个带标签的脚注[^label]
+
+[^1]: 这是一个数字脚注
+[^label]: 这是一个带标签的脚注
+# 13 图片
+图片的语法与链接相似，但包含一个在前面的感叹号
+```markdown
+![Minion](https://octodex.github.com/images/minion.png)
+![Alt text](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")
+```
+![Minion](https://octodex.github.com/images/minion.png)
+![Alt text](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")
