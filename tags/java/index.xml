@@ -1,0 +1,21 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>java - 标签 - CC&#39;s Blog</title>
+        <link>http://example.org/tags/java/</link>
+        <description>java - 标签 - CC&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 10 Feb 2021 09:16:45 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/java/" rel="self" type="application/rss+xml" /><item>
+    <title>Java02</title>
+    <link>http://example.org/java02/</link>
+    <pubDate>Wed, 10 Feb 2021 09:16:45 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/java02/</guid>
+    <description><![CDATA[java02]]></description>
+</item><item>
+    <title>Java01</title>
+    <link>http://example.org/java01/</link>
+    <pubDate>Tue, 09 Feb 2021 09:16:45 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/java01/</guid>
+    <description><![CDATA[java01]]></description>
+</item></channel>
+</rss>
