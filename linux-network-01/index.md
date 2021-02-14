@@ -87,6 +87,6 @@ RARP协议是反向地址转换协议，通过MAC地址确定IP地址
 
 7、应用层：是最靠近用户的OSI层，这一层为用户的应用程序(例如电子邮件、文件传输和终端仿真)提供网络服务
 ## 通信过程
-![通信过程](images/Communication-process.png)
+![通信过程](/images/Communication-process.png)
 ## 协议格式
 
