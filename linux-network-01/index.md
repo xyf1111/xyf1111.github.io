@@ -90,10 +90,10 @@ RARP协议是反向地址转换协议，通过MAC地址确定IP地址
 TCP/IP网络协议栈分为应用层、传输层、网络层、链路层四层
 
 其中应用层典型的是FTP协议，传输层典型的是TCP或UDP协议，网络层典型的是IP协议，链路层典型的是以太网帧协议
-![TCP/IP模型](/images/tcpip-model.png)
+![TCP/IP模型](/images/tcpip-model.png "TCP/IP模型")
 ## 通信过程
-![通信过程](/images/Communication-process.png)
+![通信过程](/images/Communication-process.png "通信过程")
 ## 协议格式
 ### 数据包封装
-![TCP/IP数据包封装](/images/tcpip-packaging.png)
+![TCP/IP数据包封装](/images/tcpip-packaging.png "数据包封装")
 
