@@ -5,32 +5,32 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>Go Study 02 - CC&#39;s Blog</title><meta name="Description" content="Go Study 02-条件语句"><meta property="og:title" content="Go Study 02" />
+        <title>Go Study 03 - CC&#39;s Blog</title><meta name="Description" content="Go Study 02-条件语句"><meta property="og:title" content="Go Study 03" />
 <meta property="og:description" content="Go Study 02-条件语句" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/go-study-02/" />
+<meta property="og:url" content="http://example.org/go-study-03/" />
 <meta property="og:image" content="http://example.org/logo.png"/>
-<meta property="article:published_time" content="2021-02-15T15:12:01+08:00" />
-<meta property="article:modified_time" content="2021-02-15T15:12:01+08:00" />
+<meta property="article:published_time" content="2021-02-15T16:22:32+08:00" />
+<meta property="article:modified_time" content="2021-02-15T16:22:32+08:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="http://example.org/logo.png"/>
 
-<meta name="twitter:title" content="Go Study 02"/>
+<meta name="twitter:title" content="Go Study 03"/>
 <meta name="twitter:description" content="Go Study 02-条件语句"/>
 <meta name="application-name" content="LoveIt">
 <meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-study-02/" /><link rel="prev" href="http://example.org/go-study-01/" /><link rel="next" href="http://example.org/go-study-03/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-study-03/" /><link rel="prev" href="http://example.org/go-study-02/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Go Study 02",
+        "headline": "Go Study 03",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/go-study-02\/"
-        },"genre": "posts","keywords": "golang","wordcount":  277 ,
-        "url": "http:\/\/example.org\/go-study-02\/","datePublished": "2021-02-15T15:12:01+08:00","dateModified": "2021-02-15T15:12:01+08:00","publisher": {
+            "@id": "http:\/\/example.org\/go-study-03\/"
+        },"genre": "posts","keywords": "golang","wordcount":  255 ,
+        "url": "http:\/\/example.org\/go-study-03\/","datePublished": "2021-02-15T16:22:32+08:00","dateModified": "2021-02-15T16:22:32+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
@@ -104,9 +104,9 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animated flipInX">Go Study 02</h1><div class="post-meta">
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Study 03</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-15">2021-02-15</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 277 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-15">2021-02-15</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 255 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
@@ -115,13 +115,31 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#if">if</a></li>
-    <li><a href="#switch">switch</a></li>
+    <li><a href="#for">for</a></li>
+    <li><a href="#基本语法要点回顾">基本语法要点回顾</a></li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h2 id="if">if</h2>
+            </div><div class="content" id="content"><h2 id="for">for</h2>
 <ul>
-<li>if的条件里不需要括号</li>
+<li>for的条件里不需要括号</li>
+<li>for的条件里可以省略初始条件，结束条件，递增表达式</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">sum</span> <span class="o">:=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+    <span class="nx">sum</span> <span class="o">+=</span> <span class="nx">i</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>省略初始条件，相当于while</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -133,22 +151,51 @@
 </span><span class="lnt">6
 </span><span class="lnt">7
 </span><span class="lnt">8
-</span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go">    <span class="kd">func</span> <span class="nf">bounded</span><span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="nx">v</span> <span class="p">&gt;</span> <span class="mi">100</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="mi">100</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">v</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="mi">0</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nx">v</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+<pre class="chroma"><code class="language-go" data-lang="go"> <span class="kd">func</span> <span class="nf">convertToBin</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="nx">result</span> <span class="o">:=</span> <span class="s">&#34;&#34;</span>
+	<span class="k">for</span> <span class="p">;</span> <span class="nx">n</span> <span class="p">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">n</span> <span class="o">/=</span> <span class="mi">2</span> <span class="p">{</span>
+		<span class="nx">lsp</span> <span class="o">:=</span> <span class="nx">n</span> <span class="o">%</span> <span class="mi">2</span>
+		<span class="nx">result</span> <span class="p">=</span> <span class="nx">strconv</span><span class="p">.</span><span class="nf">Itoa</span><span class="p">(</span><span class="nx">lsp</span><span class="p">)</span> <span class="o">+</span> <span class="nx">result</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">result</span>
+<span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><ul>
-<li>if的条件里可以赋值</li>
+<li>省略初始条件和递增条件，也相当于while</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">printFile</span><span class="p">(</span><span class="nx">filename</span> <span class="kt">string</span><span class="p">)</span>  <span class="p">{</span>
+	<span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">scanner</span> <span class="o">:=</span> <span class="nx">bufio</span><span class="p">.</span><span class="nf">NewScanner</span><span class="p">(</span><span class="nx">file</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="nx">scanner</span><span class="p">.</span><span class="nf">Scan</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">scanner</span><span class="p">.</span><span class="nf">Text</span><span class="p">())</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>无限循环</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -159,100 +206,20 @@
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go">    <span class="k">if</span> <span class="nx">contents</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nf">ReadFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%s\n&#34;</span><span class="p">,</span> <span class="nx">contents</span><span class="p">)</span>
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">forever</span><span class="p">()</span>  <span class="p">{</span>
+	<span class="k">for</span>  <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;abc&#34;</span><span class="p">)</span>
 	<span class="p">}</span>
+<span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><ul>
-<li>if条件里赋值的变量作用域就在这个if语句里</li>
-</ul>
-<h2 id="switch">switch</h2>
+</div><h2 id="基本语法要点回顾">基本语法要点回顾</h2>
 <ul>
-<li>switch会自动break，除非使用fallthrough</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">eval</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">op</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">result</span> <span class="kt">int</span>
-	<span class="k">switch</span> <span class="nx">op</span> <span class="p">{</span>
-	<span class="k">case</span> <span class="s">&#34;+&#34;</span><span class="p">:</span>
-		<span class="nx">result</span> <span class="p">=</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span>
-	<span class="k">case</span> <span class="s">&#34;-&#34;</span><span class="p">:</span>
-		<span class="nx">result</span> <span class="p">=</span> <span class="nx">a</span> <span class="o">-</span> <span class="nx">b</span>
-	<span class="k">case</span> <span class="s">&#34;*&#34;</span><span class="p">:</span>
-		<span class="nx">result</span> <span class="p">=</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">b</span>
-	<span class="k">case</span> <span class="s">&#34;/&#34;</span><span class="p">:</span>
-		<span class="nx">result</span> <span class="p">=</span> <span class="nx">a</span> <span class="o">/</span> <span class="nx">b</span>
-	<span class="k">default</span><span class="p">:</span>
-		<span class="nb">panic</span><span class="p">(</span><span class="s">&#34;unsupported operator:&#34;</span> <span class="o">+</span> <span class="nx">op</span><span class="p">)</span>
-	<span class="p">}</span>
-	<span class="k">return</span> <span class="nx">result</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>switch后可以没有表达式</li>
-</ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">grade</span><span class="p">(</span><span class="nx">score</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
-	<span class="nx">g</span> <span class="o">:=</span> <span class="s">&#34;&#34;</span>
-	<span class="k">switch</span>  <span class="p">{</span>
-	<span class="k">case</span> <span class="nx">score</span> <span class="p">&lt;</span> <span class="mi">60</span><span class="p">:</span>
-		<span class="nx">g</span> <span class="p">=</span> <span class="s">&#34;D&#34;</span>
-	<span class="k">case</span> <span class="nx">score</span> <span class="p">&lt;</span> <span class="mi">80</span><span class="p">:</span>
-		<span class="nx">g</span> <span class="p">=</span> <span class="s">&#34;C&#34;</span>
-	<span class="k">case</span> <span class="nx">score</span> <span class="p">&lt;</span> <span class="mi">90</span><span class="p">:</span>
-		<span class="nx">g</span> <span class="p">=</span> <span class="s">&#34;B&#34;</span>
-	<span class="k">case</span> <span class="nx">score</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
-		<span class="nx">g</span> <span class="p">=</span> <span class="s">&#34;A&#34;</span>
-	<span class="k">default</span><span class="p">:</span>
-		<span class="nb">panic</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;Wrong score: %d&#34;</span><span class="p">,</span> <span class="nx">score</span><span class="p">))</span>
-	<span class="p">}</span>
-	<span class="k">return</span> <span class="nx">g</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
-</div>
-</div></div><div class="post-footer" id="post-footer">
+<li>for, if后面的条件没有括号</li>
+<li>if条件里也可以定义变量</li>
+<li>没有while</li>
+<li>switch不需要break，也可以直接switch多个条件</li>
+</ul></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
@@ -262,10 +229,10 @@
         </div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/go-study-02/index.md" target="_blank">阅读原始文档</a>
+                            <a class="link-to-markdown" href="/go-study-03/index.md" target="_blank">阅读原始文档</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-study-02/" data-title="Go Study 02" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-study-02/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-study-02/" data-title="Go Study 02" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-study-02/" data-title="Go Study 02"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-study-02/" data-title="Go Study 02"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-study-02/" data-title="Go Study 02" data-description="Go Study 02-条件语句"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-study-02/" data-title="Go Study 02" data-description="Go Study 02-条件语句"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-study-02/" data-title="Go Study 02"><i class="fab fa-evernote fa-fw"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-study-03/" data-title="Go Study 03" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-study-03/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-study-03/" data-title="Go Study 03" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-study-03/" data-title="Go Study 03"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-study-03/" data-title="Go Study 03"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-study-03/" data-title="Go Study 03" data-description="Go Study 02-条件语句"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-study-03/" data-title="Go Study 03" data-description="Go Study 02-条件语句"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-study-03/" data-title="Go Study 03"><i class="fab fa-evernote fa-fw"></i></a></span>
             </div>
         </div>
     </div>
@@ -277,8 +244,7 @@
         </section>
     </div>
 
-    <div class="post-nav"><a href="/go-study-01/" class="prev" rel="prev" title="Go Study 01"><i class="fas fa-angle-left fa-fw"></i>Go Study 01</a>
-            <a href="/go-study-03/" class="next" rel="next" title="Go Study 03">Go Study 03<i class="fas fa-angle-right fa-fw"></i></a></div>
+    <div class="post-nav"><a href="/go-study-02/" class="prev" rel="prev" title="Go Study 02"><i class="fas fa-angle-left fa-fw"></i>Go Study 02</a></div>
 </div>
 <div id="comments"></div></article></div>
             </main><footer class="footer">
