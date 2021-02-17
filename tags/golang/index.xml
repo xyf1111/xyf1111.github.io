@@ -3,7 +3,14 @@
         <title>golang - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/golang/</link>
         <description>golang - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 16 Feb 2021 14:27:28 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 16 Feb 2021 16:15:16 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Study 08</title>
+    <link>http://example.org/go-study-08/</link>
+    <pubDate>Tue, 16 Feb 2021 16:15:16 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study-08/</guid>
+    <description><![CDATA[Go Study 08-封装]]></description>
+</item><item>
     <title>Go Study 07</title>
     <link>http://example.org/go-study-07/</link>
     <pubDate>Tue, 16 Feb 2021 14:27:28 &#43;0800</pubDate>
