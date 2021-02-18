@@ -2,13 +2,14 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>http://example.org/categories/</loc><lastmod>2021-02-17T14:44:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://example.org/</loc><lastmod>2021-02-17T14:44:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/categories/</loc><lastmod>2021-02-18T12:02:44&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/</loc><lastmod>2021-02-18T12:02:44&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/go-study-11/</loc><lastmod>2021-02-18T12:02:44&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/tags/golang/</loc><lastmod>2021-02-18T12:02:44&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/posts/</loc><lastmod>2021-02-18T12:02:44&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/tags/</loc><lastmod>2021-02-18T12:02:44&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</loc><lastmod>2021-02-18T12:02:44&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://example.org/go-study-10/</loc><lastmod>2021-02-17T14:44:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://example.org/tags/golang/</loc><lastmod>2021-02-17T14:44:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://example.org/posts/</loc><lastmod>2021-02-17T14:44:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://example.org/tags/</loc><lastmod>2021-02-17T14:44:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</loc><lastmod>2021-02-17T14:44:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://example.org/go-study-09/</loc><lastmod>2021-02-17T13:51:06&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://example.org/go-study-08/</loc><lastmod>2021-02-16T16:15:16&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://example.org/go-study-07/</loc><lastmod>2021-02-16T14:27:28&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>

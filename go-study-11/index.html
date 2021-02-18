@@ -5,32 +5,32 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>Go Study 10 - CC&#39;s Blog</title><meta name="Description" content="Go Study 10-接口"><meta property="og:title" content="Go Study 10" />
+        <title>Go Study 11 - CC&#39;s Blog</title><meta name="Description" content="Go Study 10-接口"><meta property="og:title" content="Go Study 11" />
 <meta property="og:description" content="Go Study 10-接口" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/go-study-10/" />
+<meta property="og:url" content="http://example.org/go-study-11/" />
 <meta property="og:image" content="http://example.org/logo.png"/>
-<meta property="article:published_time" content="2021-02-17T14:44:49+08:00" />
-<meta property="article:modified_time" content="2021-02-17T14:44:49+08:00" />
+<meta property="article:published_time" content="2021-02-18T12:02:44+08:00" />
+<meta property="article:modified_time" content="2021-02-18T12:02:44+08:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="http://example.org/logo.png"/>
 
-<meta name="twitter:title" content="Go Study 10"/>
+<meta name="twitter:title" content="Go Study 11"/>
 <meta name="twitter:description" content="Go Study 10-接口"/>
 <meta name="application-name" content="LoveIt">
 <meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-study-10/" /><link rel="prev" href="http://example.org/go-study-09/" /><link rel="next" href="http://example.org/go-study-11/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-study-11/" /><link rel="prev" href="http://example.org/go-study-10/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Go Study 10",
+        "headline": "Go Study 11",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/go-study-10\/"
-        },"genre": "posts","keywords": "golang","wordcount":  250 ,
-        "url": "http:\/\/example.org\/go-study-10\/","datePublished": "2021-02-17T14:44:49+08:00","dateModified": "2021-02-17T14:44:49+08:00","publisher": {
+            "@id": "http:\/\/example.org\/go-study-11\/"
+        },"genre": "posts","keywords": "golang","wordcount":  166 ,
+        "url": "http:\/\/example.org\/go-study-11\/","datePublished": "2021-02-18T12:02:44+08:00","dateModified": "2021-02-18T12:02:44+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
@@ -104,9 +104,9 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animated flipInX">Go Study 10</h1><div class="post-meta">
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Study 11</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-17">2021-02-17</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 250 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-18">2021-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 166 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
@@ -115,73 +115,55 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#接口">接口</a></li>
-    <li><a href="#duck-typing">duck typing</a></li>
-    <li><a href="#接口变量里有什么">接口变量里有什么</a></li>
-    <li><a href="#查看接口变量">查看接口变量</a></li>
-    <li><a href="#特殊接口">特殊接口</a></li>
+    <li><a href="#函数与闭包">函数与闭包</a>
+      <ul>
+        <li><a href="#函数式编程-vs-函数指针">函数式编程 vs 函数指针</a></li>
+        <li><a href="#正统函数式编程">“正统”函数式编程</a></li>
+        <li><a href="#go-语言闭包的应用">go 语言闭包的应用</a></li>
+      </ul>
+    </li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h2 id="接口">接口</h2>
+            </div><div class="content" id="content"><h2 id="函数与闭包">函数与闭包</h2>
+<h3 id="函数式编程-vs-函数指针">函数式编程 vs 函数指针</h3>
 <ul>
-<li>接口由使用者定义</li>
+<li>函数式一等公民：参数，变量，返回值都可以是函数</li>
+<li>高阶函数</li>
+<li>函数 -&gt; 闭包</li>
 </ul>
-<h2 id="duck-typing">duck typing</h2>
+<h3 id="正统函数式编程">“正统”函数式编程</h3>
 <ul>
-<li>“像鸭子走路，像鸭子叫(长得像鸭子)，那么就是鸭子”</li>
-<li>描述事物的外部行为而非内部结构</li>
-<li>严格来说go属于结构化类型系统，类似duck typing</li>
+<li>不可变性：不能有状态，只有常量和函数</li>
+<li>函数只能有一个参数</li>
 </ul>
-<h2 id="接口变量里有什么">接口变量里有什么</h2>
-<p><figure><a class="lightgallery" href="/images/interface1.png" title="&amp;ldquo;接口变量1&amp;rdquo;" data-thumbnail="/images/interface1.png" data-sub-html="<h2>接口变量1</h2><p>&amp;ldquo;接口变量1&amp;rdquo;</p>">
+<h3 id="go-语言闭包的应用">go 语言闭包的应用</h3>
+<ul>
+<li>更为自然，不需要修饰如何访问自由变量</li>
+<li>没有Lambda表达式，但是有匿名函数
+<figure><a class="lightgallery" href="/images/functional1.png" title="&amp;ldquo;闭包与函数&amp;rdquo;" data-thumbnail="/images/functional1.png" data-sub-html="<h2>闭包与函数</h2><p>&amp;ldquo;闭包与函数&amp;rdquo;</p>">
         <img
             class="lazyload"
             src="/svg/loading.min.svg"
-            data-src="/images/interface1.png"
-            data-srcset="/images/interface1.png, /images/interface1.png 1.5x, /images/interface1.png 2x"
+            data-src="/images/functional1.png"
+            data-srcset="/images/functional1.png, /images/functional1.png 1.5x, /images/functional1.png 2x"
             data-sizes="auto"
-            alt="/images/interface1.png" />
-    </a><figcaption class="image-caption">接口变量1</figcaption>
-    </figure>
-<figure><a class="lightgallery" href="/images/interface2.png" title="&amp;ldquo;接口变量2&amp;rdquo;" data-thumbnail="/images/interface2.png" data-sub-html="<h2>接口变量2</h2><p>&amp;ldquo;接口变量2&amp;rdquo;</p>">
-        <img
-            class="lazyload"
-            src="/svg/loading.min.svg"
-            data-src="/images/interface2.png"
-            data-srcset="/images/interface2.png, /images/interface2.png 1.5x, /images/interface2.png 2x"
-            data-sizes="auto"
-            alt="/images/interface2.png" />
-    </a><figcaption class="image-caption">接口变量2</figcaption>
-    </figure></p>
-<ul>
-<li>接口变量自带指针</li>
-<li>接口变量同样采用值传递，几乎不需要使用接口的指针</li>
-<li>指针接收者实现只能以指针方式使用；值接收者都可以</li>
-</ul>
-<h2 id="查看接口变量">查看接口变量</h2>
-<ul>
-<li>表示任何变量：interface{}</li>
-<li>Type Assertion</li>
-<li>Type Switch</li>
-</ul>
-<h2 id="特殊接口">特殊接口</h2>
-<ul>
-<li>Stringer</li>
-<li>Reader/Writer</li>
+            alt="/images/functional1.png" />
+    </a><figcaption class="image-caption">闭包与函数</figcaption>
+    </figure></li>
 </ul></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>更新于 2021-02-17</span>
+                <span>更新于 2021-02-18</span>
             </div>
             <div class="post-info-license"></div>
         </div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/go-study-10/index.md" target="_blank">阅读原始文档</a>
+                            <a class="link-to-markdown" href="/go-study-11/index.md" target="_blank">阅读原始文档</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-study-10/" data-title="Go Study 10" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-study-10/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-study-10/" data-title="Go Study 10" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-study-10/" data-title="Go Study 10"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-study-10/" data-title="Go Study 10"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-study-10/" data-title="Go Study 10" data-description="Go Study 10-接口"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-study-10/" data-title="Go Study 10" data-description="Go Study 10-接口"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-study-10/" data-title="Go Study 10"><i class="fab fa-evernote fa-fw"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-study-11/" data-title="Go Study 11" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-study-11/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-study-11/" data-title="Go Study 11" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-study-11/" data-title="Go Study 11"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-study-11/" data-title="Go Study 11"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-study-11/" data-title="Go Study 11" data-description="Go Study 10-接口"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-study-11/" data-title="Go Study 11" data-description="Go Study 10-接口"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-study-11/" data-title="Go Study 11"><i class="fab fa-evernote fa-fw"></i></a></span>
             </div>
         </div>
     </div>
@@ -193,8 +175,7 @@
         </section>
     </div>
 
-    <div class="post-nav"><a href="/go-study-09/" class="prev" rel="prev" title="Go Study 09"><i class="fas fa-angle-left fa-fw"></i>Go Study 09</a>
-            <a href="/go-study-11/" class="next" rel="next" title="Go Study 11">Go Study 11<i class="fas fa-angle-right fa-fw"></i></a></div>
+    <div class="post-nav"><a href="/go-study-10/" class="prev" rel="prev" title="Go Study 10"><i class="fas fa-angle-left fa-fw"></i>Go Study 10</a></div>
 </div>
 <div id="comments"></div></article></div>
             </main><footer class="footer">

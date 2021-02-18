@@ -3,7 +3,14 @@
         <title>学习 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</link>
         <description>学习 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 17 Feb 2021 14:44:49 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 18 Feb 2021 12:02:44 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Study 11</title>
+    <link>http://example.org/go-study-11/</link>
+    <pubDate>Thu, 18 Feb 2021 12:02:44 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study-11/</guid>
+    <description><![CDATA[Go Study 10-接口]]></description>
+</item><item>
     <title>Go Study 10</title>
     <link>http://example.org/go-study-10/</link>
     <pubDate>Wed, 17 Feb 2021 14:44:49 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-study-02/</guid>
     <description><![CDATA[Go Study 02-条件语句]]></description>
-</item><item>
-    <title>Go Study 01</title>
-    <link>http://example.org/go-study-01/</link>
-    <pubDate>Mon, 15 Feb 2021 14:20:01 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-01/</guid>
-    <description><![CDATA[Go Study 01-变量常量]]></description>
 </item></channel>
 </rss>
