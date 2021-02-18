@@ -3,13 +3,20 @@
         <title>学习 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</link>
         <description>学习 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 18 Feb 2021 12:02:44 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 18 Feb 2021 16:53:11 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Study 12</title>
+    <link>http://example.org/go-study-12/</link>
+    <pubDate>Thu, 18 Feb 2021 16:53:11 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study-12/</guid>
+    <description><![CDATA[Go Study 12-资源管理与出错处理]]></description>
+</item><item>
     <title>Go Study 11</title>
     <link>http://example.org/go-study-11/</link>
     <pubDate>Thu, 18 Feb 2021 12:02:44 &#43;0800</pubDate>
     <author>作者</author>
     <guid>http://example.org/go-study-11/</guid>
-    <description><![CDATA[Go Study 10-接口]]></description>
+    <description><![CDATA[Go Study 11-函数与闭包]]></description>
 </item><item>
     <title>Go Study 10</title>
     <link>http://example.org/go-study-10/</link>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-study-03/</guid>
     <description><![CDATA[Go Study 03-循环语句]]></description>
-</item><item>
-    <title>Go Study 02</title>
-    <link>http://example.org/go-study-02/</link>
-    <pubDate>Mon, 15 Feb 2021 15:12:01 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-02/</guid>
-    <description><![CDATA[Go Study 02-条件语句]]></description>
 </item></channel>
 </rss>

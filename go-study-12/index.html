@@ -5,37 +5,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>Go Study 11 - CC&#39;s Blog</title><meta name="Description" content="Go Study 11-函数与闭包"><meta property="og:title" content="Go Study 11" />
-<meta property="og:description" content="Go Study 11-函数与闭包" />
+        <title>Go Study 12 - CC&#39;s Blog</title><meta name="Description" content="Go Study 12-资源管理与出错处理"><meta property="og:title" content="Go Study 12" />
+<meta property="og:description" content="Go Study 12-资源管理与出错处理" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/go-study-11/" />
+<meta property="og:url" content="http://example.org/go-study-12/" />
 <meta property="og:image" content="http://example.org/logo.png"/>
-<meta property="article:published_time" content="2021-02-18T12:02:44+08:00" />
-<meta property="article:modified_time" content="2021-02-18T12:02:44+08:00" />
+<meta property="article:published_time" content="2021-02-18T16:53:11+08:00" />
+<meta property="article:modified_time" content="2021-02-18T16:53:11+08:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="http://example.org/logo.png"/>
 
-<meta name="twitter:title" content="Go Study 11"/>
-<meta name="twitter:description" content="Go Study 11-函数与闭包"/>
+<meta name="twitter:title" content="Go Study 12"/>
+<meta name="twitter:description" content="Go Study 12-资源管理与出错处理"/>
 <meta name="application-name" content="LoveIt">
 <meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-study-11/" /><link rel="prev" href="http://example.org/go-study-10/" /><link rel="next" href="http://example.org/go-study-12/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-study-12/" /><link rel="prev" href="http://example.org/go-study-11/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Go Study 11",
+        "headline": "Go Study 12",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/go-study-11\/"
-        },"genre": "posts","keywords": "golang","wordcount":  166 ,
-        "url": "http:\/\/example.org\/go-study-11\/","datePublished": "2021-02-18T12:02:44+08:00","dateModified": "2021-02-18T12:02:44+08:00","publisher": {
+            "@id": "http:\/\/example.org\/go-study-12\/"
+        },"genre": "posts","keywords": "golang","wordcount":  229 ,
+        "url": "http:\/\/example.org\/go-study-12\/","datePublished": "2021-02-18T16:53:11+08:00","dateModified": "2021-02-18T16:53:11+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "CC"
-            },"description": "Go Study 11-函数与闭包"
+            },"description": "Go Study 12-资源管理与出错处理"
     }
     </script></head>
     <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
@@ -104,9 +104,9 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animated flipInX">Go Study 11</h1><div class="post-meta">
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Study 12</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-18">2021-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 166 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-18">2021-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 229 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
@@ -115,41 +115,53 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#函数与闭包">函数与闭包</a>
-      <ul>
-        <li><a href="#函数式编程-vs-函数指针">函数式编程 vs 函数指针</a></li>
-        <li><a href="#正统函数式编程">“正统”函数式编程</a></li>
-        <li><a href="#go-语言闭包的应用">go 语言闭包的应用</a></li>
-      </ul>
-    </li>
+    <li><a href="#defer调用">defer调用</a></li>
+    <li><a href="#何时使用defer调用">何时使用defer调用</a></li>
+    <li><a href="#错误处理二">错误处理二</a></li>
+    <li><a href="#panic">panic</a></li>
+    <li><a href="#recover">recover</a></li>
+    <li><a href="#error-vs-panic">error vs panic</a></li>
+    <li><a href="#错误处理综合实例">错误处理综合实例</a></li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h2 id="函数与闭包">函数与闭包</h2>
-<h3 id="函数式编程-vs-函数指针">函数式编程 vs 函数指针</h3>
+            </div><div class="content" id="content"><h2 id="defer调用">defer调用</h2>
 <ul>
-<li>函数式一等公民：参数，变量，返回值都可以是函数</li>
-<li>高阶函数</li>
-<li>函数 -&gt; 闭包</li>
+<li>确保调用在函数结束时发生</li>
+<li>多defer相当于栈(先进后出)</li>
+<li>参数在defer语句时计算</li>
 </ul>
-<h3 id="正统函数式编程">“正统”函数式编程</h3>
+<h2 id="何时使用defer调用">何时使用defer调用</h2>
 <ul>
-<li>不可变性：不能有状态，只有常量和函数</li>
-<li>函数只能有一个参数</li>
+<li>Open/Close</li>
+<li>Lock/Unlock</li>
+<li>PrintHeader/PrintFooter</li>
 </ul>
-<h3 id="go-语言闭包的应用">go 语言闭包的应用</h3>
+<h2 id="错误处理二">错误处理二</h2>
 <ul>
-<li>更为自然，不需要修饰如何访问自由变量</li>
-<li>没有Lambda表达式，但是有匿名函数
-<figure><a class="lightgallery" href="/images/functional1.png" title="&amp;ldquo;闭包与函数&amp;rdquo;" data-thumbnail="/images/functional1.png" data-sub-html="<h2>闭包与函数</h2><p>&amp;ldquo;闭包与函数&amp;rdquo;</p>">
-        <img
-            class="lazyload"
-            src="/svg/loading.min.svg"
-            data-src="/images/functional1.png"
-            data-srcset="/images/functional1.png, /images/functional1.png 1.5x, /images/functional1.png 2x"
-            data-sizes="auto"
-            alt="/images/functional1.png" />
-    </a><figcaption class="image-caption">闭包与函数</figcaption>
-    </figure></li>
+<li>如何实现统一的错误处理逻辑</li>
+</ul>
+<h2 id="panic">panic</h2>
+<ul>
+<li>停止当前函数运行</li>
+<li>一直向上返回，执行每一层的defer</li>
+<li>如果没有遇见recover，程序退出</li>
+</ul>
+<h2 id="recover">recover</h2>
+<ul>
+<li>仅在defer调用中使用</li>
+<li>获取panic的值</li>
+<li>如果无法处理，可重新panic</li>
+</ul>
+<h2 id="error-vs-panic">error vs panic</h2>
+<ul>
+<li>意料之中的：使用error。如：文件打不开</li>
+<li>意料之外的：使用panic。如：数组越界</li>
+</ul>
+<h2 id="错误处理综合实例">错误处理综合实例</h2>
+<ul>
+<li>defer + panic + recover</li>
+<li>Type Assertion</li>
+<li>函数式编程的应用</li>
 </ul></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
@@ -160,10 +172,10 @@
         </div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/go-study-11/index.md" target="_blank">阅读原始文档</a>
+                            <a class="link-to-markdown" href="/go-study-12/index.md" target="_blank">阅读原始文档</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-study-11/" data-title="Go Study 11" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-study-11/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-study-11/" data-title="Go Study 11" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-study-11/" data-title="Go Study 11"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-study-11/" data-title="Go Study 11"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-study-11/" data-title="Go Study 11" data-description="Go Study 11-函数与闭包"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-study-11/" data-title="Go Study 11" data-description="Go Study 11-函数与闭包"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-study-11/" data-title="Go Study 11"><i class="fab fa-evernote fa-fw"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-study-12/" data-title="Go Study 12" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-study-12/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-study-12/" data-title="Go Study 12" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-study-12/" data-title="Go Study 12"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-study-12/" data-title="Go Study 12"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-study-12/" data-title="Go Study 12" data-description="Go Study 12-资源管理与出错处理"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-study-12/" data-title="Go Study 12" data-description="Go Study 12-资源管理与出错处理"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-study-12/" data-title="Go Study 12"><i class="fab fa-evernote fa-fw"></i></a></span>
             </div>
         </div>
     </div>
@@ -175,8 +187,7 @@
         </section>
     </div>
 
-    <div class="post-nav"><a href="/go-study-10/" class="prev" rel="prev" title="Go Study 10"><i class="fas fa-angle-left fa-fw"></i>Go Study 10</a>
-            <a href="/go-study-12/" class="next" rel="next" title="Go Study 12">Go Study 12<i class="fas fa-angle-right fa-fw"></i></a></div>
+    <div class="post-nav"><a href="/go-study-11/" class="prev" rel="prev" title="Go Study 11"><i class="fas fa-angle-left fa-fw"></i>Go Study 11</a></div>
 </div>
 <div id="comments"></div></article></div>
             </main><footer class="footer">
