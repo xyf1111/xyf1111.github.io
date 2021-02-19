@@ -174,3 +174,113 @@ range只取value
 - map使用哈希表，必须可以比较相等
 - 除了slice，map，function的内建类型都可以作为key
 - Struct类型不包含上述字段，也可以作为key
+## 案例
+### 数组
+在Go中数组是一个固定长度的数列。在Go中相对于数组而言，slice使用更多
+```go
+func arraySample()  {
+	//创建了一个数组a来存放刚好5个int。元素类型和长度是数组类型的一部分
+	//数组默认是零值
+	var a [5]int
+	fmt.Println(a)
+	//使用array[index] = value语法来设置数组指定位置的值
+	//使用array[index]来得到值
+	a[4] = 100
+	fmt.Println(a)
+	fmt.Println(a[4])
+	//使用内置函数len返回数组的长度
+	fmt.Println("len: ", len(a))
+	//使用这个语法一行内初始化一个数组
+	b := [5]int{1, 2, 3, 4, 5}
+	fmt.Println("dcl: ", b)
+	//数组的存储类型是单一的，但是可以组合这些数据来构造多维的数据结构
+	var twoD [2][3]int
+	for i := 0; i < 2; i++ {
+		for j := 0; j < 3; j++ {
+			twoD[i][j] = i + j
+		}
+	}
+	fmt.Println("2d: ", twoD)
+}
+```
+### 切片
+Slice是Go中一个关键的数据类型，是一个比数组更加强大的序列接口
+```go
+func sliceSample()  {
+	//slice的类型仅由它所包含的元素决定(不像数组还需要元素个数)
+	//创建一个长度非零的空slice，需要使用内建的方法 make
+	//创建一个长度为3的string类型slice(初始化为零值)
+	s := make([]string, 3)
+	fmt.Println("emp: ", s)
+	//通过slice[index] = value来设置值
+	//slice[index]来获取值
+	s[0] = "a"
+	s[1] = "b"
+	s[2] = "c"
+	fmt.Println(s)
+	fmt.Println(s[2])
+	//通过len来获取slice长度
+	fmt.Println("len: ", len(s))
+	//作为基本操作的补充，slice支持比数组更多的操作
+	//其中一个是内建的append，它返回一个包含一个或多个新值的slice
+	//slice底层是由指针数组和len以及cap组成的，append不会改变slice地址
+	s = append(s, "d")
+	s = append(s, "e", "f")
+	fmt.Println("append: ", s)
+	//slice可以被copy
+	//这里新建一个空的和s相同长度的slice c，并将s复制给c
+	c := make([]string, len(s))
+	copy(c, s)
+	fmt.Println("copy c: ",c)
+	//slice支持通过slice[low:high]语法进行切片处理
+	l := s[2:5]
+	fmt.Println("切片之后2-5slice: ", l)
+	//这个slice从s[0]到(包含)s[5]
+	l = s[:5]
+	fmt.Println("从s[0]到s[5]: ", l)
+	//这个slice从s[2]到s最后一个值
+	l = s[2:]
+	fmt.Println("从s[2]到slice最后一个值: ", l)
+	//在一行代码中声明并初始化一个slice变量
+	t := []string{"g", "h", "i"}
+	fmt.Println("dcl: ", t)
+	//slice可以组成多维数据结构
+	twoD := make([][]int, 3)
+	for i := 0; i < 3; i++ {
+		innerlen := 4
+		twoD[i] = make([]int, innerlen)
+		for j := 0; j < innerlen; j++ {
+			twoD[i][j] = i + j
+		}
+	}
+	fmt.Println("2d: ", twoD)
+}
+```
+### 关联数组
+map是Go内置关联数据类型(在其他语言成为哈希或字典)
+```go
+func mapsSample()  {
+	//要创建一个空的map，需要使用内建的map1 := make(map[key-type]value-type)
+	m := make(map[string]int)
+	fmt.Println(m)
+	//使用经典的map1[key] = value语法来设置键值对
+	m["k1"] = 1
+	m["k2"] = 2
+	fmt.Println("map: ", m)
+	//使用map1[key]来获取一个键的值
+	v1 := m["k1"]
+	fmt.Println(v1)
+	//当对一个map调用内建len，返回的是键值对数目
+	fmt.Println("len: ", len(m))
+	//内建的delete可以从一个map中移除键值对
+	delete(m, "k2")
+	fmt.Println("delete", m)
+	//从一个map中取值时，可选第二个返回值是这个键是否存在于map中
+	//这个可以用来消除键不存在或键有零值产生的歧义
+	_, prs := m["k2"]
+	fmt.Println("prs: ", prs)
+	//一行申明和初始化一个map
+	n := map[string]int{"foo": 1, "bar": 2, "zhang": 3}
+	fmt.Println(n)
+}
+```
