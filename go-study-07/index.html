@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/go-study-07\/"
-        },"genre": "posts","keywords": "golang","wordcount":  421 ,
+        },"genre": "posts","keywords": "golang","wordcount":  731 ,
         "url": "http:\/\/example.org\/go-study-07\/","datePublished": "2021-02-16T14:27:28+08:00","dateModified": "2021-02-16T14:27:28+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,8 +106,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Go Study 07</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-16">2021-02-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 421 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-16">2021-02-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 731 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -120,6 +120,11 @@
     <li><a href="#为结构定义方法">为结构定义方法</a></li>
     <li><a href="#使用指针作为方法接受者">使用指针作为方法接受者</a></li>
     <li><a href="#值接受者-vs-指针接受者">值接受者 vs 指针接受者</a></li>
+    <li><a href="#案例">案例</a>
+      <ul>
+        <li><a href="#值和指针">值和指针</a></li>
+      </ul>
+    </li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="面向对象">面向对象</h2>
@@ -220,7 +225,73 @@
 <li>很简单的不可变对象使用值接收者可以减轻GC负担(太多的指针会增加垃圾服务器GC的负担)</li>
 <li><strong>值接收者</strong>是go语言特有</li>
 <li>值/指针接收者均可接收值/指针</li>
-</ul></div><div class="post-footer" id="post-footer">
+</ul>
+<h2 id="案例">案例</h2>
+<h3 id="值和指针">值和指针</h3>
+<p>Go支持指针，允许在程序中通过<strong>引用</strong>传递值或数据结构</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+<span class="c1">//通过两个不同的函数来比较值和指针类型的不同
+</span><span class="c1">//zeroVal有一个int型参数，所以使用值传递
+</span><span class="c1">//zeroVal将从调用它的函数中获得一个ival形参的拷贝
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">zeroVal</span><span class="p">(</span><span class="nx">ival</span> <span class="kt">int</span><span class="p">)</span>  <span class="p">{</span>
+	<span class="nx">ival</span> <span class="p">=</span> <span class="mi">0</span>
+<span class="p">}</span>
+<span class="c1">//zeroPtr和上面不同是*int，意味着它使用的是指针
+</span><span class="c1">//函数体内的*iptr接着解引用这个指针，从它内存地址得到这个地址当前值
+</span><span class="c1">//对一个解引用指针进行赋值会改变这个指针引用的真实地址的值
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">zeroPtr</span><span class="p">(</span><span class="nx">iptr</span> <span class="o">*</span><span class="kt">int</span><span class="p">)</span>  <span class="p">{</span>
+	<span class="o">*</span><span class="nx">iptr</span> <span class="p">=</span> <span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;initial: &#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+	<span class="nf">zeroVal</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;zeroVal: &#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+	<span class="c1">//通过&amp;i语法来获取i的内存地址
+</span><span class="c1"></span>	<span class="nf">zeroPtr</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">i</span><span class="p">)</span>
+	<span class="c1">//指针也是可以被打印的
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;zeroPtr: &#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;point: &#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">i</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
