@@ -20,3 +20,65 @@
 ## 特殊接口
 - Stringer
 - Reader/Writer
+## 案例
+### 接口
+接口：Go语言中组织和命名相关的方法集合的机制。接口是方法特征的命名集合
+```go
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+//这里是一个几何体的基本接口
+type geometry interface {
+	area()	float64
+	perim()	float64
+}
+
+//这个例子中，将让rect和circle实现这个接口
+type rect struct {
+	width	float64
+	height	float64
+}
+
+type circle struct {
+	radius	float64
+}
+
+//在Go中实现接口，需要实现这个接口的所有方法
+//rect实现接口
+func (r rect) area() float64 {
+	return r.width * r.height
+}
+
+func (r rect) perim() float64 {
+	return 2*r.width + 2*r.height
+}
+//circle实现接口
+func (c circle) area() float64 {
+	return math.Pi * c.radius * c.radius
+}
+
+func (c circle) perim() float64 {
+	return math.Pi * c.radius * 2
+}
+//如果有一个变量是接口类型，可以调用这个被命名接口的方法
+//这里有一个通用的measure函数，利用特性，可以用在任何geometry(几何学)上
+func measure(g geometry)  {
+	fmt.Println(g)
+	fmt.Println(g.area())
+	fmt.Println(g.perim())
+}
+
+func main() {
+	r := rect{width: 3, height: 4}
+	c := circle{radius: 5}
+
+	//结构体类型circle和rect都实现了geometry接口
+	//所以可以使用他们的实例作为measure的参数
+	measure(r)
+	measure(c)
+}
+```

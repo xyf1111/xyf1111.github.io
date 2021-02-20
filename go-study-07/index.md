@@ -53,6 +53,95 @@ func (node *treeNode) setValue(value int) {
 - **值接收者**是go语言特有
 - 值/指针接收者均可接收值/指针
 ## 案例
+### 结构体
+Go的结构体是各个字段 字段类型的集合
+```go
+package main
+
+import "fmt"
+
+type person struct {
+	name	string
+	age		int
+}
+
+func main() {
+	//使用这个语法创建一个新的结构体函数
+	fmt.Println(person{"Bob", 20})
+	//可以在初始化一个结构体元素时指定字段名
+	fmt.Println(person{name:"Alice", age:18})
+	//省略的字段将被初始化为零值
+	fmt.Println(person{name:"Fred"})
+	//&前缀生成一个结构体指针
+	fmt.Println(&person{name:"Ann", age:40})
+
+	//使用点来访问结构体字段
+	s := person{name:"Sean", age:50}
+	fmt.Println(s.name)
+	fmt.Println(s.age)
+
+	//也可以对结构体指针引用，指针会被自动解引用
+	sp := &s
+	fmt.Println(sp.age)
+
+	//结构体是可变的
+	sp.age = 51
+	fmt.Println(s.age)
+	s.age = 52
+	fmt.Println(s.age)
+}
+```
+### 方法
+Go支持在结构体类型中定义方法
+```go
+package main
+
+import "fmt"
+
+type rect struct {
+	wight	int
+	height	int
+}
+
+//area方法有一个接收器类型rect来计算矩形面积
+func (r rect) area() int {
+	return r.height * r.wight
+}
+
+//可以为值或指针类型的接收器定义方法，这是个值类型接收器
+//计算矩形周长
+func (r rect) perim() int {
+	return 2*r.wight + 2*r.height
+}
+
+//指针类型接收器可以改变实际值
+func (r *rect) changeH(val int) {
+	r.height = val
+}
+
+//值类型接收器改变拷贝值
+func (r rect) changeW(val int) {
+	r.wight = val
+}
+
+func main() {
+	r := rect{10, 5}
+	//调用上面为结构体定义的方法
+	fmt.Println(r.area())
+	fmt.Println(r.perim())
+	r.changeH(20)
+	r.changeW(15)
+	fmt.Println(r)
+
+	//Go自动处理方法调用时值和指针之间的转换
+	//可以使用指针来调用方法避免在方法调用时产生一个拷贝或让方法能够改变接收的数据
+	rp := &r
+	rp.changeH(25)
+	rp.changeW(30)
+	fmt.Println(rp.area())
+	fmt.Println(rp.perim())
+}
+```
 ### 值和指针
 Go支持指针，允许在程序中通过**引用**传递值或数据结构
 ```go
