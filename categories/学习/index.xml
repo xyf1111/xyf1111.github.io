@@ -3,7 +3,21 @@
         <title>学习 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</link>
         <description>学习 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 18 Feb 2021 16:53:11 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 21 Feb 2021 21:33:17 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Study 14</title>
+    <link>http://example.org/go-study-14/</link>
+    <pubDate>Sun, 21 Feb 2021 21:33:17 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study-14/</guid>
+    <description><![CDATA[Go Study 14-goroutine]]></description>
+</item><item>
+    <title>Go Study 13</title>
+    <link>http://example.org/go-study-13/</link>
+    <pubDate>Sun, 21 Feb 2021 20:47:36 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study-13/</guid>
+    <description><![CDATA[Go Study 13-测试]]></description>
+</item><item>
     <title>Go Study 12</title>
     <link>http://example.org/go-study-12/</link>
     <pubDate>Thu, 18 Feb 2021 16:53:11 &#43;0800</pubDate>
@@ -59,19 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-study-05/</guid>
     <description><![CDATA[Go Study 05-leetcode例题]]></description>
-</item><item>
-    <title>Go Study 04</title>
-    <link>http://example.org/go-study-04/</link>
-    <pubDate>Mon, 15 Feb 2021 16:46:17 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-04/</guid>
-    <description><![CDATA[Go Study 04-数组、切片和容器]]></description>
-</item><item>
-    <title>Go Study 03</title>
-    <link>http://example.org/go-study-03/</link>
-    <pubDate>Mon, 15 Feb 2021 16:22:32 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-03/</guid>
-    <description><![CDATA[Go Study 03-循环语句]]></description>
 </item></channel>
 </rss>
