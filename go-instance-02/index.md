@@ -182,3 +182,50 @@ func main() {
 }
 
 ```
+## 拷贝文件
+### 案例1
+将一个图片拷贝到另一个文件下
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"os"
+)
+//编写一个函数，传入两个文件路径
+func copyFile(dstFile string, srcFile string) (written int64, err error) {
+	//打开srcFile
+	read, err := os.OpenFile(srcFile, os.O_RDONLY, 0)
+	if err != nil {
+		fmt.Println("srcFile open err:", err)
+	}
+	defer read.Close()
+	//通过srcFile找到 reader
+	reader := bufio.NewReader(read)
+	//打开dstFile
+	write, err := os.OpenFile(dstFile, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		fmt.Println("dstFile open err:", err)
+	}
+	defer write.Close()
+	//通过dstFile找到writer
+	writer := bufio.NewWriter(write)
+
+	return io.Copy(writer, reader)
+}
+
+func main() {
+	//将srcFile文件拷贝到dstFile文件
+	srcFile := "F:/hugo-blog/cc/static/go7.jpg"
+	dstFile := "D:/bgird.jpg"
+	//调用copyFile完成拷贝
+	written, err := copyFile(dstFile, srcFile)
+	if err != nil {
+		fmt.Println("copy file err:", err)
+	} else {
+		fmt.Println("copy file success, written:", written)
+	}
+}
+```
