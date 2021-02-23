@@ -5,37 +5,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>Go Instance 05 - CC&#39;s Blog</title><meta name="Description" content="Go Instance 05-select解决通道堵塞"><meta property="og:title" content="Go Instance 05" />
-<meta property="og:description" content="Go Instance 05-select解决通道堵塞" />
+        <title>Go Instance 06 - CC&#39;s Blog</title><meta name="Description" content="Go Instance 06-defer&#43;recover解决panic"><meta property="og:title" content="Go Instance 06" />
+<meta property="og:description" content="Go Instance 06-defer&#43;recover解决panic" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/go-instance-05/" />
+<meta property="og:url" content="http://example.org/go-instance-06/" />
 <meta property="og:image" content="http://example.org/logo.png"/>
-<meta property="article:published_time" content="2021-02-23T15:12:57+08:00" />
-<meta property="article:modified_time" content="2021-02-23T15:12:57+08:00" />
+<meta property="article:published_time" content="2021-02-23T17:43:11+08:00" />
+<meta property="article:modified_time" content="2021-02-23T17:43:11+08:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="http://example.org/logo.png"/>
 
-<meta name="twitter:title" content="Go Instance 05"/>
-<meta name="twitter:description" content="Go Instance 05-select解决通道堵塞"/>
+<meta name="twitter:title" content="Go Instance 06"/>
+<meta name="twitter:description" content="Go Instance 06-defer&#43;recover解决panic"/>
 <meta name="application-name" content="LoveIt">
 <meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-instance-05/" /><link rel="prev" href="http://example.org/go-instance-04/" /><link rel="next" href="http://example.org/go-instance-06/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-instance-06/" /><link rel="prev" href="http://example.org/go-instance-05/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Go Instance 05",
+        "headline": "Go Instance 06",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/go-instance-05\/"
-        },"genre": "posts","keywords": "golang","wordcount":  466 ,
-        "url": "http:\/\/example.org\/go-instance-05\/","datePublished": "2021-02-23T15:12:57+08:00","dateModified": "2021-02-23T15:12:57+08:00","publisher": {
+            "@id": "http:\/\/example.org\/go-instance-06\/"
+        },"genre": "posts","keywords": "golang","wordcount":  275 ,
+        "url": "http:\/\/example.org\/go-instance-06\/","datePublished": "2021-02-23T17:43:11+08:00","dateModified": "2021-02-23T17:43:11+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "CC"
-            },"description": "Go Instance 05-select解决通道堵塞"
+            },"description": "Go Instance 06-defer+recover解决panic"
     }
     </script></head>
     <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
@@ -104,9 +104,9 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animated flipInX">Go Instance 05</h1><div class="post-meta">
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Instance 06</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AE%9E%E4%BE%8B/"><i class="far fa-folder fa-fw"></i>实例</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-23">2021-02-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 466 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-23">2021-02-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 275 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
@@ -115,22 +115,16 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#使用select解决从管道取数据堵塞问题">使用select解决从管道取数据堵塞问题</a></li>
+    <li><a href="#deferrecover解决panic导致程序崩溃">defer+recover解决panic导致程序崩溃</a>
+      <ul>
+        <li><a href="#案例1">案例1</a></li>
+      </ul>
+    </li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><!--mores-->
-<h2 id="使用select解决从管道取数据堵塞问题">使用select解决从管道取数据堵塞问题</h2>
-<p>使用select解决从管道取数据堵塞的问题，语法如下：
-<figure><a class="lightgallery" href="/images/instance05-01.png" title="&amp;ldquo;select语法&amp;rdquo;" data-thumbnail="/images/instance05-01.png" data-sub-html="<h2>select语法</h2><p>&amp;ldquo;select语法&amp;rdquo;</p>">
-        <img
-            class="lazyload"
-            src="/svg/loading.min.svg"
-            data-src="/images/instance05-01.png"
-            data-srcset="/images/instance05-01.png, /images/instance05-01.png 1.5x, /images/instance05-01.png 2x"
-            data-sizes="auto"
-            alt="/images/instance05-01.png" />
-    </a><figcaption class="image-caption">select语法</figcaption>
-    </figure></p>
+            </div><div class="content" id="content"><h2 id="deferrecover解决panic导致程序崩溃">defer+recover解决panic导致程序崩溃</h2>
+<h3 id="案例1">案例1</h3>
+<p>如果我们起了一个协程，但这个协程出现了panic，但我们没有捕获这个协程，就会造成程序的崩溃，这时可以在goroutine中使用recover来捕获panic，进行处理，这样主线程不会受到影响</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -169,11 +163,6 @@
 </span><span class="lnt">34
 </span><span class="lnt">35
 </span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
@@ -183,40 +172,35 @@
 	<span class="s">&#34;time&#34;</span>
 <span class="p">)</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-	<span class="c1">//定义一个管道，可以放10个int类型数据
-</span><span class="c1"></span>	<span class="nx">intChan</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="kd">func</span> <span class="nf">sayhello</span><span class="p">()</span> <span class="p">{</span>
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-		<span class="nx">intChan</span> <span class="o">&lt;-</span> <span class="nx">i</span>
-	<span class="p">}</span>
-	<span class="c1">//定义一个管道，可以放5个string类型数据
-</span><span class="c1"></span>	<span class="nx">stringChan</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-		<span class="nx">stringChan</span> <span class="o">&lt;-</span> <span class="s">&#34;hello&#34;</span> <span class="o">+</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%d&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
-	<span class="p">}</span>
-	<span class="c1">//传统的方法遍历管道时，如果不关闭会阻塞而导致deadlock
-</span><span class="c1"></span>
-	<span class="c1">//实际开发中，不好确定什么时候关闭通道
-</span><span class="c1"></span>	<span class="c1">//这时可以使用select方式解决
-</span><span class="c1"></span>	<span class="c1">//label
-</span><span class="c1"></span>	<span class="k">for</span> <span class="p">{</span>
-		<span class="k">select</span> <span class="p">{</span>
-		<span class="c1">//管道不关闭不会deadlock，会自动到下一个case匹配
-</span><span class="c1"></span>		<span class="k">case</span> <span class="nx">v</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">intChan</span><span class="p">:</span>
-			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;从intChan读取的数据%d\n&#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
-			<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
-		<span class="k">case</span> <span class="nx">v</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">stringChan</span><span class="p">:</span>
-			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;从stringChan读取的数据%v\n&#34;</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
-			<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
-		<span class="k">default</span><span class="p">:</span>
-			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;取不到数据\n&#34;</span><span class="p">)</span>
-			<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
-			<span class="k">return</span>
-		<span class="c1">//break label
-</span><span class="c1"></span>		<span class="p">}</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">)</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kd">func</span> <span class="nf">test</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">//使用defer+recover
+</span><span class="c1"></span>	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="c1">//捕获test抛出的panic
+</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;test 发生错误：&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}()</span>
+
+	<span class="kd">var</span> <span class="nx">myMap</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span>
+	<span class="nx">myMap</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;golang&#34;</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">go</span> <span class="nf">sayhello</span><span class="p">()</span>
+	<span class="k">go</span> <span class="nf">test</span><span class="p">()</span>
+
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;main() ok=&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div></div><div class="post-footer" id="post-footer">
@@ -229,10 +213,10 @@
         </div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/go-instance-05/index.md" target="_blank">阅读原始文档</a>
+                            <a class="link-to-markdown" href="/go-instance-06/index.md" target="_blank">阅读原始文档</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-instance-05/" data-title="Go Instance 05" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-instance-05/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-instance-05/" data-title="Go Instance 05" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-instance-05/" data-title="Go Instance 05"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-instance-05/" data-title="Go Instance 05"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-instance-05/" data-title="Go Instance 05" data-description="Go Instance 05-select解决通道堵塞"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-instance-05/" data-title="Go Instance 05" data-description="Go Instance 05-select解决通道堵塞"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-instance-05/" data-title="Go Instance 05"><i class="fab fa-evernote fa-fw"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-instance-06/" data-title="Go Instance 06" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-instance-06/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-instance-06/" data-title="Go Instance 06" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-instance-06/" data-title="Go Instance 06"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-instance-06/" data-title="Go Instance 06"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-instance-06/" data-title="Go Instance 06" data-description="Go Instance 06-defer&#43;recover解决panic"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-instance-06/" data-title="Go Instance 06" data-description="Go Instance 06-defer&#43;recover解决panic"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-instance-06/" data-title="Go Instance 06"><i class="fab fa-evernote fa-fw"></i></a></span>
             </div>
         </div>
     </div>
@@ -244,8 +228,7 @@
         </section>
     </div>
 
-    <div class="post-nav"><a href="/go-instance-04/" class="prev" rel="prev" title="Go Instance 04"><i class="fas fa-angle-left fa-fw"></i>Go Instance 04</a>
-            <a href="/go-instance-06/" class="next" rel="next" title="Go Instance 06">Go Instance 06<i class="fas fa-angle-right fa-fw"></i></a></div>
+    <div class="post-nav"><a href="/go-instance-05/" class="prev" rel="prev" title="Go Instance 05"><i class="fas fa-angle-left fa-fw"></i>Go Instance 05</a></div>
 </div>
 <div id="comments"></div></article></div>
             </main><footer class="footer">
