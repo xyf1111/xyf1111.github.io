@@ -3,7 +3,7 @@
 <!--mores-->
 ## 使用select解决从管道取数据堵塞问题
 使用select解决从管道取数据堵塞的问题，语法如下：
-!["select语法"](/images/instance05-01.png, "select语法")
+!["select语法"](/images/instance05-01.png "select语法")
 ```go
 package main
 
