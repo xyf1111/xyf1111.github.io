@@ -3,9 +3,16 @@
         <title>CC&#39;s Blog</title>
         <link>http://example.org/</link>
         <description>这是我的全新 Hugo 网站</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Feb 2021 14:51:55 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Feb 2021 15:12:57 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Go Instance 05</title>
+    <link>http://example.org/go-instance-05/</link>
+    <pubDate>Tue, 23 Feb 2021 15:12:57 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-instance-05/</guid>
+    <description><![CDATA[使用select解决从管道取数据堵塞问题 使用select解决从管道取数据堵塞的问题，语法如下： select语法&amp;ldquo;sele]]></description>
+</item><item>
     <title>Go Instance 04</title>
     <link>http://example.org/go-instance-04/</link>
     <pubDate>Tue, 23 Feb 2021 14:51:55 &#43;0800</pubDate>
@@ -68,12 +75,5 @@
     <author>作者</author>
     <guid>http://example.org/go-study-12/</guid>
     <description><![CDATA[Go Study 12-资源管理与出错处理]]></description>
-</item><item>
-    <title>Go Study 11</title>
-    <link>http://example.org/go-study-11/</link>
-    <pubDate>Thu, 18 Feb 2021 12:02:44 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-11/</guid>
-    <description><![CDATA[Go Study 11-函数与闭包]]></description>
 </item></channel>
 </rss>
