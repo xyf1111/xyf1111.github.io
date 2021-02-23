@@ -3,9 +3,16 @@
         <title>CC&#39;s Blog</title>
         <link>http://example.org/</link>
         <description>这是我的全新 Hugo 网站</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 22 Feb 2021 21:32:13 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Feb 2021 14:51:55 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Go Instance 04</title>
+    <link>http://example.org/go-instance-04/</link>
+    <pubDate>Tue, 23 Feb 2021 14:51:55 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-instance-04/</guid>
+    <description><![CDATA[Go Instance 04-goroutine和channel]]></description>
+</item><item>
     <title>Go Study 15</title>
     <link>http://example.org/go-study-15/</link>
     <pubDate>Mon, 22 Feb 2021 21:32:13 &#43;0800</pubDate>
@@ -68,12 +75,5 @@
     <author>作者</author>
     <guid>http://example.org/go-study-11/</guid>
     <description><![CDATA[Go Study 11-函数与闭包]]></description>
-</item><item>
-    <title>Go Study 10</title>
-    <link>http://example.org/go-study-10/</link>
-    <pubDate>Wed, 17 Feb 2021 14:44:49 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-10/</guid>
-    <description><![CDATA[Go Study 10-接口]]></description>
 </item></channel>
 </rss>
