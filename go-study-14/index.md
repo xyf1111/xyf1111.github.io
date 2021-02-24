@@ -21,3 +21,37 @@
 - 函数调用(有时)
 - runtime.Gosched()
 - 以上只是参考，不能保证切换，不能保证在其他地方不切换
+## 案例
+### 协程
+Go协程在执行上来说是轻量级的线程
+```go
+package main
+
+import "fmt"
+
+func f(s string)  {
+	for i := 0; i < 3; i++ {
+		fmt.Println(s)
+	}
+}
+//Go协程在执行上来说是轻量级的线程
+func main() {
+	//使用一般方式运行f函数
+	f("direct")
+	//使用go f(s)在一个Go协程中调用这个函数
+	//这个新的Go协程会并行的执行这个函数的调用
+	go f("gorouting")
+	//为匿名函数启动一个Go协程
+	go func(msg string) {
+		for i := 0; i < 10; i++ {
+			fmt.Println(msg)
+		}
+	}("going")
+	//现在这两个Go协程在独立的Go协程中异步运行，所以需要等他们结束
+	//Scanln代码，我们在程序退出前按下任意键结束
+	var in string
+	fmt.Scanln(&in)
+	fmt.Println("done")
+}
+```
+当运行这个程序时，将先看见阻塞式调用，然后是两个go协程交替输出，这种交替输出表示Go运行时是以异步方式运行协程的
