@@ -5,37 +5,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>Go Instance 07 - CC&#39;s Blog</title><meta name="Description" content="Go Instance 07-Go定时器和打点器"><meta property="og:title" content="Go Instance 07" />
-<meta property="og:description" content="Go Instance 07-Go定时器和打点器" />
+        <title>Go Instance 08 - CC&#39;s Blog</title><meta name="Description" content="Go Instance 08-模拟工作池"><meta property="og:title" content="Go Instance 08" />
+<meta property="og:description" content="Go Instance 08-模拟工作池" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/go-instance-07/" />
+<meta property="og:url" content="http://example.org/go-instance-08/" />
 <meta property="og:image" content="http://example.org/logo.png"/>
-<meta property="article:published_time" content="2021-02-25T20:45:09+08:00" />
-<meta property="article:modified_time" content="2021-02-25T20:45:09+08:00" />
+<meta property="article:published_time" content="2021-02-26T22:02:58+08:00" />
+<meta property="article:modified_time" content="2021-02-26T22:02:58+08:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="http://example.org/logo.png"/>
 
-<meta name="twitter:title" content="Go Instance 07"/>
-<meta name="twitter:description" content="Go Instance 07-Go定时器和打点器"/>
+<meta name="twitter:title" content="Go Instance 08"/>
+<meta name="twitter:description" content="Go Instance 08-模拟工作池"/>
 <meta name="application-name" content="LoveIt">
 <meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-instance-07/" /><link rel="prev" href="http://example.org/learning-process/" /><link rel="next" href="http://example.org/go-instance-08/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-instance-08/" /><link rel="prev" href="http://example.org/go-instance-07/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Go Instance 07",
+        "headline": "Go Instance 08",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/go-instance-07\/"
-        },"genre": "posts","keywords": "golang","wordcount":  568 ,
-        "url": "http:\/\/example.org\/go-instance-07\/","datePublished": "2021-02-25T20:45:09+08:00","dateModified": "2021-02-25T20:45:09+08:00","publisher": {
+            "@id": "http:\/\/example.org\/go-instance-08\/"
+        },"genre": "posts","keywords": "golang","wordcount":  380 ,
+        "url": "http:\/\/example.org\/go-instance-08\/","datePublished": "2021-02-26T22:02:58+08:00","dateModified": "2021-02-26T22:02:58+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "CC"
-            },"description": "Go Instance 07-Go定时器和打点器"
+            },"description": "Go Instance 08-模拟工作池"
     }
     </script></head>
     <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
@@ -104,10 +104,10 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animated flipInX">Go Instance 07</h1><div class="post-meta">
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Instance 08</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AE%9E%E4%BE%8B/"><i class="far fa-folder fa-fw"></i>实例</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-25">2021-02-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 568 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-26">2021-02-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 380 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -115,12 +115,11 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#定时器">定时器</a></li>
-    <li><a href="#打点器">打点器</a></li>
+    <li><a href="#工作池">工作池</a></li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h2 id="定时器">定时器</h2>
-<p>当需要在后面一个时刻运行Go代码，或者在某段时间内重复运行。Go内置的定时器和打点器让这些很容易实现</p>
+            </div><div class="content" id="content"><h2 id="工作池">工作池</h2>
+<p>在这个例子中，将看到如何使用GO协程和通道实现一个工作池</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -154,6 +153,13 @@
 </span><span class="lnt">29
 </span><span class="lnt">30
 </span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
@@ -162,106 +168,54 @@
 	<span class="s">&#34;fmt&#34;</span>
 	<span class="s">&#34;time&#34;</span>
 <span class="p">)</span>
+<span class="c1">//这是将要在多个并发实例中支持的任务
+</span><span class="c1">//这些执行者将从jobs通道接收任务，并通过results发送对应结果
+</span><span class="c1">//让每个任务睡1秒，模拟耗时任务
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">worker</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">jobs</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">results</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span>  <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">jobs</span><span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;worker %d processing job %d \n&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="p">)</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="nx">results</span> <span class="o">&lt;-</span> <span class="nx">j</span>
+	<span class="p">}</span>
+<span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-	<span class="c1">//定时器表示在未来某一时刻的独立事件
-</span><span class="c1"></span>	<span class="c1">//提供定时器需要的时间，定时器将提供一个用于通知的通道
-</span><span class="c1"></span>	<span class="c1">//这里设置定时器将等待2秒
-</span><span class="c1"></span>	<span class="nx">timer1</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">NewTimer</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+	<span class="c1">//使用worker工作池并收集结果，需要两个通道
+</span><span class="c1"></span>	<span class="nx">jobs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+	<span class="nx">results</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 
-	<span class="c1">//&lt;-timer1.C 直到这个定时器的通道C明确的发送了定时器失效的值之前，一直阻塞
-</span><span class="c1"></span>	<span class="o">&lt;-</span><span class="nx">timer1</span><span class="p">.</span><span class="nx">C</span>
-	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Timer 1 expired&#34;</span><span class="p">)</span>
+	<span class="c1">//这里启动三个worker，初始是阻塞的，因为还没有任务
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="k">go</span> <span class="nf">worker</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">jobs</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span>
+	<span class="p">}</span>
 
-	<span class="c1">//如果需要的仅仅是等待，可以使用Sleep
-</span><span class="c1"></span>	<span class="c1">//定时器有用的原因之一是可以在定时器失效前取消定时器
-</span><span class="c1"></span>	<span class="nx">timer2</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">NewTimer</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+	<span class="c1">//发送9个任务，然后close表示这些就是所有任务了
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">jobs</span> <span class="o">&lt;-</span> <span class="nx">i</span>
+	<span class="p">}</span>
+	<span class="nb">close</span><span class="p">(</span><span class="nx">jobs</span><span class="p">)</span>
 
-	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-		<span class="o">&lt;-</span> <span class="nx">timer2</span><span class="p">.</span><span class="nx">C</span>
-		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Timer 2 expired&#34;</span><span class="p">)</span>
-	<span class="p">}()</span>
-
-	<span class="nx">stop</span> <span class="o">:=</span> <span class="nx">timer2</span><span class="p">.</span><span class="nf">Stop</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">stop</span> <span class="p">{</span>
-		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Timer 2 stop&#34;</span><span class="p">)</span>
+	<span class="c1">//收集所有任务的返回值
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="o">&lt;-</span><span class="nx">results</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>第一个定时器将在程序开始后2秒失效，第二个在其还没失效前就被停止了</p>
-<h2 id="打点器">打点器</h2>
-<p>定时器是当你想要在未来某一时刻执行一次时使用，打点器是当你想要在固定的时间间隔重复执行准备的。这是一个打点器的例子，它将定时执行，直到我们将它停止</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
-
-<span class="kn">import</span> <span class="p">(</span>
-	<span class="s">&#34;fmt&#34;</span>
-	<span class="s">&#34;time&#34;</span>
-<span class="p">)</span>
-
-<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-	
-	<span class="c1">//打点器和定时器的机制有点相似：一个通道用来发送数据。
-</span><span class="c1"></span>	<span class="c1">// 这里我们在这个通道上使用内置的 range 来迭代值每隔500ms 发送一次的值。
-</span><span class="c1"></span>	<span class="nx">ticker</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">NewTicker</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span> <span class="o">*</span> <span class="mi">500</span><span class="p">)</span>
-	
-	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-		<span class="k">for</span> <span class="nx">t</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ticker</span><span class="p">.</span><span class="nx">C</span> <span class="p">{</span>
-			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Tick at &#34;</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span>
-		<span class="p">}</span>
-	<span class="p">}()</span>
-	
-	<span class="c1">//打点器可以和定时器一样被停止。一旦一个打点停止了，将不能再从它的通道中接收到值。
-</span><span class="c1"></span>	<span class="c1">// 我们将在运行后 1600ms停止这个打点器。
-</span><span class="c1"></span>	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
-	<span class="nx">ticker</span><span class="p">.</span><span class="nf">Stop</span><span class="p">()</span>
-	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Ticker stopped&#34;</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
-</div>
-</div></div><div class="post-footer" id="post-footer">
+</div><p>执行这个程序，显示9个任务被多个worker执行。整个程序处理所有任务仅执行了3秒，因为是3个worker并行的</p></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>更新于 2021-02-25</span>
+                <span>更新于 2021-02-26</span>
             </div>
             <div class="post-info-license"></div>
         </div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/go-instance-07/index.md" target="_blank">阅读原始文档</a>
+                            <a class="link-to-markdown" href="/go-instance-08/index.md" target="_blank">阅读原始文档</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-instance-07/" data-title="Go Instance 07" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-instance-07/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-instance-07/" data-title="Go Instance 07" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-instance-07/" data-title="Go Instance 07"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-instance-07/" data-title="Go Instance 07"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-instance-07/" data-title="Go Instance 07" data-description="Go Instance 07-Go定时器和打点器"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-instance-07/" data-title="Go Instance 07" data-description="Go Instance 07-Go定时器和打点器"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-instance-07/" data-title="Go Instance 07"><i class="fab fa-evernote fa-fw"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-instance-08/" data-title="Go Instance 08" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-instance-08/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-instance-08/" data-title="Go Instance 08" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-instance-08/" data-title="Go Instance 08"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-instance-08/" data-title="Go Instance 08"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-instance-08/" data-title="Go Instance 08" data-description="Go Instance 08-模拟工作池"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-instance-08/" data-title="Go Instance 08" data-description="Go Instance 08-模拟工作池"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-instance-08/" data-title="Go Instance 08"><i class="fab fa-evernote fa-fw"></i></a></span>
             </div>
         </div>
     </div>
@@ -273,8 +227,7 @@
         </section>
     </div>
 
-    <div class="post-nav"><a href="/learning-process/" class="prev" rel="prev" title="Learning Process"><i class="fas fa-angle-left fa-fw"></i>Learning Process</a>
-            <a href="/go-instance-08/" class="next" rel="next" title="Go Instance 08">Go Instance 08<i class="fas fa-angle-right fa-fw"></i></a></div>
+    <div class="post-nav"><a href="/go-instance-07/" class="prev" rel="prev" title="Go Instance 07"><i class="fas fa-angle-left fa-fw"></i>Go Instance 07</a></div>
 </div>
 <div id="comments"></div></article></div>
             </main><footer class="footer">
