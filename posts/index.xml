@@ -3,7 +3,35 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 03 Mar 2021 22:38:44 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 09 Mar 2021 09:50:33 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Mysql Interview 02</title>
+    <link>http://example.org/mysql-interview-02/</link>
+    <pubDate>Tue, 09 Mar 2021 09:50:33 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/mysql-interview-02/</guid>
+    <description><![CDATA[mysql面试02]]></description>
+</item><item>
+    <title>Mysql Interview 01</title>
+    <link>http://example.org/mysql-interview-01/</link>
+    <pubDate>Mon, 08 Mar 2021 10:23:18 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/mysql-interview-01/</guid>
+    <description><![CDATA[mysql面试01]]></description>
+</item><item>
+    <title>Mysql Optimize 01</title>
+    <link>http://example.org/mysql-optimize-01/</link>
+    <pubDate>Mon, 08 Mar 2021 10:15:35 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/mysql-optimize-01/</guid>
+    <description><![CDATA[mysql优化01]]></description>
+</item><item>
+    <title>Resume</title>
+    <link>http://example.org/resume/</link>
+    <pubDate>Sun, 07 Mar 2021 17:26:25 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/resume/</guid>
+    <description><![CDATA[简历]]></description>
+</item><item>
     <title>Go Instance 12</title>
     <link>http://example.org/go-instance-12/</link>
     <pubDate>Wed, 03 Mar 2021 22:38:44 &#43;0800</pubDate>
@@ -45,33 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-instance-07/</guid>
     <description><![CDATA[Go Instance 07-Go定时器和打点器]]></description>
-</item><item>
-    <title>Learning Process</title>
-    <link>http://example.org/learning-process/</link>
-    <pubDate>Thu, 25 Feb 2021 09:51:21 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/learning-process/</guid>
-    <description><![CDATA[学习进度]]></description>
-</item><item>
-    <title>Go Instance 06</title>
-    <link>http://example.org/go-instance-06/</link>
-    <pubDate>Tue, 23 Feb 2021 17:43:11 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-06/</guid>
-    <description><![CDATA[Go Instance 06-defer+recover解决panic]]></description>
-</item><item>
-    <title>Go Instance 05</title>
-    <link>http://example.org/go-instance-05/</link>
-    <pubDate>Tue, 23 Feb 2021 15:12:57 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-05/</guid>
-    <description><![CDATA[使用select解决从管道取数据堵塞问题 使用select解决从管道取数据堵塞的问题，语法如下： select语法&amp;ldquo;sele]]></description>
-</item><item>
-    <title>Go Instance 04</title>
-    <link>http://example.org/go-instance-04/</link>
-    <pubDate>Tue, 23 Feb 2021 14:51:55 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-04/</guid>
-    <description><![CDATA[Go Instance 04-goroutine和channel]]></description>
 </item></channel>
 </rss>

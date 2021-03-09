@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Mysql Interview 02 - CC&#39;s Blog</title><meta name="Description" content="mysql面试02"><meta property="og:title" content="Mysql Interview 02" />
+<meta property="og:description" content="mysql面试02" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/mysql-interview-02/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-03-09T09:50:33+08:00" />
+<meta property="article:modified_time" content="2021-03-09T09:50:33+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Mysql Interview 02"/>
+<meta name="twitter:description" content="mysql面试02"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/mysql-interview-02/" /><link rel="prev" href="http://example.org/mysql-interview-01/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Mysql Interview 02",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/mysql-interview-02\/"
+        },"genre": "posts","keywords": "mysql","wordcount":  3758 ,
+        "url": "http:\/\/example.org\/mysql-interview-02\/","datePublished": "2021-03-09T09:50:33+08:00","dateModified": "2021-03-09T09:50:33+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "mysql面试02"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Mysql Interview 02</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-09">2021-03-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3758 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#事务的四大特性acid原子性一致性隔离性持久性">事务的四大特性（ACID）原子性，一致性，隔离性，持久性？</a>
+      <ul>
+        <li><a href="#原子性">原子性</a></li>
+        <li><a href="#一致性">一致性</a></li>
+        <li><a href="#隔离性">隔离性</a></li>
+        <li><a href="#持久性">持久性</a></li>
+      </ul>
+    </li>
+    <li><a href="#数据库隔离级别每个级别会引发什么问题mysql默认是什么级别的">数据库隔离级别，每个级别会引发什么问题，mysql默认是什么级别的</a>
+      <ul>
+        <li><a href="#脏读">脏读</a></li>
+        <li><a href="#不可重复读">不可重复读</a></li>
+        <li><a href="#幻读">幻读</a></li>
+        <li><a href="#mysql提供的四种隔离模式">MySQL提供的四种隔离模式</a></li>
+      </ul>
+    </li>
+    <li><a href="#mysql常见的三种存储引擎innodbmyisammemory的区别">MySQL常见的三种存储引擎（InnoDB、MyISAM、MEMORY）的区别</a>
+      <ul>
+        <li><a href="#innodb">InnoDB</a></li>
+        <li><a href="#myisam">MyISAM</a></li>
+        <li><a href="#memory">MEMORY</a></li>
+      </ul>
+    </li>
+    <li><a href="#mysql的myisam和innodb两种存储引擎在事务锁级别各自的使用场景">MySQL的MyISAM和InnoDB两种存储引擎在事务、锁级别，各自的使用场景</a>
+      <ul>
+        <li><a href="#myisam特点">MyISAM特点</a></li>
+        <li><a href="#innodb特点">InnoDB特点</a></li>
+        <li><a href="#各自的使用场景">各自的使用场景</a></li>
+      </ul>
+    </li>
+    <li><a href="#sql查询语句wherejoinlimitgroup-byhaving执行先后顺序">SQL查询语句（where，join，limit，group by，having）执行先后顺序</a></li>
+    <li><a href="#什么是临时表临时表什么时候删除">什么是临时表，临时表什么时候删除</a>
+      <ul>
+        <li><a href="#什么是临时表">什么是临时表</a></li>
+        <li><a href="#为什么会产生临时表">为什么会产生临时表</a></li>
+        <li><a href="#临时表的分类">临时表的分类</a></li>
+        <li><a href="#下面操作会使用到临时表">下面操作会使用到临时表</a></li>
+        <li><a href="#mysql以下操作会阻止内存临时表的建立直接使用磁盘临时表">MySQL以下操作会阻止内存临时表的建立，直接使用磁盘临时表</a></li>
+      </ul>
+    </li>
+    <li><a href="#mysql-btree索引和hash索引的区别">MySQL B+Tree索引和Hash索引的区别</a>
+      <ul>
+        <li><a href="#区别">区别</a></li>
+        <li><a href="#为何采用b-tree而不采用hash">为何采用B-Tree而不采用Hash</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="事务的四大特性acid原子性一致性隔离性持久性">事务的四大特性（ACID）原子性，一致性，隔离性，持久性？</h2>
+<h3 id="原子性">原子性</h3>
+<p>根据定义，原子性是指一个事务是一个不可分割的工作单位，其中操作要么都做，要么都不做。不存在中间状态。</p>
+<h3 id="一致性">一致性</h3>
+<p>根据定义一致性是指事务执行前后，数据处于一种合法的状态，这种状态是语义上的而不是语法上的。</p>
+<h3 id="隔离性">隔离性</h3>
+<p>根据定义，隔离性是指多个事务并发执行时，事务内部操作和其他事务是隔离的，并发执行的各个事务之间不能互相干扰。</p>
+<h3 id="持久性">持久性</h3>
+<p>根据定义，持久性是指事务一旦提交，它对数据库的改变就应该是永久性的。接下来其他操作或故障不应该对其有任何影响。</p>
+<h2 id="数据库隔离级别每个级别会引发什么问题mysql默认是什么级别的">数据库隔离级别，每个级别会引发什么问题，mysql默认是什么级别的</h2>
+<h3 id="脏读">脏读</h3>
+<p>脏读是指在一个事务中读到另一个未提交事务的数据。</p>
+<p>当一个事务正在多次修改某个数据而这个事务中多次修改都尚未提交，此时另一个并发事务来访问该数据，就会造成两个事务得到的数据不一致。</p>
+<p>举个例子：A在一个转账事务中，转了100给B，此时，B读到了这个转账数据，然后做了一些操作（发货给A或其他操作），可这个时候A的事务并没有提交，如果A回滚了事务，就会发生数据问题。这就是脏读。</p>
+<h3 id="不可重复读">不可重复读</h3>
+<p>不可重复读是指对于数据库中的某个数据，一个事务范围内多次查询却返回了不同的数据。这是由于在查询间隔，被另一个事务修改并提交了。</p>
+<p>例如：事务T1读取某一数据，而事务T2马上修改数据并提交给数据库，事务T1再次读取就得到了不同的结果，发生了不可重复读。</p>
+<p>不可重复读和脏读的区别是，脏读是某一事务读取了另一个事务未提交的脏数据，不可重复读则是读取了前一事务提交的数据</p>
+<h3 id="幻读">幻读</h3>
+<p>幻读是指事务非独立执行时发生的一种现象。</p>
+<p>例如：事务T1对一个表中的所有的行的某一数据做了从1修改为2的操作，这时事务T2又对这个表中插入了一行数据项，而这个数据项还是1并且提交给了数据库。而事务T1如果再次查看刚刚修改的数据，会发现还有一行未修改，其实这行是T2添加的，就好像产生了幻觉。这就是幻读。</p>
+<p>幻读和不可重复读的区别，幻读和不可重复读都是读取另一个以提交的事务（这点就和脏读不同），不同的是，不可重复读查询的都是同一个数据项，而幻读是针对一批数据整体（比如数据个数）</p>
+<h3 id="mysql提供的四种隔离模式">MySQL提供的四种隔离模式</h3>
+<ol>
+<li>Serializable（串行化）：可以避免脏读，不可重复读和幻读的发生。</li>
+<li>Repeatable read（可重复读）：可以避免脏读，不可重复读的发生。</li>
+<li>Read committed（读已提交）：可避免脏读的发生。</li>
+<li>Read uncommitted（读未提交）：最低级别，都无法避免。</li>
+</ol>
+<p>以上四种模式最高是Serializable级别，最低是Read uncommitted级别。级别越高效率越低。像是Serializable这样的级别就是以锁表的方式使得其他事务只能在锁外等待。MySQL数据库默认的级别为Read committed</p>
+<h2 id="mysql常见的三种存储引擎innodbmyisammemory的区别">MySQL常见的三种存储引擎（InnoDB、MyISAM、MEMORY）的区别</h2>
+<h3 id="innodb">InnoDB</h3>
+<p>支持事务，支持外键，支持崩溃修复能力和并发控制。如果需要对事务的完整性要求比较高（比如银行），要求实现并发控制（比如售票），那选择InnoDB有很大优势。如果需要频繁的更新，删除操作的数据库，也可以选择InnoDB，因为支持事务的提交（commit）和回滚（rollback）</p>
+<h3 id="myisam">MyISAM</h3>
+<p>插入数据快，空间和内存使用比较低。如果表主要是用于插入新数据和读出记录，那么选择MyISAM能实现处理高效率。如果应用的完整性和并发性要求比较低，也可以使用。</p>
+<h3 id="memory">MEMORY</h3>
+<p>所有数据都在内存中，数据的处理快，但是安全性不高，如果需要很快的读写速度，对数据的安全性要求较低，可以选择MEMORY。其对表的大小有所要求，不能建立太大的表。所以这类数据库只使用在相对较小的数据库表。</p>
+<h2 id="mysql的myisam和innodb两种存储引擎在事务锁级别各自的使用场景">MySQL的MyISAM和InnoDB两种存储引擎在事务、锁级别，各自的使用场景</h2>
+<h3 id="myisam特点">MyISAM特点</h3>
+<ul>
+<li>不支持行锁（MyISAM只有表锁），读取时对需要读到的所有表进行加锁，写入时则对表加排它锁</li>
+<li>不支持事务</li>
+<li>不支持外键</li>
+<li>不支持崩溃后安全修复</li>
+<li>在表有读取查询时，支持往表中插入新数据</li>
+<li>支持BLOG和TEXT的前500个字符索引，支持全文索引</li>
+<li>支持延时更新索引，极大的提升写入性能</li>
+<li>对于不会进行修改的表，支持压缩表，极大的减少对磁盘空间的占用</li>
+</ul>
+<h3 id="innodb特点">InnoDB特点</h3>
+<ul>
+<li>支持行锁，采用MVCC来支持高并发，有可能死锁</li>
+<li>支持事务</li>
+<li>支持外键</li>
+<li>支持崩溃后的安全修复</li>
+<li>不支持全文索引</li>
+</ul>
+<h3 id="各自的使用场景">各自的使用场景</h3>
+<p>MyISAM管理非事务表。它提供高速存储和检索，以及全文搜索能力。如果应用中需要执行大量的SELECT查询时，那么MyISAM是更好的选择。</p>
+<p>InnoDB用于事务处理应用程序，具有众多特性，包括ACID事务支持。如果应用中需要大量的INSERT或UPDATE操作，则应该使用InnoDB，这样可以提高多用户并发操作的性能。</p>
+<p>但是实际场景中，针对具体问题具体分析，一般遵循以下几个问题？</p>
+<ul>
+<li>数据库是否有外键</li>
+<li>是否需要事务支持</li>
+<li>是否需要全文索引</li>
+<li>数据库经常使用什么查询模式？在写多读少的应用中还是InnoDB插入性能更稳定，在并发情况下也基本，如果是对读取速度要求比较快的应用还是选MyISAM</li>
+<li>数据库的数据大小？大尺寸倾向与InnoDB，因为有事务日志，故障修复</li>
+</ul>
+<h2 id="sql查询语句wherejoinlimitgroup-byhaving执行先后顺序">SQL查询语句（where，join，limit，group by，having）执行先后顺序</h2>
+<p>一个查询语句同时出现以上关键词时执行顺序是：</p>
+<ol>
+<li>执行where xxx对全表数据做筛选，返回第一个结果集</li>
+<li>针对第一个结果集使用group by分组，返回第二个结果集</li>
+<li>针对第二个结果集中的每一组数据执行select xxx，有几组就执行几次，返回第三个结果集</li>
+<li>针对第三个结果集执行having xxx进行筛选，返回第四个结果集</li>
+<li>针对第四个结果集排序
+总结一个顺序：我（W）哥（G）是（SH）偶（O）像（W-&gt;G-&gt;S-&gt;H-&gt;O）</li>
+</ol>
+<h2 id="什么是临时表临时表什么时候删除">什么是临时表，临时表什么时候删除</h2>
+<h3 id="什么是临时表">什么是临时表</h3>
+<p>MySQL用于存储一些中间结果集的表，临时表只在当前连接可见，当关闭连接时，MySQL会自动删除表并释放所有空间。</p>
+<h3 id="为什么会产生临时表">为什么会产生临时表</h3>
+<p>一般是由于复杂的SQL导致临时表被大量创建</p>
+<h3 id="临时表的分类">临时表的分类</h3>
+<p>临时表分为两种，一种是内存临时表，一种是磁盘临时表。内存临时表采用的是MEMORY存储引擎，磁盘临时表采用的是MyISAM存储引擎（磁盘临时表也可以使用InnoDB存储引擎，通过参数来控制使用那种存储引擎，从MySQL5.7.6版本后默认为InnoDB存储引擎，之前版本一直默认的是MyISAM存储引擎）</p>
+<h3 id="下面操作会使用到临时表">下面操作会使用到临时表</h3>
+<ul>
+<li>union查询</li>
+<li>对于视图操作，比如使用一些TEMPTABLE算法，union或aggregation</li>
+<li>子查询</li>
+<li>join包括not in，exist等</li>
+<li>查询产生的派生表</li>
+<li>复杂的group by或order by</li>
+<li>insert，select同一个表，mysql会产生一个临时表缓存select行</li>
+<li>多个表更新</li>
+<li>GROUP_CONCAT()或COUNT(DISTINCT)</li>
+</ul>
+<h3 id="mysql以下操作会阻止内存临时表的建立直接使用磁盘临时表">MySQL以下操作会阻止内存临时表的建立，直接使用磁盘临时表</h3>
+<ul>
+<li>表含有BLOG或TEXT列</li>
+<li>使用union或union all时，select子句有大于512字节的列</li>
+<li>Show columns或desc表时，有LOB或TEXT</li>
+<li>GROUP BY或DISTINCY子句中包含列大于512字节的列</li>
+</ul>
+<h2 id="mysql-btree索引和hash索引的区别">MySQL B+Tree索引和Hash索引的区别</h2>
+<h3 id="区别">区别</h3>
+<p>由于Hash索引结构的特殊性，其检索效率特别高，索引的检索可以一次定位，不想B-Tree索引需要从根节点到枝节点，最后才能访问到叶节点这样多次访问，所以Hash索引的查询效率是要远高于B-Tree索引</p>
+<h3 id="为何采用b-tree而不采用hash">为何采用B-Tree而不采用Hash</h3>
+<p>任何事物都有两面性，Hash索引也一样，虽然Hash索引效率高，但是Hash索引本身由于其特殊性也带来了很多限制和弊端，主要有以下这些</p>
+<ol>
+<li>Hash索引仅仅能满足于“=”，“in”和“&lt;=&gt;”查询，不能使用范围查询。</li>
+</ol>
+<ul>
+<li>由于Hash索引比较的是Hash运算之后的Hash值，所以只能使用等值过滤，不能用于基于范围的过滤，因为经过相应的Hash算法处理后的Hash值的大小关系，并不能保证和Hash运算前完全一样</li>
+</ul>
+<ol start="2">
+<li>Hash索引无法用来避免数据的排序操作。</li>
+</ol>
+<ul>
+<li>由于Hash索引中存放是经过Hash计算之后的Hash值，而且Hash值的大小关系还不一定和Hash运算之前的键值完全一样，所以数据库无法通过索引的数据来避免任何排序运算</li>
+</ul>
+<ol start="3">
+<li>Hash索引不能利用部分索引键查询</li>
+</ol>
+<ul>
+<li>对于组合索引，Hash索引在计算Hash值的时候是组合索引键合并后再一起计算Hash值，而不是单独计算Hash值，所以通过组合索引的前面一个或几个索引键进行查询的时候，Hash索引也无法被利用。</li>
+</ul>
+<ol start="4">
+<li>Hash索引在任何时候都不能避免表扫描</li>
+</ol>
+<ul>
+<li>Hash索引是将索引键通过Hash运算后，将Hash运算结果和所对应的指针信息存放在一个Hash表中由于不同的索引键中存在相同的Hash值，所以即使满足某个Hash键值数据的记录条数也无法从Hash索引中直接完成查询，还是要通过访问表中的实际数据进行相应的比较，并得到相应的结果。</li>
+</ul>
+<ol start="5">
+<li>Hash索引遇到大量Hash值相等的情况后性能就不一定比B-Tree高</li>
+</ol>
+<p>对于选择性较低的索引键，如果创建Hash索引，那么将会存在大量记录指针信息存于同一个Hash值相关联。这样会浪费多次表数据访问，造成整体性能低下。</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-03-09</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/mysql-interview-02/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/mysql-interview-02/" data-title="Mysql Interview 02" data-via="xxxx" data-hashtags="mysql"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/mysql-interview-02/" data-hashtag="mysql"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/mysql-interview-02/" data-title="Mysql Interview 02" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/mysql-interview-02/" data-title="Mysql Interview 02"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/mysql-interview-02/" data-title="Mysql Interview 02"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/mysql-interview-02/" data-title="Mysql Interview 02" data-description="mysql面试02"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/mysql-interview-02/" data-title="Mysql Interview 02" data-description="mysql面试02"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/mysql-interview-02/" data-title="Mysql Interview 02"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/mysql/">mysql</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/mysql-interview-01/" class="prev" rel="prev" title="Mysql Interview 01"><i class="fas fa-angle-left fa-fw"></i>Mysql Interview 01</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
