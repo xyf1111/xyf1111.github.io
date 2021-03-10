@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Mysql Interview 03 - CC&#39;s Blog</title><meta name="Description" content="mysql面试03"><meta property="og:title" content="Mysql Interview 03" />
+<meta property="og:description" content="mysql面试03" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/mysql-interview-03/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-03-09T14:58:38+08:00" />
+<meta property="article:modified_time" content="2021-03-09T14:58:38+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Mysql Interview 03"/>
+<meta name="twitter:description" content="mysql面试03"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/mysql-interview-03/" /><link rel="prev" href="http://example.org/mysql-interview-02/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Mysql Interview 03",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/mysql-interview-03\/"
+        },"genre": "posts","keywords": "mysql","wordcount":  1858 ,
+        "url": "http:\/\/example.org\/mysql-interview-03\/","datePublished": "2021-03-09T14:58:38+08:00","dateModified": "2021-03-09T14:58:38+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "mysql面试03"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Mysql Interview 03</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-09">2021-03-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1858 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#mysql索引">MySQL索引</a>
+      <ul>
+        <li><a href="#mysql目前主要有以下几种索引类型">MySQL目前主要有以下几种索引类型</a></li>
+        <li><a href="#缺点">缺点</a></li>
+        <li><a href="#注意事项">注意事项</a></li>
+        <li><a href="#mysql索引类型normaluniquefulltext的区别是什么">mysql索引类型normal，unique，fulltext的区别是什么</a></li>
+        <li><a href="#实际操作中应选取表中哪些字段作为索引">实际操作中，应选取表中哪些字段作为索引</a></li>
+        <li><a href="#聚集索引和非聚集索引区别">聚集索引和非聚集索引区别</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="mysql索引">MySQL索引</h2>
+<h3 id="mysql目前主要有以下几种索引类型">MySQL目前主要有以下几种索引类型</h3>
+<ol>
+<li>普通索引</li>
+</ol>
+<p>最基本的索引，没有任何限制，有以下几种创建方式：</p>
+<ul>
+<li>直接创建索引</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">index_name</span> <span class="k">ON</span> <span class="k">table</span><span class="p">(</span><span class="k">column</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>修改表结构的方式添加索引</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">table_name</span> <span class="k">ADD</span> <span class="k">INDEX</span> <span class="n">index_name</span> <span class="k">ON</span> <span class="p">(</span><span class="k">column</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>创建表的时候同时创建索引</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="o">`</span><span class="k">table</span><span class="o">`</span> <span class="p">(</span>
+    <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+    <span class="o">`</span><span class="n">title</span><span class="o">`</span> <span class="kt">char</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">CHARACTER</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="o">`</span><span class="n">content</span><span class="o">`</span> <span class="kt">TEXT</span> <span class="k">CHARACTER</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="o">`</span><span class="kt">time</span><span class="o">`</span> <span class="kt">int</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="no">NULL</span> <span class="k">DEFAULT</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">),</span>
+    <span class="k">INDEX</span> <span class="k">index</span> <span class="p">(</span><span class="nf">title</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>删除索引</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">DROP</span> <span class="k">INDEX</span> <span class="n">index_name</span> <span class="k">ON</span> <span class="k">table</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>唯一索引
+与前面的普通索引类似。不同的是，索引列的值必须唯一，但允许有空值。如果是组合索引，则列值的组合必须唯一，有以下几种创建方式</li>
+</ol>
+<ul>
+<li>创建唯一索引</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">CREATE</span> <span class="k">UNIQUE</span> <span class="k">INDEX</span> <span class="n">index_name</span> <span class="k">ON</span> <span class="k">table</span><span class="p">(</span><span class="k">column</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>修改表结构</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">ALTER TABLE table_name ADD UNIQUE index_name ON table(column(length))
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>创建表的时候直接指定</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="o">`</span><span class="k">table</span><span class="o">`</span> <span class="p">(</span>
+    <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+    <span class="o">`</span><span class="n">title</span><span class="o">`</span> <span class="kt">char</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="n">CHATACTER</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="o">`</span><span class="n">content</span><span class="o">`</span> <span class="kt">text</span> <span class="k">CHARACTER</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="o">`</span><span class="kt">time</span><span class="o">`</span> <span class="kt">int</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="no">NULL</span> <span class="k">DEFAULT</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="k">UNIQUE</span> <span class="nf">indexName</span> <span class="p">(</span><span class="nf">title</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>主键索引
+是一种特殊的唯一索引，一个表只能有一个主键，不允许有空值，一般建表的时候同时创建主键索引</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="o">`</span><span class="k">table</span><span class="o">`</span> <span class="p">(</span>
+    <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="kt">int</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+    <span class="o">`</span><span class="n">title</span><span class="o">`</span> <span class="kt">char</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol start="4">
+<li>组合索引
+多个字段上创建索引，只有在查询条件中使用了创建索引时的第一个字段，索引才会被使用，使用组合索引遵循最左前缀集合</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="o">`</span><span class="k">table</span><span class="o">`</span> <span class="k">ADD</span> <span class="k">INDEX</span> <span class="nf">city_name_age</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol start="5">
+<li>全文索引
+主要用来查找文本中的关键字，而不是直接与索引中的值进行比较。fulltext（全文索引）跟其他索引大不相同，它更像是一个搜索引擎，而不是简单的where语句的参数匹配。fulltext索引配合match against操作使用，而不是一般的where+like。它可以在create table，alter table，create index使用。不过目前只用char，varchar，text列上可以创建全文索引。值得一提的是，在数据量比较大的时候，先将数据放入一个没有全文索引的表中，然后再用CREATE index创建fulltext（全文索引），要比先为一张表建立fulltext全文索引然后再将数据写入快得多。</li>
+</ol>
+<ul>
+<li>创建表的时候添加全文索引</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="o">`</span><span class="k">table</span><span class="o">`</span> <span class="p">(</span>
+    <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span><span class="p">,</span>
+    <span class="o">`</span><span class="n">title</span><span class="o">`</span> <span class="kt">char</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">CHARACTER</span> <span class="k">NOT</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="o">`</span><span class="n">content</span><span class="o">`</span> <span class="kt">text</span> <span class="k">CHARACTER</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="o">`</span><span class="kt">time</span><span class="o">`</span> <span class="kt">int</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="no">NULL</span> <span class="k">DEFAULT</span> <span class="no">NULL</span><span class="p">,</span>
+    <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">),</span>
+    <span class="k">FULLTEXT</span> <span class="p">(</span><span class="n">content</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>修改表结构添加全文索引</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table</span> <span class="k">ADD</span> <span class="k">FULLTEXT</span> <span class="nf">index_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>直接创建索引</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">CREATE</span> <span class="k">FULLTEXT</span> <span class="k">INDEX</span> <span class="n">index_content</span> <span class="k">ON</span> <span class="k">table</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="缺点">缺点</h3>
+<ol>
+<li>虽然索引大大提高了查询速度，同时会降低表的更新速度，如对表进行delete，update，insert。因为更新表时，不仅要保存数据，还要保存一下索引文件。</li>
+<li>建立索引会建立占用磁盘空间的索引文件。一般这个问题不太严重，但如果在一个大表上创建多种组合索引，索引文件会增长很快。</li>
+</ol>
+<p>索引只是提高效率的一个因素，如果有大数据量的表，就需要花时间研究建立优秀索引，或优化查询语句。</p>
+<h3 id="注意事项">注意事项</h3>
+<ol>
+<li>索引不会包含有null值的列。只要列中包含null值豆浆不会被包含在索引中，复合索引中只要有一列含有null值，那么这一列对于索引就是无效的。所以在设计数据库的时候尽量不要让字段的默认值为null。</li>
+<li>使用短索引
+对串列进行索引，如果可能就指定一个前缀长度。例如：一个char(255)的列，如果在前10个或20个字符内，多数值是唯一的，那么就不需要对整列进行索引。短索引不仅可以提高查询速度还可以节省磁盘空间和I/O操作。</li>
+<li>索引列排序
+查询只用一个索引，因此如果where已经使用了索引，那么order by就不会在使用索引。因此数据库默认排序符合可以符合要求的情况下不要使用排序操作。尽量不要包含多个列的排序，如果需要最好给这些列创建复合索引。</li>
+<li>like语句操作
+一般情况下不推荐使用like，如果非使用不可，如何使用也是一个问题，like“%aaa%”不会使用索引而like“aaa%”可以使用索引。</li>
+<li>不要在列上进行运算
+这将导致索引失效而进行全表扫描，例如</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">table_name</span> <span class="k">WHERE</span> <span class="kt">YEAR</span><span class="p">(</span><span class="n">column_name</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2017</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol start="6">
+<li>不使用not in和&lt;&gt;操作</li>
+</ol>
+<h3 id="mysql索引类型normaluniquefulltext的区别是什么">mysql索引类型normal，unique，fulltext的区别是什么</h3>
+<ul>
+<li>normal：表示普通索引</li>
+<li>unique：表示唯一的，不允许出现重复的索引，如果该字段信息不会出现重复。例如使用身份证号作为索引，可以设置为unique</li>
+<li>fulltext：表示全文搜索的索引，fulltext用于搜索很长一片文章的时候，效果最好。如果就一两行字，使用普通的index也可以。</li>
+</ul>
+<p>总结，索引的类别由建立索引的字段内容特性来决定，通常normal最常见。</p>
+<h3 id="实际操作中应选取表中哪些字段作为索引">实际操作中，应选取表中哪些字段作为索引</h3>
+<p>建立索引上有7大原则：</p>
+<ol>
+<li>选择唯一性索引</li>
+<li>为经常需要排序、分组和联合操作的字段建立索引</li>
+<li>为常作为查询条件的字段建立索引</li>
+<li>限制索引数目</li>
+<li>尽量使用数据量小的索引</li>
+<li>尽量使用前缀来索引</li>
+<li>删除不再使用或很少使用的索引</li>
+</ol>
+<h3 id="聚集索引和非聚集索引区别">聚集索引和非聚集索引区别</h3>
+<ol>
+<li>聚集索引一个表只有一个，非聚集索引一个表可以有多个</li>
+<li>聚集索引存储记录在物理上是连续存在的，而非聚集索引在逻辑上是连续的，物理存储并不连续</li>
+</ol></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-03-09</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/mysql-interview-03/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/mysql-interview-03/" data-title="Mysql Interview 03" data-via="xxxx" data-hashtags="mysql"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/mysql-interview-03/" data-hashtag="mysql"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/mysql-interview-03/" data-title="Mysql Interview 03" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/mysql-interview-03/" data-title="Mysql Interview 03"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/mysql-interview-03/" data-title="Mysql Interview 03"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/mysql-interview-03/" data-title="Mysql Interview 03" data-description="mysql面试03"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/mysql-interview-03/" data-title="Mysql Interview 03" data-description="mysql面试03"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/mysql-interview-03/" data-title="Mysql Interview 03"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/mysql/">mysql</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/mysql-interview-02/" class="prev" rel="prev" title="Mysql Interview 02"><i class="fas fa-angle-left fa-fw"></i>Mysql Interview 02</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
