@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Mysql Interview 04 - CC&#39;s Blog</title><meta name="Description" content="mysql面试04"><meta property="og:title" content="Mysql Interview 04" />
+<meta property="og:description" content="mysql面试04" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/mysql-interview-04/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-03-10T11:10:43+08:00" />
+<meta property="article:modified_time" content="2021-03-10T11:10:43+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Mysql Interview 04"/>
+<meta name="twitter:description" content="mysql面试04"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/mysql-interview-04/" /><link rel="prev" href="http://example.org/mysql-interview-03/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Mysql Interview 04",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/mysql-interview-04\/"
+        },"genre": "posts","keywords": "mysql","wordcount":  2888 ,
+        "url": "http:\/\/example.org\/mysql-interview-04\/","datePublished": "2021-03-10T11:10:43+08:00","dateModified": "2021-03-10T11:10:43+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "mysql面试04"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Mysql Interview 04</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-10">2021-03-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2888 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#mysql锁">MySQL锁</a>
+      <ul>
+        <li><a href="#mvcc总结">MVCC总结</a></li>
+        <li><a href="#mysql锁的介绍">MySQL锁的介绍</a></li>
+        <li><a href="#不同粒度锁的比较">不同粒度锁的比较</a></li>
+        <li><a href="#innodb锁模式">InnoDB锁模式</a></li>
+        <li><a href="#innodb加锁方式">InnoDB加锁方式</a></li>
+        <li><a href="#乐观锁和悲观锁">乐观锁和悲观锁</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="mysql锁">MySQL锁</h2>
+<h3 id="mvcc总结">MVCC总结</h3>
+<p>MVCC（多版本并发控制）指的就是在使用READ COMMITTED，REPEATABLE READ这两种隔离级别的事务在执行普通的select操作时访问记录的版本链的过程。可以使不同事务的读-写，写-读操作并发执行，从而提升系统性能。READ COMMITTED、REPEATABLE READ这两个隔离级别一个很大的不同就是：生成ReadView的时机不同，READ COMMITTED是每一次进行普通SELECT操作前都会生成一次ReadView。而REPEATABLE READ只会在第一次进行普通SELECT的时候偶生成ReadView。之后的查询重复使用这个ReadView。</p>
+<h3 id="mysql锁的介绍">MySQL锁的介绍</h3>
+<ol>
+<li>按照锁的粒度来说，MySQL主要包含三种锁：全局锁，表级锁，行级锁</li>
+</ol>
+<ul>
+<li>全局锁，锁的是整个database，由MySQL的Sql layer层实现</li>
+<li>表级锁，锁的是整张表，由MySQL的Sql layer层实现</li>
+<li>行级锁，锁的是某行数据，也可能锁的是行之间的间隙，由存储引擎实现</li>
+</ul>
+<ol start="2">
+<li>按照锁的功能来分，可以分为共享锁和排他锁</li>
+</ol>
+<ul>
+<li>共享锁：也称S锁，加了S锁，允许其他事务再加S锁，但是不允许其他事务加X锁。加锁方式select &hellip; lock in share mode</li>
+<li>排他锁：也称X锁，加了X锁，不允许其他事务再加X锁或S锁。加锁方式：select &hellip; for update(delete|insert)</li>
+</ul>
+<h3 id="不同粒度锁的比较">不同粒度锁的比较</h3>
+<ul>
+<li>表级锁：开销小，加锁快。不会出现死锁，锁定粒度大，发生锁冲突概率最高，并发度最低。
+<ul>
+<li>这些存储引擎通过总是一次性同时获取所有需要锁以及总是按相同顺序获取表锁避免死锁</li>
+<li>表级锁主要适合以查询为主，并发数量少，只有少量按索引条件更新数据的应用，如WEB应用</li>
+</ul>
+</li>
+<li>行级锁：开销大，加锁慢。会出现死锁，锁定粒度最小，发生锁冲突概率最低，并发度也最高
+<ul>
+<li>最大程度支持并发，同时也带来了最大的锁开销</li>
+<li>在InnoDB中，除单个SQL组成的事务外，锁是逐步获取的，这就决定了在InnoDB发生死锁是可能的</li>
+<li>行级锁只是在存储引擎层实现，而MySQL服务层没有实现。行级锁更适合于有大量按索引条件并发更新少量不同数据，同时又有并发查询的应用，如一些在线事务处理系统</li>
+</ul>
+</li>
+</ul>
+<h3 id="innodb锁模式">InnoDB锁模式</h3>
+<p>InnoDB实现了以下两种锁</p>
+<ul>
+<li>共享锁（S）：允许一个事务去读行，阻止其他事务获得相同数据集的排他锁</li>
+<li>排他锁（X）：允许获得排他锁的事务更新数据，阻止其他事务获得相同数据集的共享锁和排他锁</li>
+</ul>
+<p>为了允许行锁和表锁共存，实现多粒度锁机制，InnoDB还有两种内部使用的意向锁，这两种锁都是表锁</p>
+<ul>
+<li>意向共享锁（IS）：事务打算个数据行加行共享锁，事务在给一个数据行加共享锁前必须先取得该表的IS锁</li>
+<li>意向排他锁（IX）：事务打算给数据行加行排他锁，事务在给一个数据行加排他锁前必须先取得该表的IX锁</li>
+</ul>
+<p>锁与锁之间如果相容，MySQL会给予锁，不相容则会阻塞。</p>
+<h3 id="innodb加锁方式">InnoDB加锁方式</h3>
+<ul>
+<li>
+<p>意向锁是InnoDB自动加的，不需用户干预</p>
+</li>
+<li>
+<p>对于UPDATE、DELETE和INSERT语句，InnoDB会自动给涉及数据集加共享锁或排他锁</p>
+</li>
+<li>
+<p>对于普通SELECT语句，InnoDB不会加任何锁；事务可以通过以下语句显式给记录集加共享锁或排他锁：</p>
+<ul>
+<li>共享锁（S）：SELECT * FROM table_name WHERE &hellip; LOCK IN SHARE MODE。其他session仍然可以查询记录，并也可以对该记录加SHARE MODE的共享锁。但如果当前事务需要对该记录进行更新操作，则很有可能造成死锁。</li>
+<li>排他锁（X）：SELECT * FROM table_name WHERE &hellip; FOR UPDATE。其他session可以查询该记录。但是不能对该记录加共享锁或排他锁，而是等待获得锁。</li>
+</ul>
+</li>
+<li>
+<p>隐式锁定</p>
+<p>InnoDB在事务执行过程中，使用两阶段锁协议：</p>
+<p>随时都可以执行锁定，InnoDB会根据隔离级别在需要的时候自行加锁；</p>
+<p>锁只有在执行commit或rollback的时候才会释放，并且所有的锁都是在同一时刻被释放。</p>
+</li>
+<li>
+<p>显示锁定</p>
+<p>select &hellip; lock in share mode   //共享锁</p>
+<p>in share mode子句在作用就是将查找到的数据加上一个share锁，这个就是表示其他的事务只能进行简单的select操作，并不能够进行DML操作。</p>
+<p>select &hellip; lock in share mode使用场景：为了确保自己查到的数据没有被其他事务正在修改，也就是确保查到的数据是最新的数据，并且不允许其他事务来修改数据。但是自己不一定能修改数据，因为有可能其他事务也对这些数据使用了in share mode的方式上了S锁</p>
+<p>select &hellip; for update           //排他锁</p>
+<p>在执行这个select查询语句的时候，会将相应的索引访问条目进行上排他锁（X锁），也就是说这个语句对应的锁就相当于update带来的效果</p>
+<p>select &hellip; for update 的使用场景：为了让自己查到的数据确保是最新的数据，并且查到后的数据只允许自己来修改的时候，需要用到for update子句</p>
+</li>
+<li>
+<p>性能影响</p>
+<p>select &hellip; for update语句，相当于一个UPDATE语句。在业务繁忙的情况下，如果事务没有及时的commit或rollback可能会造成其他事务长时间的等待，从而影响数据库的并发使用效率。</p>
+<p>select &hellip; lock in share mode语句是给一个查找语句上一个共享锁（S）的功能，它允许其他事务也对该事务上S锁，但是不能够允许对数据进行修改。如果不及时的commit或rollback也可能造成大量的事务等待。</p>
+</li>
+<li>
+<p>InnoDB行锁实现方式</p>
+<ul>
+<li>InnoDB行锁是通过给索引上的索引项加锁来实现的，这一点MySQL和Oracle完全不同，后者是通过在数据块中对相应数据行加锁来实现的。InnoDB这种行锁实现特点意味着：只用通过索引条件检索数据，InnoDB才使用行锁，否则InnoDB将使用表锁。</li>
+<li>不论是主键索引，唯一索引还是普通索引，InnoDB都会使用行锁来对数据加锁</li>
+<li>只有在执行计划中真正使用了索引，才能使用行锁：即使在条件中使用了索引字段，但是否使用索引来检索数据是有MySQL通过判断不同执行计划的代价来决定的，如果MySQL认为全表扫描效率更高，比如对一些很小的表，MySQL就不会使用索引，这种情况下InnoDB将使用表锁，而不是使用行锁。因此在分析锁冲突的时候可以检查SQL的执行计划（可以通过explain检查SQL的执行计划），已确认是否真正使用了索引。</li>
+</ul>
+</li>
+</ul>
+<h3 id="乐观锁和悲观锁">乐观锁和悲观锁</h3>
+<p>悲观锁是指在数据处理过程中是数据处于锁定状态。在MySQL中使用悲观锁，必须关闭MySQL自动提交，set autocommit = 0，MySQL默认使用自动提交模式，即使你执行一个更新操作，MySQL会自动将结果提交。</p>
+<p>select &hellip; for update 是MySQL提供实现悲观锁的方式。执行后该数据将被锁定，直到获得该锁的事务提交或回滚后，锁才能释放。其他要执行该数据的事务才能执行。</p>
+<p>乐观锁相对于悲观锁来说，一般来说是不会造成冲突，所以只有在数据提交更新的时候，才会正式对数据的冲突与否进行检测。如果发现冲突了，则让返回错误信息，让用户决定如何去做。</p>
+<p>利用数据版本号（version）机制是乐观锁最常用的一种实现方式，一般通过为数据库添加一个version字段，当读取数据的时候，将version字段的数据一同读出，数据每更新一次，对此version值+1。当提交更新的时候，判断数据库对应的当前的版本信息是否与第一次去出来的版本信息相等，相等则予以更新，不相等认为是过期的数据，返回更新失败。</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-03-10</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/mysql-interview-04/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/mysql-interview-04/" data-title="Mysql Interview 04" data-via="xxxx" data-hashtags="mysql"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/mysql-interview-04/" data-hashtag="mysql"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/mysql-interview-04/" data-title="Mysql Interview 04" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/mysql-interview-04/" data-title="Mysql Interview 04"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/mysql-interview-04/" data-title="Mysql Interview 04"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/mysql-interview-04/" data-title="Mysql Interview 04" data-description="mysql面试04"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/mysql-interview-04/" data-title="Mysql Interview 04" data-description="mysql面试04"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/mysql-interview-04/" data-title="Mysql Interview 04"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/mysql/">mysql</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/mysql-interview-03/" class="prev" rel="prev" title="Mysql Interview 03"><i class="fas fa-angle-left fa-fw"></i>Mysql Interview 03</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

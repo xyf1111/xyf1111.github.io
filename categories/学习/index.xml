@@ -3,7 +3,14 @@
         <title>学习 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</link>
         <description>学习 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 09 Mar 2021 14:58:38 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 10 Mar 2021 11:10:43 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>Mysql Interview 04</title>
+    <link>http://example.org/mysql-interview-04/</link>
+    <pubDate>Wed, 10 Mar 2021 11:10:43 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/mysql-interview-04/</guid>
+    <description><![CDATA[mysql面试04]]></description>
+</item><item>
     <title>Mysql Interview 03</title>
     <link>http://example.org/mysql-interview-03/</link>
     <pubDate>Tue, 09 Mar 2021 14:58:38 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-study-11/</guid>
     <description><![CDATA[Go Study 11-函数与闭包]]></description>
-</item><item>
-    <title>Go Study 10</title>
-    <link>http://example.org/go-study-10/</link>
-    <pubDate>Wed, 17 Feb 2021 14:44:49 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-10/</guid>
-    <description><![CDATA[Go Study 10-接口]]></description>
 </item></channel>
 </rss>
