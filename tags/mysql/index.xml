@@ -3,7 +3,14 @@
         <title>mysql - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/mysql/</link>
         <description>mysql - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 10 Mar 2021 11:10:43 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/mysql/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 11 Mar 2021 11:03:02 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/mysql/" rel="self" type="application/rss+xml" /><item>
+    <title>Mysql Interview 05</title>
+    <link>http://example.org/mysql-interview-05/</link>
+    <pubDate>Thu, 11 Mar 2021 11:03:02 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/mysql-interview-05/</guid>
+    <description><![CDATA[mysql面试05]]></description>
+</item><item>
     <title>Mysql Interview 04</title>
     <link>http://example.org/mysql-interview-04/</link>
     <pubDate>Wed, 10 Mar 2021 11:10:43 &#43;0800</pubDate>

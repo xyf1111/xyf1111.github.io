@@ -3,7 +3,28 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 10 Mar 2021 11:10:43 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 11 Mar 2021 16:05:43 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Redis Study 01</title>
+    <link>http://example.org/redis-study-01/</link>
+    <pubDate>Thu, 11 Mar 2021 16:05:43 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/redis-study-01/</guid>
+    <description><![CDATA[redis学习01]]></description>
+</item><item>
+    <title>Redis Interview 01</title>
+    <link>http://example.org/redis-interview-01/</link>
+    <pubDate>Thu, 11 Mar 2021 11:03:51 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/redis-interview-01/</guid>
+    <description><![CDATA[redis面试01]]></description>
+</item><item>
+    <title>Mysql Interview 05</title>
+    <link>http://example.org/mysql-interview-05/</link>
+    <pubDate>Thu, 11 Mar 2021 11:03:02 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/mysql-interview-05/</guid>
+    <description><![CDATA[mysql面试05]]></description>
+</item><item>
     <title>Mysql Interview 04</title>
     <link>http://example.org/mysql-interview-04/</link>
     <pubDate>Wed, 10 Mar 2021 11:10:43 &#43;0800</pubDate>
@@ -52,26 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-instance-12/</guid>
     <description><![CDATA[Go Instance 12-排序]]></description>
-</item><item>
-    <title>Go Instance 11</title>
-    <link>http://example.org/go-instance-11/</link>
-    <pubDate>Sun, 28 Feb 2021 12:52:29 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-11/</guid>
-    <description><![CDATA[Go Instance 11-Go协程状态]]></description>
-</item><item>
-    <title>Go Instance 10</title>
-    <link>http://example.org/go-instance-10/</link>
-    <pubDate>Sun, 28 Feb 2021 12:46:04 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-10/</guid>
-    <description><![CDATA[Go Instance 10-原子计数器，互斥锁]]></description>
-</item><item>
-    <title>Go Instance 09</title>
-    <link>http://example.org/go-instance-09/</link>
-    <pubDate>Sat, 27 Feb 2021 23:39:15 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-09/</guid>
-    <description><![CDATA[Go Instance 09-速率限制]]></description>
 </item></channel>
 </rss>

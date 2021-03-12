@@ -3,7 +3,28 @@
         <title>学习 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</link>
         <description>学习 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 10 Mar 2021 11:10:43 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 11 Mar 2021 16:05:43 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>Redis Study 01</title>
+    <link>http://example.org/redis-study-01/</link>
+    <pubDate>Thu, 11 Mar 2021 16:05:43 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/redis-study-01/</guid>
+    <description><![CDATA[redis学习01]]></description>
+</item><item>
+    <title>Redis Interview 01</title>
+    <link>http://example.org/redis-interview-01/</link>
+    <pubDate>Thu, 11 Mar 2021 11:03:51 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/redis-interview-01/</guid>
+    <description><![CDATA[redis面试01]]></description>
+</item><item>
+    <title>Mysql Interview 05</title>
+    <link>http://example.org/mysql-interview-05/</link>
+    <pubDate>Thu, 11 Mar 2021 11:03:02 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/mysql-interview-05/</guid>
+    <description><![CDATA[mysql面试05]]></description>
+</item><item>
     <title>Mysql Interview 04</title>
     <link>http://example.org/mysql-interview-04/</link>
     <pubDate>Wed, 10 Mar 2021 11:10:43 &#43;0800</pubDate>
@@ -52,26 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-study-14/</guid>
     <description><![CDATA[Go Study 14-goroutine]]></description>
-</item><item>
-    <title>Go Study 13</title>
-    <link>http://example.org/go-study-13/</link>
-    <pubDate>Sun, 21 Feb 2021 20:47:36 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-13/</guid>
-    <description><![CDATA[Go Study 13-测试]]></description>
-</item><item>
-    <title>Go Study 12</title>
-    <link>http://example.org/go-study-12/</link>
-    <pubDate>Thu, 18 Feb 2021 16:53:11 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-12/</guid>
-    <description><![CDATA[Go Study 12-资源管理与出错处理]]></description>
-</item><item>
-    <title>Go Study 11</title>
-    <link>http://example.org/go-study-11/</link>
-    <pubDate>Thu, 18 Feb 2021 12:02:44 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-11/</guid>
-    <description><![CDATA[Go Study 11-函数与闭包]]></description>
 </item></channel>
 </rss>
