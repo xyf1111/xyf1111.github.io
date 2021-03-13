@@ -47,6 +47,13 @@ redis会周期性的把更新的数据写进磁盘或者把修改操作写入追
 - keys *，查看当前数据库所有的key
 - flushdb，清除当前数据库
 - flushall，清除所有数据库
+- set name cc，set key
+- exists name，判断当前的key是否存在
+- move name，移除当前的key
+- expire name 10，设置key的过期时间单位秒
+- ttl name，查看key的剩余时间
+- get name，获得key
+- type name，查看key的类型
 ### Redis是单线程的
 Redis是很快的。官方表示Redis是基于内存操作的，CPU并不是Redis的瓶颈Redis是根据机器的内存和网络带宽，可以使用单线程就使用单线程。
 ### Redis为什么单线程还这么快

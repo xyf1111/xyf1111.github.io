@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Redis Study 02 - CC&#39;s Blog</title><meta name="Description" content="redis学习02"><meta property="og:title" content="Redis Study 02" />
+<meta property="og:description" content="redis学习02" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/redis-study-02/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-03-12T10:43:55+08:00" />
+<meta property="article:modified_time" content="2021-03-12T10:43:55+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Redis Study 02"/>
+<meta name="twitter:description" content="redis学习02"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/redis-study-02/" /><link rel="prev" href="http://example.org/redis-study-01/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Redis Study 02",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/redis-study-02\/"
+        },"genre": "posts","keywords": "redis","wordcount":  1089 ,
+        "url": "http:\/\/example.org\/redis-study-02\/","datePublished": "2021-03-12T10:43:55+08:00","dateModified": "2021-03-12T10:43:55+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "redis学习02"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Redis Study 02</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-12">2021-03-12</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1089 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#五大数据类型">五大数据类型</a>
+      <ul>
+        <li><a href="#stirng字符串">Stirng（字符串）</a></li>
+        <li><a href="#list">List</a></li>
+        <li><a href="#set">Set</a></li>
+        <li><a href="#zset">Zset</a></li>
+        <li><a href="#hash">Hash</a></li>
+      </ul>
+    </li>
+    <li><a href="#三大特殊数据类型">三大特殊数据类型</a>
+      <ul>
+        <li><a href="#geospatial">geospatial</a></li>
+        <li><a href="#hyperloglog">hyperloglog</a></li>
+        <li><a href="#bitmaps">bitmaps</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="五大数据类型">五大数据类型</h2>
+<h3 id="stirng字符串">Stirng（字符串）</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; <span class="nb">set</span> key1 v1 <span class="c1"># 设置key1</span>
+OK
+127.0.0.1:6379&gt; get key1 <span class="c1"># 获得值</span>
+<span class="s2">&#34;v1&#34;</span>
+127.0.0.1:6379&gt; exists key1 <span class="c1"># 判断key是否存在</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; append key1 <span class="s2">&#34;hello&#34;</span> <span class="c1"># 追加字符串，如果当前key不存在相当于set key</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">7</span>
+127.0.0.1:6379&gt; get key1
+<span class="s2">&#34;v1hello&#34;</span>
+127.0.0.1:6379&gt; strlen key1 <span class="c1"># 获取字符串长度</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">7</span>
+127.0.0.1:6379&gt; append key1 <span class="s2">&#34;,cc&#34;</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">10</span>
+127.0.0.1:6379&gt; strlen key1
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">10</span>
+127.0.0.1:6379&gt; get key1
+<span class="s2">&#34;v1hello,cc&#34;</span>
+<span class="c1"># 步长 i++</span>
+127.0.0.1:6379&gt; incr views <span class="c1"># 自增1</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; get views
+<span class="s2">&#34;1&#34;</span>
+127.0.0.1:6379&gt; decr views <span class="c1"># 自减1</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; incrby views <span class="m">10</span> <span class="c1"># 设置步长，指定增量</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">10</span>
+127.0.0.1:6379&gt; get views
+<span class="s2">&#34;10&#34;</span>
+127.0.0.1:6379&gt; DECRBY views <span class="m">5</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">5</span>
+127.0.0.1:6379&gt; GET views
+<span class="s2">&#34;5&#34;</span>
+<span class="c1"># 字符串范围</span>
+127.0.0.1:6379&gt; <span class="nb">set</span> key1 <span class="s2">&#34;hello,cc&#34;</span>
+OK
+127.0.0.1:6379&gt; GETRANGE key1 <span class="m">0</span> <span class="m">3</span> <span class="c1"># 截取字符串， [0,3]</span>
+<span class="s2">&#34;hell&#34;</span>
+127.0.0.1:6379&gt; GETRANGE key1 <span class="m">0</span> -1 <span class="c1"># 获取全部字符串，相当于get key</span>
+<span class="s2">&#34;hello,cc&#34;</span>
+<span class="c1"># 替换</span>
+127.0.0.1:6379&gt; <span class="nb">set</span> key2 abcdefg
+OK
+127.0.0.1:6379&gt; GET key2
+<span class="s2">&#34;abcdefg&#34;</span>
+127.0.0.1:6379&gt; SETRANGE key2 <span class="m">1</span> xx <span class="c1"># 替换指定位置开始的字符串</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">7</span>
+127.0.0.1:6379&gt; GET key2
+<span class="s2">&#34;axxdefg&#34;</span>
+<span class="c1"># setex (set with expire) 设置过期时间</span>
+<span class="c1"># setnx (set if not exist) 不存在才设置（在分布式锁中常使用）</span>
+127.0.0.1:6379&gt; SETEX key3 <span class="m">30</span> <span class="s2">&#34;hello&#34;</span> <span class="c1"># 设置key3为hello，30秒后过期</span>
+OK
+127.0.0.1:6379&gt; ttl key3 <span class="c1"># 查看剩余时间</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">22</span>
+127.0.0.1:6379&gt; get key3
+<span class="s2">&#34;hello&#34;</span>
+127.0.0.1:6379&gt; SETNX mykey redis <span class="c1"># 如果mykey不存在，创建mykey</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; get mykey
+<span class="s2">&#34;redis&#34;</span>
+127.0.0.1:6379&gt; SETNX mykey mongodb <span class="c1"># 如果mykey存在，创建失败</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; get mykey
+<span class="s2">&#34;redis&#34;</span>
+127.0.0.1:6379&gt; ttl key3
+<span class="o">(</span>integer<span class="o">)</span> -2
+127.0.0.1:6379&gt; get key3
+<span class="o">(</span>nil<span class="o">)</span>
+<span class="c1"># mset  （同时设置多个值）</span>
+<span class="c1"># mget  （同时获取多个值）</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; mset k1 v1 k2 v2 k3 v3 <span class="c1"># 同时设置多个值</span>
+OK
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; keys *
+1<span class="o">)</span> <span class="s2">&#34;k1&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;k3&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;k2&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; mget k1 k2 k3 <span class="c1"># 同时获取多个值</span>
+1<span class="o">)</span> <span class="s2">&#34;v1&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;v2&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;v3&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; mset k1 v1 k4 v4
+OK
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; keys *
+1<span class="o">)</span> <span class="s2">&#34;k1&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;k4&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;k3&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;k2&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; mget k1 k2 k3 k4
+1<span class="o">)</span> <span class="s2">&#34;v1&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;v2&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;v3&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;v4&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; msetnx k1 v1 k5 v5 <span class="c1"># msetnx是一个原子性操作，要么都成功，要么都失败</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; keys *
+1<span class="o">)</span> <span class="s2">&#34;k1&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;k4&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;k3&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;k2&#34;</span>
+<span class="c1"># 对象</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; <span class="nb">set</span> user:1 <span class="o">{</span>name:zhangsan,age:3<span class="o">}</span> <span class="c1"># 设置一个user:1对象，值为json字符来保存一个对象</span>
+OK
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; mset user:1:name zhangsan user:1:age <span class="m">3</span> <span class="c1"># 这里的key是一个巧妙的设计：user:{id}:{filed}，如此设计在redis中是完全ok的</span>
+OK
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; mget user:1:name user:1:age
+1<span class="o">)</span> <span class="s2">&#34;zhangsan&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;3&#34;</span>
+<span class="c1"># getset 先get后set</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; GETSET db redis <span class="c1"># 如果不存在值，返回nil，并设置值</span>
+<span class="o">(</span>nil<span class="o">)</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; get db
+<span class="s2">&#34;redis&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; GETSET db mongodb <span class="c1"># 如果存在值，返回原来的值，并做更新操作</span>
+<span class="s2">&#34;redis&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; get db
+<span class="s2">&#34;mongodb&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="list">List</h3>
+<p>列表是一种基本的数据类型</p>
+<p>在Redis里面，我们可以把list完成，栈、队列、堵塞队列。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPUSH list one <span class="c1"># 将一个值或多个值，插入到列表头部</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPUSH list two
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPUSH list three
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> -1 <span class="c1"># 获取list中的值</span>
+1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> <span class="m">1</span> <span class="c1"># 通过区间获取具体的值</span>
+1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; RPUSH list right <span class="c1"># 将一个或多个值放到列表的尾部</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">4</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;right&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPOP list <span class="c1"># 移除列表的第一个元素</span>
+<span class="s2">&#34;three&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; RPOP list <span class="c1"># 移除列表的最后一个元素</span>
+<span class="s2">&#34;right&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LINDEX list <span class="m">0</span> <span class="c1"># 通过下标获取list中的某一个值</span>
+<span class="s2">&#34;two&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LINDEX list <span class="m">1</span>
+<span class="s2">&#34;one&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="set">Set</h3>
+<h3 id="zset">Zset</h3>
+<h3 id="hash">Hash</h3>
+<h2 id="三大特殊数据类型">三大特殊数据类型</h2>
+<h3 id="geospatial">geospatial</h3>
+<h3 id="hyperloglog">hyperloglog</h3>
+<h3 id="bitmaps">bitmaps</h3></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-03-12</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/redis-study-02/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/redis-study-02/" data-title="Redis Study 02" data-via="xxxx" data-hashtags="redis"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/redis-study-02/" data-hashtag="redis"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/redis-study-02/" data-title="Redis Study 02" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/redis-study-02/" data-title="Redis Study 02"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/redis-study-02/" data-title="Redis Study 02"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/redis-study-02/" data-title="Redis Study 02" data-description="redis学习02"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/redis-study-02/" data-title="Redis Study 02" data-description="redis学习02"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/redis-study-02/" data-title="Redis Study 02"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/redis/">redis</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/redis-study-01/" class="prev" rel="prev" title="Redis Study 01"><i class="fas fa-angle-left fa-fw"></i>Redis Study 01</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
