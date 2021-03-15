@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/redis-study-02\/"
-        },"genre": "posts","keywords": "redis","wordcount":  1089 ,
+        },"genre": "posts","keywords": "redis","wordcount":  3127 ,
         "url": "http:\/\/example.org\/redis-study-02\/","datePublished": "2021-03-12T10:43:55+08:00","dateModified": "2021-03-12T10:43:55+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,8 +106,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Redis Study 02</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-12">2021-03-12</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1089 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-12">2021-03-12</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3127 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 7 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -119,7 +119,7 @@
       <ul>
         <li><a href="#stirng字符串">Stirng（字符串）</a></li>
         <li><a href="#list">List</a></li>
-        <li><a href="#set">Set</a></li>
+        <li><a href="#set集合">Set（集合）</a></li>
         <li><a href="#zset">Zset</a></li>
         <li><a href="#hash">Hash</a></li>
       </ul>
@@ -254,9 +254,27 @@
 </span><span class="lnt">115
 </span><span class="lnt">116
 </span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; <span class="nb">set</span> key1 v1 <span class="c1"># 设置key1</span>
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
+<span class="c1">#   set</span>
+<span class="c1">#   get</span>
+<span class="c1">#   exists</span>
+<span class="c1">#   append</span>
+127.0.0.1:6379&gt; <span class="nb">set</span> key1 v1 <span class="c1"># 设置key1</span>
 OK
 127.0.0.1:6379&gt; get key1 <span class="c1"># 获得值</span>
 <span class="s2">&#34;v1&#34;</span>
@@ -266,6 +284,8 @@ OK
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">7</span>
 127.0.0.1:6379&gt; get key1
 <span class="s2">&#34;v1hello&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   strlen</span>
 127.0.0.1:6379&gt; strlen key1 <span class="c1"># 获取字符串长度</span>
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">7</span>
 127.0.0.1:6379&gt; append key1 <span class="s2">&#34;,cc&#34;</span>
@@ -274,7 +294,8 @@ OK
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">10</span>
 127.0.0.1:6379&gt; get key1
 <span class="s2">&#34;v1hello,cc&#34;</span>
-<span class="c1"># 步长 i++</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   步长 i++</span>
 127.0.0.1:6379&gt; incr views <span class="c1"># 自增1</span>
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
 127.0.0.1:6379&gt; get views
@@ -289,6 +310,7 @@ OK
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">5</span>
 127.0.0.1:6379&gt; GET views
 <span class="s2">&#34;5&#34;</span>
+<span class="c1">#######################################################</span>
 <span class="c1"># 字符串范围</span>
 127.0.0.1:6379&gt; <span class="nb">set</span> key1 <span class="s2">&#34;hello,cc&#34;</span>
 OK
@@ -305,6 +327,7 @@ OK
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">7</span>
 127.0.0.1:6379&gt; GET key2
 <span class="s2">&#34;axxdefg&#34;</span>
+<span class="c1">#######################################################</span>
 <span class="c1"># setex (set with expire) 设置过期时间</span>
 <span class="c1"># setnx (set if not exist) 不存在才设置（在分布式锁中常使用）</span>
 127.0.0.1:6379&gt; SETEX key3 <span class="m">30</span> <span class="s2">&#34;hello&#34;</span> <span class="c1"># 设置key3为hello，30秒后过期</span>
@@ -325,6 +348,7 @@ OK
 <span class="o">(</span>integer<span class="o">)</span> -2
 127.0.0.1:6379&gt; get key3
 <span class="o">(</span>nil<span class="o">)</span>
+<span class="c1">#######################################################</span>
 <span class="c1"># mset  （同时设置多个值）</span>
 <span class="c1"># mget  （同时获取多个值）</span>
 127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; mset k1 v1 k2 v2 k3 v3 <span class="c1"># 同时设置多个值</span>
@@ -356,6 +380,7 @@ OK
 2<span class="o">)</span> <span class="s2">&#34;k4&#34;</span>
 3<span class="o">)</span> <span class="s2">&#34;k3&#34;</span>
 4<span class="o">)</span> <span class="s2">&#34;k2&#34;</span>
+<span class="c1">#######################################################</span>
 <span class="c1"># 对象</span>
 127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; <span class="nb">set</span> user:1 <span class="o">{</span>name:zhangsan,age:3<span class="o">}</span> <span class="c1"># 设置一个user:1对象，值为json字符来保存一个对象</span>
 OK
@@ -364,6 +389,7 @@ OK
 127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; mget user:1:name user:1:age
 1<span class="o">)</span> <span class="s2">&#34;zhangsan&#34;</span>
 2<span class="o">)</span> <span class="s2">&#34;3&#34;</span>
+<span class="c1">#######################################################</span>
 <span class="c1"># getset 先get后set</span>
 127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; GETSET db redis <span class="c1"># 如果不存在值，返回nil，并设置值</span>
 <span class="o">(</span>nil<span class="o">)</span>
@@ -378,6 +404,281 @@ OK
 </div><h3 id="list">List</h3>
 <p>列表是一种基本的数据类型</p>
 <p>在Redis里面，我们可以把list完成，栈、队列、堵塞队列。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
+<span class="c1">#   lpush</span>
+<span class="c1">#   lpop</span>
+<span class="c1">#   lrange</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPUSH list one <span class="c1"># 将一个值或多个值，插入到列表头部</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPUSH list two
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPUSH list three
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> -1 <span class="c1"># 获取list中的值</span>
+1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> <span class="m">1</span> <span class="c1"># 通过区间获取具体的值</span>
+1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; RPUSH list right <span class="c1"># 将一个或多个值放到列表的尾部</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">4</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;right&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPOP list <span class="c1"># 移除列表的第一个元素</span>
+<span class="s2">&#34;three&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; RPOP list <span class="c1"># 移除列表的最后一个元素</span>
+<span class="s2">&#34;right&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   lindex</span>
+<span class="c1">#   llen</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LINDEX list <span class="m">0</span> <span class="c1"># 通过下标获取list中的某一个值</span>
+<span class="s2">&#34;two&#34;</span>
+127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LINDEX list <span class="m">1</span>
+<span class="s2">&#34;one&#34;</span>
+127.0.0.1:6379&gt; LPUSH list one
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; LPUSH list two
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379&gt; LPUSH list three
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
+127.0.0.1:6379&gt; LLEN list <span class="c1"># 返回列表的长度</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   lrem</span>
+127.0.0.1:6379&gt; LRANGE list <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
+127.0.0.1:6379&gt; LREM list <span class="m">1</span> one <span class="c1"># 移除list集合中指定个数的value</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; LRANGE list <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+127.0.0.1:6379&gt; LREM list <span class="m">2</span> three
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379&gt; LRANGE list <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   trim修剪</span>
+127.0.0.1:6379&gt; RPUSH mylist hello
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; RPUSH mylist hello1
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379&gt; RPUSH mylist hello2
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
+127.0.0.1:6379&gt; RPUSH mylist hello3
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">4</span>
+127.0.0.1:6379&gt; LRANGE mylist <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;hello1&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;hello2&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;hello3&#34;</span>
+127.0.0.1:6379&gt; LTRIM mylist <span class="m">1</span> <span class="m">2</span>    <span class="c1"># 通过下标截取指定长度，这个list已经改变，只剩下截取的元素</span>
+OK
+127.0.0.1:6379&gt; LRANGE mylist <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;hello1&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;hello2&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   rpoplpush</span>
+127.0.0.1:6379&gt; LRANGE mylist <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;hello1&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;hello2&#34;</span>
+127.0.0.1:6379&gt; RPOPLPUSH mylist myotherlist <span class="c1"># 移动列表的最后一个元素到其他表中</span>
+<span class="s2">&#34;hello2&#34;</span>
+127.0.0.1:6379&gt; LRANGE mylist <span class="m">0</span> -1 <span class="c1"># 查看原来的表</span>
+1<span class="o">)</span> <span class="s2">&#34;hello1&#34;</span>
+127.0.0.1:6379&gt; LRANGE myotherlist <span class="m">0</span> -1 <span class="c1"># 查看新的表</span>
+1<span class="o">)</span> <span class="s2">&#34;hello2&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   exists</span>
+<span class="c1">#   lset    将列表指定下标的值，替换为另外一个值，更新操作</span>
+127.0.0.1:6379&gt; exists list <span class="c1"># 判断列表是否存在</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; lset list <span class="m">0</span> item <span class="c1"># 不存在，更新，报错</span>
+<span class="o">(</span>error<span class="o">)</span> ERR no such key
+127.0.0.1:6379&gt; LPUSH list value
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; lset list <span class="m">0</span> item <span class="c1"># 存在，更新当前下标的值</span>
+OK
+127.0.0.1:6379&gt; LRANGE list <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;item&#34;</span>
+127.0.0.1:6379&gt; lset list <span class="m">1</span> other <span class="c1"># 列表不存在，也报错</span>
+<span class="o">(</span>error<span class="o">)</span> ERR index out of range
+<span class="c1">#######################################################</span>
+<span class="c1">#   linsert 将某个具体的value插入列表中某个元素的前面或者后面</span>
+127.0.0.1:6379&gt; LPUSH mylist hello
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; LPUSH mylist world
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379&gt; LINSERT mylist before world other
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
+127.0.0.1:6379&gt; LRANGE mylist <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;other&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+127.0.0.1:6379&gt; LINSERT mylist after world other1
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">4</span>
+127.0.0.1:6379&gt; LRANGE mylist <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;other&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;other1&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>小结：</p>
+<ul>
+<li>list实际上是一个链表，before Node after，left，right都可以插入</li>
+<li>如果key不存在，创建新的链表</li>
+<li>如果key存在，新增内容</li>
+<li>如果移除了key，空链表，也代表不存在</li>
+<li>在两边插入或改动值，效率最高。中间元素，相对来说效率会低一点
+使用场景：</li>
+<li>消息排队</li>
+<li>消息队列</li>
+</ul>
+<h3 id="set集合">Set（集合）</h3>
+<p>Set中的值是不能重复的</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -411,44 +712,442 @@ OK
 </span><span class="lnt">29
 </span><span class="lnt">30
 </span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span><span class="lnt">93
+</span><span class="lnt">94
+</span><span class="lnt">95
+</span><span class="lnt">96
+</span><span class="lnt">97
+</span><span class="lnt">98
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPUSH list one <span class="c1"># 将一个值或多个值，插入到列表头部</span>
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
+<span class="c1">#   sadd</span>
+<span class="c1">#   smembers</span>
+<span class="c1">#   sismember</span>
+127.0.0.1:6379&gt; sadd myset <span class="s2">&#34;hello&#34;</span>  <span class="c1"># set集合中添加元素</span>
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPUSH list two
+127.0.0.1:6379&gt; sadd myset cc
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; SMEMBERS myset  <span class="c1"># 查看指定set所有值</span>
+1<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+127.0.0.1:6379&gt; SISMEMBER myset cc  <span class="c1"># 判断某一个值在不在set中</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; SISMEMBER myset a
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   scard   # 获取set集合中的内容元素个数</span>
+127.0.0.1:6379&gt; scard myset <span class="c1"># 获取set集合元素个数</span>
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPUSH list three
+127.0.0.1:6379&gt; SMEMBERS myset
+1<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+127.0.0.1:6379&gt; SADD myset cc   <span class="c1"># set 已存在元素</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; SADD myset cc1
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; SCARD myset
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> -1 <span class="c1"># 获取list中的值</span>
-1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
-2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
-3<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> <span class="m">1</span> <span class="c1"># 通过区间获取具体的值</span>
-1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
-2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; RPUSH list right <span class="c1"># 将一个或多个值放到列表的尾部</span>
-<span class="o">(</span>integer<span class="o">)</span> <span class="m">4</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> -1
-1<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
-2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
-3<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
-4<span class="o">)</span> <span class="s2">&#34;right&#34;</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LPOP list <span class="c1"># 移除列表的第一个元素</span>
-<span class="s2">&#34;three&#34;</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; RPOP list <span class="c1"># 移除列表的最后一个元素</span>
-<span class="s2">&#34;right&#34;</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LRANGE list <span class="m">0</span> -1
-1<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
-2<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LINDEX list <span class="m">0</span> <span class="c1"># 通过下标获取list中的某一个值</span>
-<span class="s2">&#34;two&#34;</span>
-127.0.0.1:6379<span class="o">[</span>1<span class="o">]</span>&gt; LINDEX list <span class="m">1</span>
-<span class="s2">&#34;one&#34;</span>
+127.0.0.1:6379&gt; SMEMBERS myset
+1<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;cc1&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   srem    移除set集合里的指定元素</span>
+127.0.0.1:6379&gt;  srem myset hello
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; SMEMBERS myset
+1<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;cc1&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   srandmember 随机抽选出几个元素</span>
+127.0.0.1:6379&gt; SRANDMEMBER myset <span class="c1"># 随机抽选一个元素</span>
+<span class="s2">&#34;cc&#34;</span>
+127.0.0.1:6379&gt; SRANDMEMBER myset
+<span class="s2">&#34;cc1&#34;</span>
+127.0.0.1:6379&gt; SRANDMEMBER myset <span class="m">2</span> <span class="c1"># 随机抽选出两个元素</span>
+1<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;cc1&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   spop    随机移除几个元素</span>
+127.0.0.1:6379&gt; SMEMBERS myset
+1<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;cc1&#34;</span>
+127.0.0.1:6379&gt; spop myset
+<span class="s2">&#34;cc1&#34;</span>
+127.0.0.1:6379&gt; spop myset
+<span class="s2">&#34;cc&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   smove   将指定的值移动到另一个集合 </span>
+127.0.0.1:6379&gt; SMEMBERS myset
+1<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+127.0.0.1:6379&gt; SADD myset2 set2
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; smove myset myset2 cc
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; SMEMBERS myset
+1<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+127.0.0.1:6379&gt; SMEMBERS myset2
+1<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;set2&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   数字集合类（差集、并集、交集）</span>
+127.0.0.1:6379&gt; sadd key1 a
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; sadd key1 b
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; sadd key1 c
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; sadd key2 c
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; sadd key2 d
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; sadd key2 e
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; SDIFF key1 key2 <span class="c1"># 差集</span>
+1<span class="o">)</span> <span class="s2">&#34;a&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;b&#34;</span>
+127.0.0.1:6379&gt; SINTER key1 key2    <span class="c1"># 交集  共同好友实现</span>
+1<span class="o">)</span> <span class="s2">&#34;c&#34;</span>
+127.0.0.1:6379&gt; SUNION key1 key2    <span class="c1"># 并集</span>
+1<span class="o">)</span> <span class="s2">&#34;a&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;b&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;c&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;e&#34;</span>
+5<span class="o">)</span> <span class="s2">&#34;d&#34;</span>
 </code></pre></td></tr></table>
 </div>
-</div><h3 id="set">Set</h3>
+</div><p>set是无序不重复集合，抽随机</p>
 <h3 id="zset">Zset</h3>
-<h3 id="hash">Hash</h3>
+<p>在set的基础上，增加了一个值，set k1 v1，zset k2 score v2</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
+zadd    <span class="c1">#   添加一个或多个值</span>
+zrange  <span class="c1">#   遍历查询</span>
+127.0.0.1:6379&gt; zadd myset <span class="m">1</span> one
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; zadd myset <span class="m">2</span> two <span class="m">3</span> three
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379&gt; ZRANGE myset <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;one&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;two&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;three&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   zrangebyscore   根据score排序</span>
+127.0.0.1:6379&gt; zset salary <span class="m">2000</span> a
+<span class="o">(</span>error<span class="o">)</span> ERR unknown <span class="nb">command</span> <span class="sb">`</span>zset<span class="sb">`</span>, with args beginning with: <span class="sb">`</span>salary<span class="sb">`</span>, <span class="sb">`</span>2000<span class="sb">`</span>, <span class="sb">`</span>a<span class="sb">`</span>, 
+127.0.0.1:6379&gt; zadd salary <span class="m">2000</span> a
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; zadd salary <span class="m">5000</span> b
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; zadd salary <span class="m">500</span> c
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; ZRANGEBYSCORE salary -inf +inf <span class="c1">#显示全部用户，从小到大</span>
+1<span class="o">)</span> <span class="s2">&#34;c&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;a&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;b&#34;</span>
+127.0.0.1:6379&gt; ZRANGEBYSCORE salary -inf +inf withscores   <span class="c1">#显示全部用户并且附带成绩</span>
+1<span class="o">)</span> <span class="s2">&#34;c&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;500&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;a&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;2000&#34;</span>
+5<span class="o">)</span> <span class="s2">&#34;b&#34;</span>
+6<span class="o">)</span> <span class="s2">&#34;5000&#34;</span>
+127.0.0.1:6379&gt; ZREVRANGE salary <span class="m">0</span> -1 withscores    <span class="c1"># 显示全部用户，从大到小</span>
+1<span class="o">)</span> <span class="s2">&#34;b&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;5000&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;c&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;500&#34;</span>
+
+<span class="c1">#######################################################</span>
+<span class="c1">#   zrem    移除指定元素</span>
+<span class="c1">#   zcard   获取集合中的个数</span>
+127.0.0.1:6379&gt; ZRANGEBYSCORE salary -inf +inf
+1<span class="o">)</span> <span class="s2">&#34;c&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;a&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;b&#34;</span>
+127.0.0.1:6379&gt; ZREM salary a
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; ZRANGEBYSCORE salary -inf +inf
+1<span class="o">)</span> <span class="s2">&#34;c&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;b&#34;</span>
+127.0.0.1:6379&gt; zcard salary
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="hash">Hash</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
+<span class="c1">#   hset set一个具体的value</span>
+<span class="c1">#   hget get一个具体的value</span>
+<span class="c1">#   hmset set多个具体的value</span>
+<span class="c1">#   hmget get多个具体的value</span>
+<span class="c1">#   hgetall get所有</span>
+<span class="c1">#   hdel    删除hash指定key字段！对应的value值也就消失了</span>
+127.0.0.1:6379&gt; hset myhash field1 c
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; HGET myhash field1
+<span class="s2">&#34;c&#34;</span>
+127.0.0.1:6379&gt; HMSET myhash field1 hello field2 world
+OK
+127.0.0.1:6379&gt; HMGET myhash field1 field2
+1<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+127.0.0.1:6379&gt; HGETALL myhash
+1<span class="o">)</span> <span class="s2">&#34;field1&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;field2&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+127.0.0.1:6379&gt; HGETALL myhash
+1<span class="o">)</span> <span class="s2">&#34;field2&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;field1&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;hello&#34;</span>
+127.0.0.1:6379&gt; HDEL myhash field1
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; HGETALL myhash
+1<span class="o">)</span> <span class="s2">&#34;field2&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   hlen    获取hash表的字符字段</span>
+127.0.0.1:6379&gt; hgetall myhash
+1<span class="o">)</span> <span class="s2">&#34;field2&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+127.0.0.1:6379&gt; hlen myhash
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   hexists 判断hash中指定字段是否存在</span>
+127.0.0.1:6379&gt; hgetall myhash
+1<span class="o">)</span> <span class="s2">&#34;field2&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+127.0.0.1:6379&gt; HEXISTS myhash field2
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; HEXISTS myhash field1
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   hkeys   只获得所有的field</span>
+<span class="c1">#   hvals   只获得所有的value</span>
+127.0.0.1:6379&gt; HKEYS myhash
+1<span class="o">)</span> <span class="s2">&#34;field2&#34;</span>
+127.0.0.1:6379&gt; HVALS myhash
+1<span class="o">)</span> <span class="s2">&#34;world&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   hincrby 步长    自增</span>
+127.0.0.1:6379&gt; hset myhash field3 <span class="m">5</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; HINCRBY myhash field3 <span class="m">1</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">6</span>
+127.0.0.1:6379&gt; HINCRBY myhash field3 -1
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">5</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   hsetnx  没有元素则创建，有元素失败</span>
+127.0.0.1:6379&gt; HSETNX myhash field4 hello
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; HSETNX myhash field4 hello1
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>map集合， key-map，本质和string类型有太大区别，还是一个简单的key-value
+使用场景：</p>
+<ul>
+<li>hash变更数据，hash更适合对象的存储，string更适合字符串的存储</li>
+</ul>
 <h2 id="三大特殊数据类型">三大特殊数据类型</h2>
 <h3 id="geospatial">geospatial</h3>
 <h3 id="hyperloglog">hyperloglog</h3>
