@@ -3,7 +3,21 @@
         <title>redis - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/redis/</link>
         <description>redis - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 12 Mar 2021 10:43:55 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/redis/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 15 Mar 2021 17:00:21 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/redis/" rel="self" type="application/rss+xml" /><item>
+    <title>Redis Study 04</title>
+    <link>http://example.org/redis-study-04/</link>
+    <pubDate>Mon, 15 Mar 2021 17:00:21 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/redis-study-04/</guid>
+    <description><![CDATA[redis学习04]]></description>
+</item><item>
+    <title>Redis Study 03</title>
+    <link>http://example.org/redis-study-03/</link>
+    <pubDate>Mon, 15 Mar 2021 09:42:39 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/redis-study-03/</guid>
+    <description><![CDATA[redis学习04]]></description>
+</item><item>
     <title>Redis Study 02</title>
     <link>http://example.org/redis-study-02/</link>
     <pubDate>Fri, 12 Mar 2021 10:43:55 &#43;0800</pubDate>

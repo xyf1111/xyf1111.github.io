@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Redis Study 03 - CC&#39;s Blog</title><meta name="Description" content="redis学习04"><meta property="og:title" content="Redis Study 03" />
+<meta property="og:description" content="redis学习04" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/redis-study-03/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-03-15T09:42:39+08:00" />
+<meta property="article:modified_time" content="2021-03-15T09:42:39+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Redis Study 03"/>
+<meta name="twitter:description" content="redis学习04"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/redis-study-03/" /><link rel="prev" href="http://example.org/redis-study-02/" /><link rel="next" href="http://example.org/redis-study-04/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Redis Study 03",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/redis-study-03\/"
+        },"genre": "posts","keywords": "redis","wordcount":  3583 ,
+        "url": "http:\/\/example.org\/redis-study-03\/","datePublished": "2021-03-15T09:42:39+08:00","dateModified": "2021-03-15T09:42:39+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "redis学习04"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Redis Study 03</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-15">2021-03-15</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3583 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#三大特殊数据类型">三大特殊数据类型</a>
+      <ul>
+        <li><a href="#geospatial地理位置">geospatial（地理位置）</a></li>
+        <li><a href="#hyperloglog">hyperloglog</a></li>
+        <li><a href="#bitmaps">bitmaps</a></li>
+      </ul>
+    </li>
+    <li><a href="#事务">事务</a>
+      <ul>
+        <li><a href="#编译型异常代码有问题命令有错事务中的命令都不会执行">编译型异常（代码有问题，命令有错），事务中的命令都不会执行</a></li>
+        <li><a href="#运行时异常如果队列中存在语法性语法没有问题那么执行命令的时候其他命令是可以正常执行的错误命令抛出异常">运行时异常，如果队列中存在语法性（语法没有问题），那么执行命令的时候其他命令是可以正常执行的，错误命令抛出异常</a></li>
+      </ul>
+    </li>
+    <li><a href="#redis锁">Redis锁</a>
+      <ul>
+        <li><a href="#悲观锁">悲观锁</a></li>
+        <li><a href="#乐观锁">乐观锁</a></li>
+      </ul>
+    </li>
+    <li><a href="#redisconf详解">redis.conf详解</a>
+      <ul>
+        <li><a href="#单位">单位</a></li>
+        <li><a href="#包含">包含</a></li>
+        <li><a href="#网络">网络</a></li>
+        <li><a href="#通用general">通用GENERAL</a></li>
+        <li><a href="#日志">日志</a></li>
+        <li><a href="#快照">快照</a></li>
+        <li><a href="#replication-复制">REPLICATION 复制</a></li>
+        <li><a href="#security-安全">SECURITY 安全</a></li>
+        <li><a href="#限制clients">限制CLIENTS</a></li>
+        <li><a href="#append-only模式-aof持久化">APPEND ONLY模式 aof持久化</a></li>
+      </ul>
+    </li>
+    <li><a href="#redis持久化">Redis持久化</a>
+      <ul>
+        <li><a href="#rdb">RDB</a></li>
+        <li><a href="#aofappend-only-file">AOF（Append Only File）</a></li>
+      </ul>
+    </li>
+    <li><a href="#redis订阅发布">Redis订阅发布</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="三大特殊数据类型">三大特殊数据类型</h2>
+<h3 id="geospatial地理位置">geospatial（地理位置）</h3>
+<p>Redis的GEO</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
+<span class="c1">#   geoadd  添加geo</span>
+<span class="c1">#   geopos  获取geo</span>
+127.0.0.1:6379&gt; GEOADD china:city 116.40 39.90 beijing
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; GEOADD china:city 121.47 31.23 shanghai 106.50 29.53 chongqin
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379&gt; GEOADD china:city 120.16 30.24 hangzhou 108.96 34.26 xian
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379&gt; GEOPOS china:city beijing chongqin
+1<span class="o">)</span> 1<span class="o">)</span> <span class="s2">&#34;116.39999896287918091&#34;</span>
+   2<span class="o">)</span> <span class="s2">&#34;39.90000009167092543&#34;</span>
+2<span class="o">)</span> 1<span class="o">)</span> <span class="s2">&#34;106.49999767541885376&#34;</span>
+   2<span class="o">)</span> <span class="s2">&#34;29.52999957900659211&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   geodist 两点之间的距离</span>
+127.0.0.1:6379&gt; GEODIST china:city beijing shanghai km  <span class="c1"># 查看北京到上海的距离</span>
+<span class="s2">&#34;1067.3788&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   georadius 获取坐标点周围的数据</span>
+127.0.0.1:6379&gt; GEORADIUS china:city <span class="m">110</span> <span class="m">30</span> <span class="m">1000</span> km <span class="c1"># 获取坐标点位110,30方圆1000km在china:city数据</span>
+1<span class="o">)</span> <span class="s2">&#34;chongqin&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;xian&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;hangzhou&#34;</span>
+127.0.0.1:6379&gt; GEORADIUS china:city <span class="m">110</span> <span class="m">30</span> <span class="m">500</span> km 
+1<span class="o">)</span> <span class="s2">&#34;chongqin&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;xian&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   georadiusbymember   以城市为中心方圆的数据</span>
+127.0.0.1:6379&gt; GEORADIUSBYMEMBER china:city beijing <span class="m">100</span> km
+1<span class="o">)</span> <span class="s2">&#34;beijing&#34;</span>
+127.0.0.1:6379&gt; GEORADIUSBYMEMBER china:city beijing <span class="m">1000</span> km
+1<span class="o">)</span> <span class="s2">&#34;beijing&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;xian&#34;</span>
+127.0.0.1:6379&gt; GEORADIUSBYMEMBER china:city hanghai <span class="m">1000</span> km
+<span class="o">(</span>error<span class="o">)</span> ERR could not decode requested zset member
+127.0.0.1:6379&gt; GEORADIUSBYMEMBER china:city shanghai <span class="m">1000</span> km
+1<span class="o">)</span> <span class="s2">&#34;hangzhou&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;shanghai&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   geohash 以hash返回数据的经纬度</span>
+127.0.0.1:6379&gt; GEOHASH china:city beijing
+1<span class="o">)</span> <span class="s2">&#34;wx4fbxxfke0&#34;</span>
+<span class="c1">#######################################################</span>
+<span class="c1">#   geo底层实现原理其实是zset</span>
+127.0.0.1:6379&gt; ZRANGE china:city <span class="m">0</span> -1  <span class="c1">#   查看全部元素</span>
+1<span class="o">)</span> <span class="s2">&#34;chongqin&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;xian&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;hangzhou&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;shanghai&#34;</span>
+5<span class="o">)</span> <span class="s2">&#34;beijing&#34;</span>
+127.0.0.1:6379&gt; ZREM china:city beijing <span class="c1">#   移除元素</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; ZRANGE china:city <span class="m">0</span> -1
+1<span class="o">)</span> <span class="s2">&#34;chongqin&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;xian&#34;</span>
+3<span class="o">)</span> <span class="s2">&#34;hangzhou&#34;</span>
+4<span class="o">)</span> <span class="s2">&#34;shanghai&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="hyperloglog">hyperloglog</h3>
+<p>基数：一个set不重复元素的数量
+hyperloglog主要用来做统计
+如果可以容错可以使用这个。这个空间占用少。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
+<span class="c1">#   pfadd   添加元素</span>
+<span class="c1">#   pfcount 获得元素个数</span>
+<span class="c1">#   pfmerge 将两个set整合到一个新的集合</span>
+127.0.0.1:6379&gt; PFADD myset a b c d e f g h i j k
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; PFCOUNT myset
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">11</span>
+127.0.0.1:6379&gt; PFADD myset2 b s d j o l m n u
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; PFCOUNT myset2
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">9</span>
+127.0.0.1:6379&gt; PFMERGE myset3 myset myset2
+OK
+127.0.0.1:6379&gt; PFCOUNT myset3
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">17</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="bitmaps">bitmaps</h3>
+<p>位存储
+只有存储0和1</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
+<span class="c1">#   setbit  添加数据</span>
+<span class="c1">#   getbit  获得数据</span>
+<span class="c1">#   bitcount    统计个数</span>
+127.0.0.1:6379&gt; SETBIT sign <span class="m">0</span> <span class="m">1</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; SETBIT sign <span class="m">1</span> <span class="m">1</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; SETBIT sign <span class="m">2</span> <span class="m">0</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; SETBIT sign <span class="m">3</span> <span class="m">0</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; SETBIT sign <span class="m">4</span> <span class="m">1</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; GETBIT sign <span class="m">3</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">0</span>
+127.0.0.1:6379&gt; GETBIT sign <span class="m">4</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; BITCOUNT sign
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="事务">事务</h2>
+<p>Redis事务本质：一组命令的集合。一个事务中的所有命令会被序列化，在事务执行的过程中，会按顺序执行。</p>
+<p>一次性、顺序性、排他性。执行一些命令</p>
+<p>Redis单条命令保持原子性，事务不保证原子性</p>
+<p>Redis事务：</p>
+<ul>
+<li>开始事务（）</li>
+<li>命令入队（）</li>
+<li>执行事务（）</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
+<span class="c1">#   multi   开始事务</span>
+<span class="c1">#   exec    执行事务</span>
+127.0.0.1:6379&gt; MULTI
+OK
+127.0.0.1:6379&gt; <span class="nb">set</span> k1 v1
+QUEUED
+127.0.0.1:6379&gt; <span class="nb">set</span> k2 v2
+QUEUED
+127.0.0.1:6379&gt; get k2
+QUEUED
+127.0.0.1:6379&gt; <span class="nb">set</span> k3 v3
+QUEUED
+127.0.0.1:6379&gt; EXEC
+1<span class="o">)</span> OK
+2<span class="o">)</span> OK
+3<span class="o">)</span> <span class="s2">&#34;v2&#34;</span>
+4<span class="o">)</span> OK
+<span class="c1">#######################################################</span>
+<span class="c1">#   discard 放弃事务（相当于回滚）</span>
+127.0.0.1:6379&gt; MULTI
+OK
+127.0.0.1:6379&gt; <span class="nb">set</span> k4 v4
+QUEUED
+127.0.0.1:6379&gt; <span class="nb">set</span> k5 v5
+QUEUED
+127.0.0.1:6379&gt; DISCARD
+OK
+127.0.0.1:6379&gt; get k4
+<span class="o">(</span>nil<span class="o">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="编译型异常代码有问题命令有错事务中的命令都不会执行">编译型异常（代码有问题，命令有错），事务中的命令都不会执行</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; MULTI
+OK
+127.0.0.1:6379&gt; <span class="nb">set</span> k1 v1
+QUEUED
+127.0.0.1:6379&gt; <span class="nb">set</span> k2 v2
+QUEUED
+127.0.0.1:6379&gt; <span class="nb">set</span> k3 v3
+QUEUED
+127.0.0.1:6379&gt; GETSET k4   <span class="c1">#   错误命令</span>
+<span class="o">(</span>error<span class="o">)</span> ERR wrong number of arguments <span class="k">for</span> <span class="s1">&#39;getset&#39;</span> <span class="nb">command</span>
+127.0.0.1:6379&gt; <span class="nb">set</span> k4 v4
+QUEUED
+127.0.0.1:6379&gt; <span class="nb">set</span> k5 v5
+QUEUED
+127.0.0.1:6379&gt; EXEC    <span class="c1">#   执行事务报错</span>
+<span class="o">(</span>error<span class="o">)</span> EXECABORT Transaction discarded because of previous errors.
+127.0.0.1:6379&gt; get k5  <span class="c1">#   所有命令都不会执行</span>
+<span class="o">(</span>nil<span class="o">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="运行时异常如果队列中存在语法性语法没有问题那么执行命令的时候其他命令是可以正常执行的错误命令抛出异常">运行时异常，如果队列中存在语法性（语法没有问题），那么执行命令的时候其他命令是可以正常执行的，错误命令抛出异常</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; <span class="nb">set</span> k1 v1
+OK
+127.0.0.1:6379&gt; MULTI
+OK
+127.0.0.1:6379&gt; INCR k1 <span class="c1">#   会执行报错</span>
+QUEUED
+127.0.0.1:6379&gt; <span class="nb">set</span> k2 v2
+QUEUED
+127.0.0.1:6379&gt; <span class="nb">set</span> k3 v3
+QUEUED
+127.0.0.1:6379&gt; get k3
+QUEUED
+127.0.0.1:6379&gt; EXEC
+1<span class="o">)</span> <span class="o">(</span>error<span class="o">)</span> ERR value is not an integer or out of range  <span class="c1"># 虽然第一条命令报错了，但其他还是正常执行了</span>
+2<span class="o">)</span> OK
+3<span class="o">)</span> OK
+4<span class="o">)</span> <span class="s2">&#34;v3&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="redis锁">Redis锁</h2>
+<h3 id="悲观锁">悲观锁</h3>
+<p>很悲观，认为什么时候都会出现问题，无论做什么都会加锁</p>
+<h3 id="乐观锁">乐观锁</h3>
+<p>很乐观，认为什么时候都不会出现问题，所以不会上锁，更新的时候去判断一下，在此期间是否有人修改过值</p>
+<p>主要通过获取version</p>
+<p>更新的时候比较第一次获取的version</p>
+<p>正常执行成功</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; <span class="nb">set</span> money <span class="m">100</span>
+OK
+127.0.0.1:6379&gt; <span class="nb">set</span> out <span class="m">0</span>
+OK
+127.0.0.1:6379&gt; watch money <span class="c1"># 监视money对象</span>
+OK
+127.0.0.1:6379&gt; MULTI   <span class="c1"># 事务开始，事务执行期间数据没有发生变化，事务正常执行</span>
+OK
+127.0.0.1:6379&gt; DECR money
+QUEUED
+127.0.0.1:6379&gt; INCR out
+QUEUED
+127.0.0.1:6379&gt; EXEC
+1<span class="o">)</span> <span class="o">(</span>integer<span class="o">)</span> <span class="m">99</span>
+2<span class="o">)</span> <span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>测试多线程修改值，使用watch可以当做redis的乐观锁操作</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; watch money <span class="c1">#监视money</span>
+OK
+127.0.0.1:6379&gt; MULTI
+OK
+127.0.0.1:6379&gt; DECRBY money <span class="m">20</span>
+QUEUED
+127.0.0.1:6379&gt; INCRBY out <span class="m">20</span>
+QUEUED
+127.0.0.1:6379&gt; EXEC
+<span class="o">(</span>nil<span class="o">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>执行前另一个事务修改值</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; INCRBY money <span class="m">300</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">399</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="redisconf详解">redis.conf详解</h2>
+<p>启动的时候就通过配置文件来启动</p>
+<h3 id="单位">单位</h3>
+<p><figure><a class="lightgallery" href="/images/redis-conf1.png" title="&amp;ldquo;redis单位&amp;rdquo;" data-thumbnail="/images/redis-conf1.png" data-sub-html="<h2>redis单位</h2><p>&amp;ldquo;redis单位&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis-conf1.png"
+            data-srcset="/images/redis-conf1.png, /images/redis-conf1.png 1.5x, /images/redis-conf1.png 2x"
+            data-sizes="auto"
+            alt="/images/redis-conf1.png" />
+    </a><figcaption class="image-caption">redis单位</figcaption>
+    </figure>
+配置文件，unit单位，对大小写不敏感</p>
+<h3 id="包含">包含</h3>
+<p><figure><a class="lightgallery" href="/images/redis-conf2.png" title="&amp;ldquo;redis包含&amp;rdquo;" data-thumbnail="/images/redis-conf2.png" data-sub-html="<h2>redis包含</h2><p>&amp;ldquo;redis包含&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis-conf2.png"
+            data-srcset="/images/redis-conf2.png, /images/redis-conf2.png 1.5x, /images/redis-conf2.png 2x"
+            data-sizes="auto"
+            alt="/images/redis-conf2.png" />
+    </a><figcaption class="image-caption">redis包含</figcaption>
+    </figure>
+导入文件</p>
+<h3 id="网络">网络</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">bind</span> 127.0.0.1  <span class="c1">#   绑定的ip</span>
+protected-mode yes  <span class="c1">#   保护模式是否开启</span>
+port <span class="m">6379</span>   <span class="c1">#   端口号</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="通用general">通用GENERAL</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">daemonize yes   <span class="c1">#   以守护进程的方式运行，默认是no</span>
+pidfile /var/run/redis_6379.pid   <span class="c1">#   如果以后台的方式运行，我们就需要指定一个pid文件</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="日志">日志</h3>
+<p><figure><a class="lightgallery" href="/images/redis-conf3.png" title="&amp;ldquo;redis日志&amp;rdquo;" data-thumbnail="/images/redis-conf3.png" data-sub-html="<h2>redis日志</h2><p>&amp;ldquo;redis日志&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis-conf3.png"
+            data-srcset="/images/redis-conf3.png, /images/redis-conf3.png 1.5x, /images/redis-conf3.png 2x"
+            data-sizes="auto"
+            alt="/images/redis-conf3.png" />
+    </a><figcaption class="image-caption">redis日志</figcaption>
+    </figure></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">logfile <span class="s2">&#34;&#34;</span>  <span class="c1">#   日志的文件位置名</span>
+databases <span class="m">16</span>    <span class="c1">#   数据库数量，默认是16个数据库</span>
+always-show-logo yes    <span class="c1">#   是否总是显示logo</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="快照">快照</h3>
+<p>持久化，在规定的时间执行了多少次操作，则会持久化到文件.rdb或.aof中</p>
+<p>redis是内存数据库，如果没有持久化，数据库断点即失</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 如果900内至少有1个key进行修改，就会进行持久化操作</span>
+save <span class="m">900</span> <span class="m">1</span>
+<span class="c1"># 如果300内有10个key进行修改，就会进行持久化操作</span>
+save <span class="m">300</span> <span class="m">10</span>
+<span class="c1"># 如果60内有10000个key进行修改，就会进行持久化操作</span>
+save <span class="m">60</span> <span class="m">10000</span>
+stop-writes-on-bgsave-error yes <span class="c1">#   持久化如果出错是否还需要继续运行</span>
+rdbcompression yes  <span class="c1">#   是否压缩rdb文件，需要消耗一些cpu资源</span>
+rdbchecksum yes <span class="c1">#   保存rdb文件的时候，进行错误的检查校验</span>
+dir ./  <span class="c1">#   rdb文件的保存路径</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="replication-复制">REPLICATION 复制</h3>
+<h3 id="security-安全">SECURITY 安全</h3>
+<h3 id="限制clients">限制CLIENTS</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">maxclients <span class="m">10000</span>    <span class="c1">#   设置能连接上redis的最多客户端数量</span>
+
+maxmemory &lt;bytes&gt;   <span class="c1">#   redis配置的最大内存容量</span>
+
+maxmemory-policy noeviction <span class="c1">#   内存达到上限的处理策略</span>
+    1. volatile-lru：只对设置了过期时间的key进行LRU（默认值）
+    2. allkeys-lru：删除LRU算法的key
+    3. volatile-lfu：只对设置了过期时间的key进行LFU
+    4. allkeys-lfu：删除LFU算法的key
+    5. volatile-random：随机删除即将过期的key
+    6. allkeys-random：随机删除
+    7. volatile-ttl：删除即将过期的
+    8. noeviction：永不过期，返回错误
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="append-only模式-aof持久化">APPEND ONLY模式 aof持久化</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">appendonly no   <span class="c1">#   默认是不开启aof模式</span>
+appendfilename <span class="s2">&#34;appendonly.aof&#34;</span> <span class="c1">#   持久化文件的名字</span>
+
+<span class="c1"># appendfsync always    #   每次修改都会sync。消耗性能</span>
+appendfsync everysec    <span class="c1">#   每秒执行一次sync。可能会丢失这1s的数据</span>
+<span class="c1"># appendfsync no        #   不执行sync，这个时候操作系统自己同步数据，速度最快</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="redis持久化">Redis持久化</h2>
+<p>Redis是内存数据库，如果不将内存中的数据库状态保存到磁盘，那么一旦服务器进程退出，服务器中的数据库状态也会消失。所以redis提供了持久化功能</p>
+<h3 id="rdb">RDB</h3>
+<p>什么是RDB</p>
+<p>在指定的时间间隔内将内存中的数据集体快照写入磁盘中，也就是快照，恢复时是将快照文件直接读到内存中。</p>
+<p>Redis会单独创建一个（fork）一个子进程进行持久化，会将数据写入到一个临时的文件中，待持久化过程都结束了，再用这个临时文件替换掉上次持久化好的文件。整个过程中，主进程不会进行任何IO操作。这就确保了极高的性能。如果需要大规模数据的恢复，且对数据恢复的完整性不是很敏感，RDB要比AOF高效。RDB缺点是最后一次持久化的数据可能丢失。</p>
+<p>RDB保存的dump.rdb文件，在conf文件中进行配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">dbfilename dump.rdb
+</code></pre></td></tr></table>
+</div>
+</div><p>触发机制</p>
+<ol>
+<li>save规则满足的情况下，会自动触发rdb规则</li>
+<li>执行flushall命令也会触发rdb规则</li>
+<li>退出redis，也会产生rdb文件
+备份就会生成dump.rdb</li>
+</ol>
+<p>如何恢复rdb文件</p>
+<ol>
+<li>只需要将rdb文件放在启动目录下即可，redis启动的时候回自动检查dump.rdb恢复其中的数据。</li>
+<li>查看需要存在的位置</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; clear
+127.0.0.1:6379&gt; config get dir
+1<span class="o">)</span> <span class="s2">&#34;dir&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;/root&#34;</span>  <span class="c1">#   如果目录下存在dump.rdb文件，启动的时候就会自动恢复其中的数据</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>几乎默认的配置就够用了</p>
+<p>优点：</p>
+<ul>
+<li>适合大规模的数据恢复！</li>
+<li>如果对数据的完整性要求不高
+缺点：</li>
+<li>需要一定的时间间隔进行操作，如果redis意外宕机了，这个最后一次修改数据就没了</li>
+<li>fork进程的时候会占用一定的内容空间</li>
+</ul>
+<h3 id="aofappend-only-file">AOF（Append Only File）</h3>
+<p>什么是AOF：</p>
+<p>将执行过的所有命令记录下来</p>
+<p>以日志的形式来记录每个写操作，将Redis执行过程中的所有指令记录下来（读操作不记录），只许追加文件，但不可以改写文件，Redis启动之初会读取该文件重新构造数据。换言之，Redis重启的话就是根据日志文件的内容将写指令从前到后执行一次以完成数据的恢复工作。</p>
+<p>AOF 保存的是appendonly.aof文件</p>
+<p>默认是不开启的，需要手动进行配置，只许将appendonly改为yes就开启的AOF</p>
+<p>重启，Redis就生效了</p>
+<p>如果appendonly.aof文件有错，redis是启动不了的，需要修复aof文件。redis提供了一个工具redis-check-aof &ndash;fix</p>
+<p>如果文件正常，重启就可以直接恢复了</p>
+<p>优点：</p>
+<ul>
+<li>每一次修改都同步，文件完整会更好</li>
+<li>每秒同步一次，可能会丢失一秒的数据</li>
+<li>从不同步，效率最高
+缺点：</li>
+<li>相对于数据文件来说，aof远大于rdb，修复速度也比rdb慢</li>
+<li>aof运行效率比rdb慢，所以默认的是rdb持久化</li>
+</ul>
+<h2 id="redis订阅发布">Redis订阅发布</h2>
+<p>订阅端</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; SUBSCRIBE cc    <span class="c1">#   订阅一个频道</span>
+Reading messages... <span class="o">(</span>press Ctrl-C to quit<span class="o">)</span>
+1<span class="o">)</span> <span class="s2">&#34;subscribe&#34;</span>
+2<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>
+3<span class="o">)</span> <span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+<span class="c1">#   等待读取推送的信息</span>
+1<span class="o">)</span> <span class="s2">&#34;message&#34;</span>        <span class="c1">#消息</span>
+2<span class="o">)</span> <span class="s2">&#34;cc&#34;</span>             <span class="c1">#频道</span>
+3<span class="o">)</span> <span class="s2">&#34;hello,world&#34;</span>    <span class="c1">#具体内容</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发送端</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; PUBLISH cc hello,world  <span class="c1">#   发布者发布消息到频道</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+</code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-03-15</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/redis-study-03/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/redis-study-03/" data-title="Redis Study 03" data-via="xxxx" data-hashtags="redis"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/redis-study-03/" data-hashtag="redis"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/redis-study-03/" data-title="Redis Study 03" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/redis-study-03/" data-title="Redis Study 03"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/redis-study-03/" data-title="Redis Study 03"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/redis-study-03/" data-title="Redis Study 03" data-description="redis学习04"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/redis-study-03/" data-title="Redis Study 03" data-description="redis学习04"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/redis-study-03/" data-title="Redis Study 03"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/redis/">redis</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/redis-study-02/" class="prev" rel="prev" title="Redis Study 02"><i class="fas fa-angle-left fa-fw"></i>Redis Study 02</a>
+            <a href="/redis-study-04/" class="next" rel="next" title="Redis Study 04">Redis Study 04<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

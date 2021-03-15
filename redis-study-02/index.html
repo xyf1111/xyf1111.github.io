@@ -20,7 +20,7 @@
 <meta name="application-name" content="LoveIt">
 <meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/redis-study-02/" /><link rel="prev" href="http://example.org/redis-study-01/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/redis-study-02/" /><link rel="prev" href="http://example.org/redis-study-01/" /><link rel="next" href="http://example.org/redis-study-03/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/redis-study-02\/"
-        },"genre": "posts","keywords": "redis","wordcount":  3127 ,
+        },"genre": "posts","keywords": "redis","wordcount":  3158 ,
         "url": "http:\/\/example.org\/redis-study-02\/","datePublished": "2021-03-12T10:43:55+08:00","dateModified": "2021-03-12T10:43:55+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,7 +106,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Redis Study 02</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-12">2021-03-12</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3127 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-12">2021-03-12</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3158 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 7 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
@@ -122,13 +122,6 @@
         <li><a href="#set集合">Set（集合）</a></li>
         <li><a href="#zset">Zset</a></li>
         <li><a href="#hash">Hash</a></li>
-      </ul>
-    </li>
-    <li><a href="#三大特殊数据类型">三大特殊数据类型</a>
-      <ul>
-        <li><a href="#geospatial">geospatial</a></li>
-        <li><a href="#hyperloglog">hyperloglog</a></li>
-        <li><a href="#bitmaps">bitmaps</a></li>
       </ul>
     </li>
   </ul>
@@ -940,6 +933,13 @@ OK
 </span><span class="lnt">52
 </span><span class="lnt">53
 </span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#######################################################</span>
@@ -994,7 +994,14 @@ zrange  <span class="c1">#   遍历查询</span>
 2<span class="o">)</span> <span class="s2">&#34;b&#34;</span>
 127.0.0.1:6379&gt; zcard salary
 <span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
-
+<span class="c1">#######################################################</span>
+<span class="c1">#   zcount  获取指定区间的个数</span>
+127.0.0.1:6379&gt; zadd myset <span class="m">1</span> hello
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+127.0.0.1:6379&gt; zadd myset <span class="m">2</span> world <span class="m">3</span> c
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">2</span>
+127.0.0.1:6379&gt; ZCOUNT myset <span class="m">1</span> <span class="m">3</span>
+<span class="o">(</span>integer<span class="o">)</span> <span class="m">3</span>
 
 </code></pre></td></tr></table>
 </div>
@@ -1147,11 +1154,7 @@ OK
 使用场景：</p>
 <ul>
 <li>hash变更数据，hash更适合对象的存储，string更适合字符串的存储</li>
-</ul>
-<h2 id="三大特殊数据类型">三大特殊数据类型</h2>
-<h3 id="geospatial">geospatial</h3>
-<h3 id="hyperloglog">hyperloglog</h3>
-<h3 id="bitmaps">bitmaps</h3></div><div class="post-footer" id="post-footer">
+</ul></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
@@ -1176,7 +1179,8 @@ OK
         </section>
     </div>
 
-    <div class="post-nav"><a href="/redis-study-01/" class="prev" rel="prev" title="Redis Study 01"><i class="fas fa-angle-left fa-fw"></i>Redis Study 01</a></div>
+    <div class="post-nav"><a href="/redis-study-01/" class="prev" rel="prev" title="Redis Study 01"><i class="fas fa-angle-left fa-fw"></i>Redis Study 01</a>
+            <a href="/redis-study-03/" class="next" rel="next" title="Redis Study 03">Redis Study 03<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 <div id="comments"></div></article></div>
             </main><footer class="footer">

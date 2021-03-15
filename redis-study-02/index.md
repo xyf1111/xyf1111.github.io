@@ -436,7 +436,14 @@ zrange  #   遍历查询
 2) "b"
 127.0.0.1:6379> zcard salary
 (integer) 2
-
+#######################################################
+#   zcount  获取指定区间的个数
+127.0.0.1:6379> zadd myset 1 hello
+(integer) 1
+127.0.0.1:6379> zadd myset 2 world 3 c
+(integer) 2
+127.0.0.1:6379> ZCOUNT myset 1 3
+(integer) 3
 
 ```
 ### Hash
@@ -514,7 +521,4 @@ OK
 map集合， key-map，本质和string类型有太大区别，还是一个简单的key-value
 使用场景：
 - hash变更数据，hash更适合对象的存储，string更适合字符串的存储
-## 三大特殊数据类型
-### geospatial
-### hyperloglog
-### bitmaps
+
