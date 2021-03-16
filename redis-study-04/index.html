@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/redis-study-04\/"
-        },"genre": "posts","keywords": "redis","wordcount":  484 ,
+        },"genre": "posts","keywords": "redis","wordcount":  1235 ,
         "url": "http:\/\/example.org\/redis-study-04\/","datePublished": "2021-03-15T17:00:21+08:00","dateModified": "2021-03-15T17:00:21+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,8 +106,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Redis Study 04</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-15">2021-03-15</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 484 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-15">2021-03-15</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1235 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -118,6 +118,8 @@
     <li><a href="#redis主从复制">Redis主从复制</a>
       <ul>
         <li><a href="#概念">概念</a></li>
+        <li><a href="#环境配置">环境配置</a></li>
+        <li><a href="#一主二从">一主二从</a></li>
       </ul>
     </li>
   </ul>
@@ -132,8 +134,148 @@
 <li>故障修复：当主节点出现问题，可以由从节点提供服务，实现快速的故障修复，实际上是一种服务的冗余</li>
 <li>负载均衡：在主从复制的基础上，配合读写分离，可以由主节点提供写服务，从节点提供读服务（即写Redis数据时应用连接主节点，读Redis数据是应用连接从节点），分担服务器负载；尤其在写少读多的情况下，通过多个节点分担读负载，可以大大提高Redis服务的并发量</li>
 <li>高可用（集群）基石：除了上述作用以外，主从复制还是哨兵和集群能够实施的基础，因此说主从复制是Redis的高可用的基础。
-一般来说，要将Redis运用于</li>
-</ol></div><div class="post-footer" id="post-footer">
+一般来说，要将Redis运用于工程项目中，只使用一台Redis是万万不能的，原因如下：</li>
+<li>从结构上，单个Redis服务器会发生单点故障，并且一台服务器要处理所有的请求负载，压力较大。</li>
+<li>从容量上，单个Redis服务器内存容量有限，就算一台Redis服务器内存容量为256GB，也不能将所有内存作为Redis存储内存，一般来说，单台Redis最大使用内存不应该超过20GB
+一般电商网站上的商品，一般都是一次上传，无数次浏览，说专业点就是多读少写</li>
+</ol>
+<p>主从复制，读写分离！80%的情况下都是在进行读操作！减缓服务器压力！架构中经常使用一主二从！</p>
+<h3 id="环境配置">环境配置</h3>
+<p>只配置从库，不用配置主库</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; info replication    <span class="c1">#   查看当前库的信息</span>
+<span class="c1"># Replication</span>
+role:master <span class="c1"># 角色</span>
+connected_slaves:0  <span class="c1">#   连接的从机个数</span>
+master_replid:c3d733dbffb09746cf8ef0b4b87ce62406dd0c83
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:0
+second_repl_offset:-1
+repl_backlog_active:0
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:0
+repl_backlog_histlen:0
+</code></pre></td></tr></table>
+</div>
+</div><p>复制3个配置文件，然后修改对应的配置信息</p>
+<ol>
+<li>端口号</li>
+<li>pid文件名</li>
+<li>日志名</li>
+<li>dump.rdb文件
+修改完毕后启动，启动3个Redis集群
+<figure><a class="lightgallery" href="/images/redis-conf3.png" title="&amp;ldquo;redis主从复制配置&amp;rdquo;" data-thumbnail="/images/redis-conf3.png" data-sub-html="<h2>redis主从复制配置</h2><p>&amp;ldquo;redis主从复制配置&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/redis-conf3.png"
+            data-srcset="/images/redis-conf3.png, /images/redis-conf3.png 1.5x, /images/redis-conf3.png 2x"
+            data-sizes="auto"
+            alt="/images/redis-conf3.png" />
+    </a><figcaption class="image-caption">redis主从复制配置</figcaption>
+    </figure></li>
+</ol>
+<h3 id="一主二从">一主二从</h3>
+<p>默认情况下，每台Redis服务器都是主节点；我们一般情况下只要配置从机就可以了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">127.0.0.1:6380&gt; SLAVEOF 127.0.0.1 <span class="m">6379</span>  <span class="c1"># 选择主机</span>
+OK
+127.0.0.1:6380&gt; info replication
+<span class="c1"># Replication</span>
+role:slave  <span class="c1">#   当前角色是从机</span>
+master_host:127.0.0.1   <span class="c1">#   主机ip</span>
+master_port:6379        <span class="c1">#   主机端口号</span>
+master_link_status:up
+master_last_io_seconds_ago:2
+master_sync_in_progress:0
+slave_repl_offset:14
+slave_priority:100
+slave_read_only:1
+connected_slaves:0
+master_replid:60116b0ccf67baa49701e78ea9cbb17c2673dded
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:14
+second_repl_offset:-1
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:1
+repl_backlog_histlen:14
+<span class="c1">#   配置完两台从机</span>
+127.0.0.1:6379&gt; info replication
+<span class="c1"># Replication</span>
+role:master
+connected_slaves:2
+slave0:ip<span class="o">=</span>127.0.0.1,port<span class="o">=</span>6380,state<span class="o">=</span>online,offset<span class="o">=</span>1148,lag<span class="o">=</span><span class="m">0</span>
+slave1:ip<span class="o">=</span>127.0.0.1,port<span class="o">=</span>6381,state<span class="o">=</span>online,offset<span class="o">=</span>1148,lag<span class="o">=</span><span class="m">0</span>
+master_replid:60116b0ccf67baa49701e78ea9cbb17c2673dded
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:1148
+second_repl_offset:-1
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:1
+repl_backlog_histlen:1148
+</code></pre></td></tr></table>
+</div>
+</div><p>真实的从主配置应该在配置文件中，这样的话是永久的，这里使用命令配置，暂时的。</p>
+<p>主机可以写，从机不能写只能读！主机中的所有信息都会被从机自动保存</p>
+<p>主机断开连接，从机依旧可以连到主机，但没有写操作。如果主机重新连接了，从机依旧可以直接获取主机写的信息!</p>
+<p>如果使用命令行配置主从，如果从机重启了，就会变回主机！只要变回从机，就能立马从主机获取值</p></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
