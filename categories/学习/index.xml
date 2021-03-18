@@ -3,7 +3,14 @@
         <title>学习 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</link>
         <description>学习 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 15 Mar 2021 17:00:21 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 18 Mar 2021 16:25:45 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>Redis Interview 02</title>
+    <link>http://example.org/redis-interview-02/</link>
+    <pubDate>Thu, 18 Mar 2021 16:25:45 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/redis-interview-02/</guid>
+    <description><![CDATA[redis面试02]]></description>
+</item><item>
     <title>Redis Study 04</title>
     <link>http://example.org/redis-study-04/</link>
     <pubDate>Mon, 15 Mar 2021 17:00:21 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/mysql-interview-02/</guid>
     <description><![CDATA[mysql面试02]]></description>
-</item><item>
-    <title>Mysql Interview 01</title>
-    <link>http://example.org/mysql-interview-01/</link>
-    <pubDate>Mon, 08 Mar 2021 10:23:18 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/mysql-interview-01/</guid>
-    <description><![CDATA[mysql面试01]]></description>
 </item></channel>
 </rss>
