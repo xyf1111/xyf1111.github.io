@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/redis-interview-02\/"
-        },"genre": "posts","keywords": "redis","wordcount":  2723 ,
+        },"genre": "posts","keywords": "redis","wordcount":  3812 ,
         "url": "http:\/\/example.org\/redis-interview-02\/","datePublished": "2021-03-18T16:25:45+08:00","dateModified": "2021-03-18T16:25:45+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,8 +106,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Redis Interview 02</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-18">2021-03-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2723 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-18">2021-03-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3812 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -152,6 +152,10 @@
         <li><a href="#缓存雪崩">缓存雪崩</a></li>
         <li><a href="#缓存穿透">缓存穿透</a></li>
         <li><a href="#缓存击穿">缓存击穿</a></li>
+        <li><a href="#缓存预热">缓存预热</a></li>
+        <li><a href="#缓存降级">缓存降级</a></li>
+        <li><a href="#热点数据和冷数据">热点数据和冷数据</a></li>
+        <li><a href="#缓存热点key">缓存热点key</a></li>
       </ul>
     </li>
   </ul>
@@ -249,6 +253,37 @@
 <ul>
 <li>设置热点数据永不过期</li>
 <li>加互斥锁</li>
+</ul>
+<h3 id="缓存预热">缓存预热</h3>
+<p>缓存预热就是指系统上线后，将相关的缓存数据直接加载到缓存系统。这样就可以避免在用户请求的时候，先查询数据库，然后再将数据缓存的问题，用户直接查询事先被预热的缓存数据
+解决方案：</p>
+<ul>
+<li>直接写个缓存刷新页面，上线时手工操作一下</li>
+<li>数据量不大，可以在项目启动的时候自动进行加载</li>
+<li>自动刷新缓存</li>
+</ul>
+<h3 id="缓存降级">缓存降级</h3>
+<p>当访问量剧增，服务出现问题（如响应时间慢或不响应）或非核心服务影响到核心流程的性能时，仍然要保证服务还是可用的，即使是有损服务，系统可以根据一些关键数据进行自动降级，也可以配置开关实现人工降级</p>
+<p>缓存降级的最终目标是保证核心服务可用，即使是有损的，而且有些服务是无法降级的（如加入购物车，结算）</p>
+<p>在进行降级之前要对系统进行梳理，看看系统是不是可以弃车保帅；从而梳理出哪些必须誓死保护，哪些可以降级，比如可以参考日志级别设置预案</p>
+<ol>
+<li>一般：比如有些服务偶尔因为网络抖动或者服务正在上线而超时，可以自动降级</li>
+<li>警告：有些服务在一段时间内成功率有波动（如在95%~100%之间），可以自动降级或人工降级，并发送警告</li>
+<li>错误：比如可用率低于90%，或者数据库连接池被打爆了，或者访问量忽然间猛增到系统能承受的最大阈值，此时可以根据情况自动降级或人工降级</li>
+<li>严重错误：比如因为特殊原因数据错误，此时需要紧急人工降级
+服务降级的目的，是为了防止Redis服务故障，导致数据库跟着一起发生雪崩问题。因此对于不重要的缓存数据，可以采取服务降级策略，例如一个比较常见的做法就是，Redis出现问题，不去数据库查询，而是直接返回默认值给用户。</li>
+</ol>
+<h3 id="热点数据和冷数据">热点数据和冷数据</h3>
+<p>热点数据，缓存才有价值</p>
+<p>对于冷数据而言，大部分数据可能还没有再次访问就已经被挤出内存，不仅占用内存，而且价值不大。频繁修改的数据，看情况考虑使用缓存</p>
+<p>对于热点数据，缓存以后可能读取数十万次或百万次</p>
+<p>缓存数据更新前至少读取两次，缓存才有意义。这个是最基本的策略，如果缓存还没有其作用就失效了，那就太没有价值了。</p>
+<p>那存不存在，修改频率很高，但是又不得不考虑缓存的场景？存在，如这个读取接口对数据库压力很大，这些请求发现缓存过期一般都会从后端DB加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端DB压垮</p>
+<h3 id="缓存热点key">缓存热点key</h3>
+<p>缓存中的一个Key（比如一个促销商品），在某个时间点过期的时候，恰好在这个时间点对这个Key有大量的并发请求发送过来，这些请求发现缓存过期，一般都会从后端DB加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端DB压垮</p>
+<p>解决方案：</p>
+<ul>
+<li>对缓存查询加锁，如果key不存在，就加锁，然后查DB入缓存，然后解锁。其他进程如果发现有锁就等待，然后等解锁后返回锁具或者进入DB查询</li>
 </ul></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">

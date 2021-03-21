@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/go-instance-12\/"
-        },"genre": "posts","keywords": "golang","wordcount":  184 ,
+        },"genre": "posts","keywords": "golang","wordcount":  240 ,
         "url": "http:\/\/example.org\/go-instance-12\/","datePublished": "2021-03-03T22:38:44+08:00","dateModified": "2021-03-03T22:38:44+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,7 +106,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Go Instance 12</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AE%9E%E4%BE%8B/"><i class="far fa-folder fa-fw"></i>实例</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-03">2021-03-03</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 184 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-03">2021-03-03</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 240 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
@@ -116,6 +116,7 @@
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
     <li><a href="#sort自带排序">sort自带排序</a></li>
+    <li><a href="#使用函数自定义排序">使用函数自定义排序</a></li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="sort自带排序">sort自带排序</h2>
@@ -170,6 +171,16 @@
 </span><span class="c1"></span>	<span class="nx">sorted</span> <span class="o">:=</span> <span class="nx">sort</span><span class="p">.</span><span class="nf">IntsAreSorted</span><span class="p">(</span><span class="nx">ints</span><span class="p">)</span>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">sorted</span><span class="p">)</span>
 <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="使用函数自定义排序">使用函数自定义排序</h2>
+<p>使用和集合的自然排序不同的方法对集合进行排序。例如按字母的长度而不是首字母顺序对字符串排序。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">
 </code></pre></td></tr></table>
 </div>
 </div></div><div class="post-footer" id="post-footer">
