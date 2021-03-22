@@ -3,7 +3,14 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 18 Mar 2021 16:25:45 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 22 Mar 2021 10:23:00 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Instance 13</title>
+    <link>http://example.org/go-instance-13/</link>
+    <pubDate>Mon, 22 Mar 2021 10:23:00 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-instance-13/</guid>
+    <description><![CDATA[Go Instance 13-panic、defer]]></description>
+</item><item>
     <title>Redis Interview 02</title>
     <link>http://example.org/redis-interview-02/</link>
     <pubDate>Thu, 18 Mar 2021 16:25:45 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/mysql-interview-03/</guid>
     <description><![CDATA[mysql面试03]]></description>
-</item><item>
-    <title>Mysql Interview 02</title>
-    <link>http://example.org/mysql-interview-02/</link>
-    <pubDate>Tue, 09 Mar 2021 09:50:33 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/mysql-interview-02/</guid>
-    <description><![CDATA[mysql面试02]]></description>
 </item></channel>
 </rss>
