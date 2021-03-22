@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Go Instance 14 - CC&#39;s Blog</title><meta name="Description" content="Go Instance 14-组合函数、字符串函数"><meta property="og:title" content="Go Instance 14" />
+<meta property="og:description" content="Go Instance 14-组合函数、字符串函数" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/go-instance-14/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-03-22T14:02:03+08:00" />
+<meta property="article:modified_time" content="2021-03-22T14:02:03+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Go Instance 14"/>
+<meta name="twitter:description" content="Go Instance 14-组合函数、字符串函数"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-instance-14/" /><link rel="prev" href="http://example.org/go-instance-13/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go Instance 14",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/go-instance-14\/"
+        },"genre": "posts","keywords": "golang","wordcount":  881 ,
+        "url": "http:\/\/example.org\/go-instance-14\/","datePublished": "2021-03-22T14:02:03+08:00","dateModified": "2021-03-22T14:02:03+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "Go Instance 14-组合函数、字符串函数"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Instance 14</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AE%9E%E4%BE%8B/"><i class="far fa-folder fa-fw"></i>实例</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-22">2021-03-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 881 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#组合函数">组合函数</a></li>
+    <li><a href="#字符串函数">字符串函数</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="组合函数">组合函数</h2>
+<p>我们经常需要程序在数据集上执行操作，比如选择满足条件的所有想，或者将所有项通过一个自定义函数映射到一个新的集合上</p>
+<p>在某些语言中，会习惯使用泛型。Go不支持泛型，在Go中当你的程序或数据类型有需要时，通常是以组合的方式来提供操作函数</p>
+<p>这是一些strings切片的组合函数实例。可以使用这些例子来构建自己的函数。注意有些时候直接使用内联组合操作代码会更加清晰，而不是创建并调用一个函数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;strings&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">//返回目标字段s出现的第一个位置，没有返回-1
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">Index</span><span class="p">(</span><span class="nx">s</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">arr</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">arr</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">s</span> <span class="o">==</span> <span class="nx">v</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">i</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="c1">//如果目标s在切片中存在返回true
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">Include</span><span class="p">(</span><span class="nx">s</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">arr</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nf">Index</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">arr</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="c1">//如果切片中的字符串有一个满足条件f返回true
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">Any</span><span class="p">(</span><span class="nx">arr</span> <span class="p">[]</span><span class="kt">string</span><span class="p">,</span> <span class="nx">f</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">arr</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nf">f</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">true</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="kc">false</span>
+<span class="p">}</span>
+
+<span class="c1">//如果切片中的字符串所有都满足条件f返回true
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">All</span><span class="p">(</span><span class="nx">arr</span> <span class="p">[]</span><span class="kt">string</span><span class="p">,</span> <span class="nx">f</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span><span class="p">)</span>	<span class="kt">bool</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">arr</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">!</span><span class="nf">f</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">false</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+
+<span class="c1">//返回一个包含所有切面中满足条件f的新切片
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">Filer</span><span class="p">(</span><span class="nx">arr</span> <span class="p">[]</span><span class="kt">string</span><span class="p">,</span> <span class="nx">f</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">[]</span><span class="kt">string</span> <span class="p">{</span>
+	<span class="nx">result</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">arr</span><span class="p">{</span>
+		<span class="k">if</span> <span class="nf">f</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">result</span>
+<span class="p">}</span>
+
+<span class="c1">//返回一个对原始切片中所有字符串执行函数f的切片
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">Map</span><span class="p">(</span><span class="nx">arr</span> <span class="p">[]</span><span class="kt">string</span><span class="p">,</span> <span class="nx">f</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span><span class="p">)</span> <span class="p">[]</span><span class="kt">string</span> <span class="p">{</span>
+	<span class="nx">result</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">arr</span> <span class="p">{</span>
+		<span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nf">f</span><span class="p">(</span><span class="nx">v</span><span class="p">))</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">result</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fruits</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;peach&#34;</span><span class="p">,</span> <span class="s">&#34;apple&#34;</span><span class="p">,</span> <span class="s">&#34;pear&#34;</span><span class="p">,</span> <span class="s">&#34;plum&#34;</span><span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nf">Index</span><span class="p">(</span><span class="s">&#34;pear&#34;</span><span class="p">,</span> <span class="nx">fruits</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nf">Include</span><span class="p">(</span><span class="s">&#34;grape&#34;</span><span class="p">,</span> <span class="nx">fruits</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nf">Any</span><span class="p">(</span><span class="nx">fruits</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">v</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="s">&#34;p&#34;</span><span class="p">)</span>
+	<span class="p">}))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nf">All</span><span class="p">(</span><span class="nx">fruits</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">v</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="s">&#34;p&#34;</span><span class="p">)</span>
+	<span class="p">}))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nf">Filer</span><span class="p">(</span><span class="nx">fruits</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">v</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="s">&#34;e&#34;</span><span class="p">)</span>
+	<span class="p">}))</span>
+	<span class="c1">//上面都是使用匿名函数，也可以使用类型正确的命名函数
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nf">Map</span><span class="p">(</span><span class="nx">fruits</span><span class="p">,</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">ToUpper</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="字符串函数">字符串函数</h2>
+<p>标准库的strings包提供了很多有用的字符相关的函数。这里是一些用来让你对这个包有个初步理解的例子</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="nx">s</span> <span class="s">&#34;strings&#34;</span>
+	<span class="p">)</span>
+
+<span class="c1">//给fmt.Println起别名，之后会经常用到
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">p</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">//这是一些strings中的函数例子。注意他们都是函数中的例子，不是字符串对自身的方法
+</span><span class="c1"></span>	<span class="c1">//这意味着我们需要考虑在调用时传递字符作为第一个参数进行传递
+</span><span class="c1"></span>	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;Contains:	&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">,</span> <span class="s">&#34;es&#34;</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;Count:		&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Count</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">,</span> <span class="s">&#34;t&#34;</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;HasPrefix:	&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">,</span> <span class="s">&#34;te&#34;</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;HasSuffix:	&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">HasSuffix</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">,</span> <span class="s">&#34;st&#34;</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;Index:		&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Index</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">,</span> <span class="s">&#34;e&#34;</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;Join:		&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Join</span><span class="p">([]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">},</span> <span class="s">&#34;-&#34;</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;Repeat:		&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Repeat</span><span class="p">(</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;Replace:	&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span><span class="s">&#34;foo&#34;</span><span class="p">,</span> <span class="s">&#34;o&#34;</span><span class="p">,</span> <span class="s">&#34;O&#34;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;Replace:	&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span><span class="s">&#34;foo&#34;</span><span class="p">,</span> <span class="s">&#34;o&#34;</span><span class="p">,</span> <span class="s">&#34;O&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;Split:		&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="s">&#34;a-b-c-d-e&#34;</span><span class="p">,</span> <span class="s">&#34;-&#34;</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;ToLower:	&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">ToLower</span><span class="p">(</span><span class="s">&#34;TEST&#34;</span><span class="p">))</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;ToUpper:	&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">ToUpper</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-03-22</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/go-instance-14/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-instance-14/" data-title="Go Instance 14" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-instance-14/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-instance-14/" data-title="Go Instance 14" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-instance-14/" data-title="Go Instance 14"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-instance-14/" data-title="Go Instance 14"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-instance-14/" data-title="Go Instance 14" data-description="Go Instance 14-组合函数、字符串函数"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-instance-14/" data-title="Go Instance 14" data-description="Go Instance 14-组合函数、字符串函数"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-instance-14/" data-title="Go Instance 14"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang/">golang</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/go-instance-13/" class="prev" rel="prev" title="Go Instance 13"><i class="fas fa-angle-left fa-fw"></i>Go Instance 13</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
