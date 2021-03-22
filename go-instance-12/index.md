@@ -31,5 +31,38 @@ func main() {
 ## 使用函数自定义排序
 使用和集合的自然排序不同的方法对集合进行排序。例如按字母的长度而不是首字母顺序对字符串排序。
 ```go
+package main
 
+import (
+	"fmt"
+	"sort"
+)
+
+//为了在Go中使用自定义函数进行排序，需要定义一个对应类型
+//这里创建一个为内置[]string类型的别名ByLength类型
+type ByLength []string
+
+//在类型中实现了sort.Interface 的Len，Less，Swap方法
+//这样就可以使用sort包内通用的Sort方法了，Len和Swap通常在各个类型中差不多
+//Less将控制实际的自定义排序逻辑
+//在这个例子中按字符串的长度来进行排序，所以这里用到了len(s[i])和len(s[j])
+func (s ByLength) Len() int {
+	return len(s)
+}
+
+func (s ByLength) Less(i int, j int) bool {
+	return len(s[i]) < len(s[j])
+}
+
+func (s ByLength) Swap(i int, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func main() {
+	//将原始的fruits转型成ByLength来实现自定义排序
+	//然后对这个转型的切片使用sort.Sort方法
+	fruits := []string{"peach", "banana", "kiwi"}
+	sort.Sort(ByLength(fruits))
+	fmt.Println(fruits)
+}
 ```
