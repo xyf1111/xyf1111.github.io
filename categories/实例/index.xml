@@ -3,7 +3,14 @@
         <title>实例 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E5%AE%9E%E4%BE%8B/</link>
         <description>实例 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 22 Mar 2021 14:46:01 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AE%9E%E4%BE%8B/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 22 Mar 2021 16:33:47 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AE%9E%E4%BE%8B/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Instance 16</title>
+    <link>http://example.org/go-instance-16/</link>
+    <pubDate>Mon, 22 Mar 2021 16:33:47 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-instance-16/</guid>
+    <description><![CDATA[Go Instance 16-Json]]></description>
+</item><item>
     <title>Go Instance 15</title>
     <link>http://example.org/go-instance-15/</link>
     <pubDate>Mon, 22 Mar 2021 14:46:01 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-instance-07/</guid>
     <description><![CDATA[Go Instance 07-Go定时器和打点器]]></description>
-</item><item>
-    <title>Go Instance 06</title>
-    <link>http://example.org/go-instance-06/</link>
-    <pubDate>Tue, 23 Feb 2021 17:43:11 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-06/</guid>
-    <description><![CDATA[Go Instance 06-defer+recover解决panic]]></description>
 </item></channel>
 </rss>
