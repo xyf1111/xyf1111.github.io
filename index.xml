@@ -3,15 +3,22 @@
         <title>CC&#39;s Blog</title>
         <link>http://example.org/</link>
         <description>这是我的全新 Hugo 网站</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Mar 2021 16:25:22 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Mar 2021 16:58:29 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Go Instance 21</title>
+    <link>http://example.org/go-instance-21/</link>
+    <pubDate>Tue, 23 Mar 2021 16:58:29 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-instance-21/</guid>
+    <description><![CDATA[Go Instance 21-读文件、写文件]]></description>
+</item><item>
     <title>Go Instance 20</title>
     <link>http://example.org/go-instance-20/</link>
     <pubDate>Tue, 23 Mar 2021 16:25:22 &#43;0800</pubDate>
     <author>作者</author>
     <guid>http://example.org/go-instance-20/</guid>
-    <description><![CDATA[Go Instance 20-]]></description>
+    <description><![CDATA[Go Instance 20-SHA1散列、Base64编码]]></description>
 </item><item>
     <title>Go Instance 19</title>
     <link>http://example.org/go-instance-19/</link>
@@ -68,12 +75,5 @@
     <author>作者</author>
     <guid>http://example.org/redis-interview-02/</guid>
     <description><![CDATA[redis面试02]]></description>
-</item><item>
-    <title>Redis Study 04</title>
-    <link>http://example.org/redis-study-04/</link>
-    <pubDate>Mon, 15 Mar 2021 17:00:21 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/redis-study-04/</guid>
-    <description><![CDATA[redis学习04]]></description>
 </item></channel>
 </rss>
