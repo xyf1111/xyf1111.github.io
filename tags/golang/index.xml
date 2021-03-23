@@ -3,7 +3,14 @@
         <title>golang - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/golang/</link>
         <description>golang - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Mar 2021 10:08:09 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Mar 2021 11:33:13 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Instance 18</title>
+    <link>http://example.org/go-instance-18/</link>
+    <pubDate>Tue, 23 Mar 2021 11:33:13 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-instance-18/</guid>
+    <description><![CDATA[Go Instance 17-时间]]></description>
+</item><item>
     <title>Go Instance 17</title>
     <link>http://example.org/go-instance-17/</link>
     <pubDate>Tue, 23 Mar 2021 10:08:09 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-instance-09/</guid>
     <description><![CDATA[Go Instance 09-速率限制]]></description>
-</item><item>
-    <title>Go Instance 08</title>
-    <link>http://example.org/go-instance-08/</link>
-    <pubDate>Fri, 26 Feb 2021 22:02:58 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-08/</guid>
-    <description><![CDATA[Go Instance 08-模拟工作池]]></description>
 </item></channel>
 </rss>
