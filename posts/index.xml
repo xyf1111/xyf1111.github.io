@@ -3,7 +3,14 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Mar 2021 14:34:57 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Mar 2021 16:25:22 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Instance 20</title>
+    <link>http://example.org/go-instance-20/</link>
+    <pubDate>Tue, 23 Mar 2021 16:25:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-instance-20/</guid>
+    <description><![CDATA[Go Instance 20-]]></description>
+</item><item>
     <title>Go Instance 19</title>
     <link>http://example.org/go-instance-19/</link>
     <pubDate>Tue, 23 Mar 2021 14:34:57 &#43;0800</pubDate>
@@ -65,13 +72,6 @@
     <pubDate>Mon, 15 Mar 2021 17:00:21 &#43;0800</pubDate>
     <author>作者</author>
     <guid>http://example.org/redis-study-04/</guid>
-    <description><![CDATA[redis学习04]]></description>
-</item><item>
-    <title>Redis Study 03</title>
-    <link>http://example.org/redis-study-03/</link>
-    <pubDate>Mon, 15 Mar 2021 09:42:39 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/redis-study-03/</guid>
     <description><![CDATA[redis学习04]]></description>
 </item></channel>
 </rss>
