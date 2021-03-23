@@ -3,13 +3,20 @@
         <title>实例 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E5%AE%9E%E4%BE%8B/</link>
         <description>实例 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Mar 2021 11:33:13 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AE%9E%E4%BE%8B/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Mar 2021 14:34:57 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AE%9E%E4%BE%8B/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Instance 19</title>
+    <link>http://example.org/go-instance-19/</link>
+    <pubDate>Tue, 23 Mar 2021 14:34:57 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-instance-19/</guid>
+    <description><![CDATA[Go Instance 19-数字解析，URL解析]]></description>
+</item><item>
     <title>Go Instance 18</title>
     <link>http://example.org/go-instance-18/</link>
     <pubDate>Tue, 23 Mar 2021 11:33:13 &#43;0800</pubDate>
     <author>作者</author>
     <guid>http://example.org/go-instance-18/</guid>
-    <description><![CDATA[Go Instance 17-时间]]></description>
+    <description><![CDATA[Go Instance 18-随机数]]></description>
 </item><item>
     <title>Go Instance 17</title>
     <link>http://example.org/go-instance-17/</link>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-instance-10/</guid>
     <description><![CDATA[Go Instance 10-原子计数器，互斥锁]]></description>
-</item><item>
-    <title>Go Instance 09</title>
-    <link>http://example.org/go-instance-09/</link>
-    <pubDate>Sat, 27 Feb 2021 23:39:15 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-09/</guid>
-    <description><![CDATA[Go Instance 09-速率限制]]></description>
 </item></channel>
 </rss>
