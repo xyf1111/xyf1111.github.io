@@ -5,37 +5,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>Go Interview 03 - CC&#39;s Blog</title><meta name="Description" content="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"><meta property="og:title" content="Go Interview 03" />
-<meta property="og:description" content="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景" />
+        <title>Go Interview 04 - CC&#39;s Blog</title><meta name="Description" content="Go Interview 04-beego|goconvey|GoStub"><meta property="og:title" content="Go Interview 04" />
+<meta property="og:description" content="Go Interview 04-beego|goconvey|GoStub" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/go-interview-03/" />
+<meta property="og:url" content="http://example.org/go-interview-04/" />
 <meta property="og:image" content="http://example.org/logo.png"/>
-<meta property="article:published_time" content="2021-03-24T15:38:14+08:00" />
-<meta property="article:modified_time" content="2021-03-24T15:38:14+08:00" />
+<meta property="article:published_time" content="2021-03-24T16:03:35+08:00" />
+<meta property="article:modified_time" content="2021-03-24T16:03:35+08:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="http://example.org/logo.png"/>
 
-<meta name="twitter:title" content="Go Interview 03"/>
-<meta name="twitter:description" content="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"/>
+<meta name="twitter:title" content="Go Interview 04"/>
+<meta name="twitter:description" content="Go Interview 04-beego|goconvey|GoStub"/>
 <meta name="application-name" content="LoveIt">
 <meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-interview-03/" /><link rel="prev" href="http://example.org/go-interview-02/" /><link rel="next" href="http://example.org/go-interview-04/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-interview-04/" /><link rel="prev" href="http://example.org/go-interview-03/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Go Interview 03",
+        "headline": "Go Interview 04",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/go-interview-03\/"
-        },"genre": "posts","keywords": "golang","wordcount":  787 ,
-        "url": "http:\/\/example.org\/go-interview-03\/","datePublished": "2021-03-24T15:38:14+08:00","dateModified": "2021-03-24T15:38:14+08:00","publisher": {
+            "@id": "http:\/\/example.org\/go-interview-04\/"
+        },"genre": "posts","keywords": "golang","wordcount":  311 ,
+        "url": "http:\/\/example.org\/go-interview-04\/","datePublished": "2021-03-24T16:03:35+08:00","dateModified": "2021-03-24T16:03:35+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "CC"
-            },"description": "Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"
+            },"description": "Go Interview 04-beego|goconvey|GoStub"
     }
     </script></head>
     <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
@@ -104,10 +104,10 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animated flipInX">Go Interview 03</h1><div class="post-meta">
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Interview 04</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E9%9D%A2%E8%AF%95/"><i class="far fa-folder fa-fw"></i>面试</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-24">2021-03-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 787 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-24">2021-03-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 311 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -115,56 +115,29 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#go中的for循环">Go中的for循环</a></li>
-    <li><a href="#go中的switch">Go中的switch</a></li>
-    <li><a href="#go中没有隐藏的this指针这句话是什么意思">Go中没有隐藏的this指针，这句话是什么意思</a></li>
-    <li><a href="#go中引用类型包含什么">Go中引用类型包含什么</a></li>
-    <li><a href="#go中指针运算有哪些">Go中指针运算有哪些</a></li>
-    <li><a href="#说说go的main函数">说说Go的main函数</a></li>
-    <li><a href="#go同步锁">Go同步锁</a></li>
-    <li><a href="#channel特性">channel特性</a></li>
-    <li><a href="#go触发异常的场景有哪些">Go触发异常的场景有哪些</a></li>
+    <li><a href="#go中的beego框架">Go中的beego框架</a></li>
+    <li><a href="#go中的goconvey框架">Go中的goconvey框架</a></li>
+    <li><a href="#go中gostub的作用是什么">Go中，GoStub的作用是什么</a></li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h2 id="go中的for循环">Go中的for循环</h2>
-<p>for循环支持continue和break来控制循环，但是她提供了一个更高级break，可以选择中断那个循环，for循环不支持以逗号为间隔的多个赋值语句，必须使用平行赋值的方式来初始化多个变量</p>
-<h2 id="go中的switch">Go中的switch</h2>
-<p>当个case中可以出现多个结果</p>
-<p>只有在case中明确添加fallthrough关键字，才会继续执行紧跟的下一个case</p>
-<h2 id="go中没有隐藏的this指针这句话是什么意思">Go中没有隐藏的this指针，这句话是什么意思</h2>
-<p>方法施加的对象显示传递，没有被隐藏起来</p>
-<p>golang的面向对象表达更直观，对于面向过程只是换了一种语法形式来表达</p>
-<p>方法施加的对象不需要非得是指针，也不用非得叫this</p>
-<h2 id="go中引用类型包含什么">Go中引用类型包含什么</h2>
-<p>数组切片，字典(map)，通道(channel)，接口(interface)</p>
-<h2 id="go中指针运算有哪些">Go中指针运算有哪些</h2>
-<p>可以通过&amp;取指针的地址</p>
-<p>可以通过*取指针指向的数据</p>
-<h2 id="说说go的main函数">说说Go的main函数</h2>
-<p>main函数不能带参数</p>
-<p>main函数不能定义返回值</p>
-<p>main函数所在的包必须是main包</p>
-<p>main函数中可以使用flag包来获取和解析命令行参数</p>
-<h2 id="go同步锁">Go同步锁</h2>
+            </div><div class="content" id="content"><h2 id="go中的beego框架">Go中的beego框架</h2>
 <ol>
-<li>当一个goroutine获得了Mutex后，其他的goroutine就只能乖乖的等待了，除非该goroutine释放这个Mutex</li>
-<li>RWMutex在读锁占用的情况下，会阻止写，但不会阻止写</li>
-<li>RWMutex在写锁占用的情况下，会阻止任何goroutine(无论是读还是写)，整个锁相当于由该goroutine独占</li>
+<li>beego是一个golang实现的轻量级HTTP框架</li>
+<li>beego可以通过注释路由、正则路由等多种方式完成url路由注入</li>
+<li>可以使用bee new工具生成空工程，然后使用bee run命令自动热编译</li>
 </ol>
-<h2 id="channel特性">channel特性</h2>
+<h2 id="go中的goconvey框架">Go中的goconvey框架</h2>
 <ol>
-<li>给一个nil channel发送数据，造成永久阻塞</li>
-<li>从一个nil channel接收数据，造成永久阻塞</li>
-<li>给一个已经关闭的channel发送数据，引起panic</li>
-<li>从一个已经关闭的channel接收数据，如果缓冲区为空，则返回一个零值</li>
-<li>无缓冲的channel是同步的，有缓冲的channel是非同步的</li>
+<li>goconvey是一个支持golang的单元测试框架</li>
+<li>goconvey能够自动监控文件并启动测试，并可以将测试结果实时输出到web界面</li>
+<li>goconvey提供了非常丰富的断言简化测试用例的编写</li>
 </ol>
-<h2 id="go触发异常的场景有哪些">Go触发异常的场景有哪些</h2>
+<h2 id="go中gostub的作用是什么">Go中，GoStub的作用是什么</h2>
 <ol>
-<li>空指针解析</li>
-<li>下标越界</li>
-<li>除数为0</li>
-<li>调用panic函数</li>
+<li>GoStub可以对全局变量打桩</li>
+<li>GoStub可以对函数打桩</li>
+<li>GoStub不可以对类的成员方法打桩</li>
+<li>GoStub可以打动态桩，例如对一个函数打桩后，多次调用该函数会有不同的行为</li>
 </ol></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
@@ -175,10 +148,10 @@
         </div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/go-interview-03/index.md" target="_blank">阅读原始文档</a>
+                            <a class="link-to-markdown" href="/go-interview-04/index.md" target="_blank">阅读原始文档</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-interview-03/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03" data-description="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03" data-description="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03"><i class="fab fa-evernote fa-fw"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-interview-04/" data-title="Go Interview 04" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-interview-04/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-interview-04/" data-title="Go Interview 04" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-interview-04/" data-title="Go Interview 04"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-interview-04/" data-title="Go Interview 04"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-interview-04/" data-title="Go Interview 04" data-description="Go Interview 04-beego|goconvey|GoStub"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-interview-04/" data-title="Go Interview 04" data-description="Go Interview 04-beego|goconvey|GoStub"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-interview-04/" data-title="Go Interview 04"><i class="fab fa-evernote fa-fw"></i></a></span>
             </div>
         </div>
     </div>
@@ -190,8 +163,7 @@
         </section>
     </div>
 
-    <div class="post-nav"><a href="/go-interview-02/" class="prev" rel="prev" title="Go Interview 02"><i class="fas fa-angle-left fa-fw"></i>Go Interview 02</a>
-            <a href="/go-interview-04/" class="next" rel="next" title="Go Interview 04">Go Interview 04<i class="fas fa-angle-right fa-fw"></i></a></div>
+    <div class="post-nav"><a href="/go-interview-03/" class="prev" rel="prev" title="Go Interview 03"><i class="fas fa-angle-left fa-fw"></i>Go Interview 03</a></div>
 </div>
 <div id="comments"></div></article></div>
             </main><footer class="footer">
