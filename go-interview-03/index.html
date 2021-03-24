@@ -5,37 +5,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>Go Interview 02 - CC&#39;s Blog</title><meta name="Description" content="Go Interview 02-Printf()、Sprintf()和Fprintf()函数的区别用法是什么|数组和切片的区别|解释go常用命令的作用|说说go中的协程"><meta property="og:title" content="Go Interview 02" />
-<meta property="og:description" content="Go Interview 02-Printf()、Sprintf()和Fprintf()函数的区别用法是什么|数组和切片的区别|解释go常用命令的作用|说说go中的协程" />
+        <title>Go Interview 03 - CC&#39;s Blog</title><meta name="Description" content="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"><meta property="og:title" content="Go Interview 03" />
+<meta property="og:description" content="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/go-interview-02/" />
+<meta property="og:url" content="http://example.org/go-interview-03/" />
 <meta property="og:image" content="http://example.org/logo.png"/>
-<meta property="article:published_time" content="2021-03-24T14:10:49+08:00" />
-<meta property="article:modified_time" content="2021-03-24T14:10:49+08:00" />
+<meta property="article:published_time" content="2021-03-24T15:38:14+08:00" />
+<meta property="article:modified_time" content="2021-03-24T15:38:14+08:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="http://example.org/logo.png"/>
 
-<meta name="twitter:title" content="Go Interview 02"/>
-<meta name="twitter:description" content="Go Interview 02-Printf()、Sprintf()和Fprintf()函数的区别用法是什么|数组和切片的区别|解释go常用命令的作用|说说go中的协程"/>
+<meta name="twitter:title" content="Go Interview 03"/>
+<meta name="twitter:description" content="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"/>
 <meta name="application-name" content="LoveIt">
 <meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-interview-02/" /><link rel="prev" href="http://example.org/go-instance-23/" /><link rel="next" href="http://example.org/go-interview-03/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-interview-03/" /><link rel="prev" href="http://example.org/go-interview-02/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Go Interview 02",
+        "headline": "Go Interview 03",
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/go-interview-02\/"
-        },"genre": "posts","keywords": "golang","wordcount":  981 ,
-        "url": "http:\/\/example.org\/go-interview-02\/","datePublished": "2021-03-24T14:10:49+08:00","dateModified": "2021-03-24T14:10:49+08:00","publisher": {
+            "@id": "http:\/\/example.org\/go-interview-03\/"
+        },"genre": "posts","keywords": "golang","wordcount":  787 ,
+        "url": "http:\/\/example.org\/go-interview-03\/","datePublished": "2021-03-24T15:38:14+08:00","dateModified": "2021-03-24T15:38:14+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
                 "name": "CC"
-            },"description": "Go Interview 02-Printf()、Sprintf()和Fprintf()函数的区别用法是什么|数组和切片的区别|解释go常用命令的作用|说说go中的协程"
+            },"description": "Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"
     }
     </script></head>
     <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
@@ -104,9 +104,9 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animated flipInX">Go Interview 02</h1><div class="post-meta">
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Interview 03</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E9%9D%A2%E8%AF%95/"><i class="far fa-folder fa-fw"></i>面试</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-24">2021-03-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 981 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-24">2021-03-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 787 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
@@ -115,67 +115,57 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#在go中printfsprintf和fprintf函数的区别用法是什么">在Go中，Printf()、Sprintf()和Fprintf()函数的区别用法是什么</a></li>
-    <li><a href="#数组和切片的区别">数组和切片的区别</a></li>
-    <li><a href="#解释以下命令的作用">解释以下命令的作用</a></li>
-    <li><a href="#说说go中的协程">说说Go中的协程</a></li>
+    <li><a href="#go中的for循环">Go中的for循环</a></li>
+    <li><a href="#go中的switch">Go中的switch</a></li>
+    <li><a href="#go中没有隐藏的this指针这句话是什么意思">Go中没有隐藏的this指针，这句话是什么意思</a></li>
+    <li><a href="#go中引用类型包含什么">Go中引用类型包含什么</a></li>
+    <li><a href="#go中指针运算有哪些">Go中指针运算有哪些</a></li>
+    <li><a href="#说说go的main函数">说说Go的main函数</a></li>
+    <li><a href="#go同步锁">Go同步锁</a></li>
+    <li><a href="#channel特性">channel特性</a></li>
+    <li><a href="#go触发异常的场景有哪些">Go触发异常的场景有哪些</a></li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><h2 id="在go中printfsprintf和fprintf函数的区别用法是什么">在Go中，Printf()、Sprintf()和Fprintf()函数的区别用法是什么</h2>
-<p>都是把格式好的字符串输出，只是输出的目标不同</p>
-<p>Printf()，是把格式字符串输出到标准输出(一般是屏幕，可以重定向)</p>
-<p>Printf()是和标准输出文件(stdout)关联的，Fprintf()没有这个限制</p>
-<p>Sprintf()，是把格式字符串输出到指定字符串中，所以参数比Printf()多一个char*。那就是目标字符串地址。</p>
-<p>Fprintf()，是把格式字符串输出到指定文件设备中，所以参数比Printf()多一个File*。主要用于文件操作</p>
-<p>Fprintf()是格式化输出到一个stream，通常是到文件</p>
-<h2 id="数组和切片的区别">数组和切片的区别</h2>
+            </div><div class="content" id="content"><h2 id="go中的for循环">Go中的for循环</h2>
+<p>for循环支持continue和break来控制循环，但是她提供了一个更高级break，可以选择中断那个循环，for循环不支持以逗号为间隔的多个赋值语句，必须使用平行赋值的方式来初始化多个变量</p>
+<h2 id="go中的switch">Go中的switch</h2>
+<p>当个case中可以出现多个结果</p>
+<p>只有在case中明确添加fallthrough关键字，才会继续执行紧跟的下一个case</p>
+<h2 id="go中没有隐藏的this指针这句话是什么意思">Go中没有隐藏的this指针，这句话是什么意思</h2>
+<p>方法施加的对象显示传递，没有被隐藏起来</p>
+<p>golang的面向对象表达更直观，对于面向过程只是换了一种语法形式来表达</p>
+<p>方法施加的对象不需要非得是指针，也不用非得叫this</p>
+<h2 id="go中引用类型包含什么">Go中引用类型包含什么</h2>
+<p>数组切片，字典(map)，通道(channel)，接口(interface)</p>
+<h2 id="go中指针运算有哪些">Go中指针运算有哪些</h2>
+<p>可以通过&amp;取指针的地址</p>
+<p>可以通过*取指针指向的数据</p>
+<h2 id="说说go的main函数">说说Go的main函数</h2>
+<p>main函数不能带参数</p>
+<p>main函数不能定义返回值</p>
+<p>main函数所在的包必须是main包</p>
+<p>main函数中可以使用flag包来获取和解析命令行参数</p>
+<h2 id="go同步锁">Go同步锁</h2>
 <ol>
-<li>数组是具有固定长度且拥有零个或者多个相同数据类型元素的序列。数组的长度是数组类型的一部分，所以[3]int和[4]int是两种不同的数组类型。</li>
+<li>当一个goroutine获得了Mutex后，其他的goroutine就只能乖乖的等待了，除非该goroutine释放这个Mutex</li>
+<li>RWMutex在读锁占用的情况下，会阻止写，但不会阻止写</li>
+<li>RWMutex在写锁占用的情况下，会阻止任何goroutine(无论是读还是写)，整个锁相当于由该goroutine独占</li>
 </ol>
-<p>数组需要制定大小，不指定也会根据初始化自动推算出大小，不可改变。</p>
-<p>数组是值传递</p>
-<p>数组是内置(build-in)类型，是一组同类型数据的集合，他是值类型，通过从零开始的下标索引访问元素值。在初始化后长度是固定的，无法修改其长度。当作为方法的参数传入时将复制一份数组而不是引用同一指针。数组的长度也是其类型的一部分，通过内置函数len(array)获取其长度</p>
-<p>数组定义</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">array</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="kt">int</span>
-
-<span class="kd">var</span> <span class="nx">array</span> <span class="p">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>2.切片表示拥有一个相同数据类型元素的可变长度的序列。切片是一种轻量级的数据结构，他有三个属性：指针、长度和容量。</p>
-<p>切片不需要指定大小</p>
-<p>切片是地址传递</p>
-<p>切片可以通过数组初始化，也可以通过内置函数make()初始化，初始化时len=cap，在追加元素时如果容量cap不足时将按len的2倍扩容</p>
-<p>切片定义</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">slice</span> <span class="p">[]</span><span class="kd">type</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kd">type</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span>
-</code></pre></td></tr></table>
-</div>
-</div><h2 id="解释以下命令的作用">解释以下命令的作用</h2>
-<ul>
-<li>go env：      用于查看go的环境变量</li>
-<li>go run：      用于编译并运行go源码文件</li>
-<li>go build：    用于编译源码文件、代码包、依赖包</li>
-<li>go get：      用于动态获取远程包</li>
-<li>go install：  用于编译go文件，并将编译结构安装到bin、pkg目录</li>
-<li>go clean：    用于清理工作目录，删除编译和安装遗留的目标文件</li>
-<li>go version：  用于查看go的版本信息</li>
-</ul>
-<h2 id="说说go中的协程">说说Go中的协程</h2>
-<p>协程和线程都可以实现程序的并发运行</p>
-<p>通过channel来进行协程间的通信</p>
-<p>只需要在函数调用前添加go关键字即可实现go协程，创建并发任务。</p>
-<p>关键字go并非执行并发任务，而是创建一个并发任务单元</p></div><div class="post-footer" id="post-footer">
+<h2 id="channel特性">channel特性</h2>
+<ol>
+<li>给一个nil channel发送数据，造成永久阻塞</li>
+<li>从一个nil channel接收数据，造成永久阻塞</li>
+<li>给一个已经关闭的channel发送数据，引起panic</li>
+<li>从一个已经关闭的channel接收数据，如果缓冲区为空，则返回一个零值</li>
+<li>无缓冲的channel是同步的，有缓冲的channel是非同步的</li>
+</ol>
+<h2 id="go触发异常的场景有哪些">Go触发异常的场景有哪些</h2>
+<ol>
+<li>空指针解析</li>
+<li>下标越界</li>
+<li>除数为0</li>
+<li>调用panic函数</li>
+</ol></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
@@ -185,10 +175,10 @@
         </div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
-                            <a class="link-to-markdown" href="/go-interview-02/index.md" target="_blank">阅读原始文档</a>
+                            <a class="link-to-markdown" href="/go-interview-03/index.md" target="_blank">阅读原始文档</a>
                         </span></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-interview-02/" data-title="Go Interview 02" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-interview-02/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-interview-02/" data-title="Go Interview 02" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-interview-02/" data-title="Go Interview 02"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-interview-02/" data-title="Go Interview 02"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-interview-02/" data-title="Go Interview 02" data-description="Go Interview 02-Printf()、Sprintf()和Fprintf()函数的区别用法是什么|数组和切片的区别|解释go常用命令的作用|说说go中的协程"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-interview-02/" data-title="Go Interview 02" data-description="Go Interview 02-Printf()、Sprintf()和Fprintf()函数的区别用法是什么|数组和切片的区别|解释go常用命令的作用|说说go中的协程"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-interview-02/" data-title="Go Interview 02"><i class="fab fa-evernote fa-fw"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03" data-via="xxxx" data-hashtags="golang"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-interview-03/" data-hashtag="golang"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03" data-description="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03" data-description="Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-interview-03/" data-title="Go Interview 03"><i class="fab fa-evernote fa-fw"></i></a></span>
             </div>
         </div>
     </div>
@@ -200,8 +190,7 @@
         </section>
     </div>
 
-    <div class="post-nav"><a href="/go-instance-23/" class="prev" rel="prev" title="Go Instance 23"><i class="fas fa-angle-left fa-fw"></i>Go Instance 23</a>
-            <a href="/go-interview-03/" class="next" rel="next" title="Go Interview 03">Go Interview 03<i class="fas fa-angle-right fa-fw"></i></a></div>
+    <div class="post-nav"><a href="/go-interview-02/" class="prev" rel="prev" title="Go Interview 02"><i class="fas fa-angle-left fa-fw"></i>Go Interview 02</a></div>
 </div>
 <div id="comments"></div></article></div>
             </main><footer class="footer">

@@ -3,13 +3,20 @@
         <title>golang - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/golang/</link>
         <description>golang - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 24 Mar 2021 14:10:49 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 24 Mar 2021 15:38:14 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Interview 03</title>
+    <link>http://example.org/go-interview-03/</link>
+    <pubDate>Wed, 24 Mar 2021 15:38:14 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-interview-03/</guid>
+    <description><![CDATA[Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景]]></description>
+</item><item>
     <title>Go Interview 02</title>
     <link>http://example.org/go-interview-02/</link>
     <pubDate>Wed, 24 Mar 2021 14:10:49 &#43;0800</pubDate>
     <author>作者</author>
     <guid>http://example.org/go-interview-02/</guid>
-    <description><![CDATA[在Go中，Printf()、Sprintf()和Fprintf()函数的区别用法是什么 都是把格式好的字符串输出，只是输出的目标不同 Print]]></description>
+    <description><![CDATA[Go Interview 02-Printf()、Sprintf()和Fprintf()函数的区别用法是什么|数组和切片的区别|解释go常用命令的作用|说说go中的协程]]></description>
 </item><item>
     <title>Go Instance 23</title>
     <link>http://example.org/go-instance-23/</link>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-instance-16/</guid>
     <description><![CDATA[Go Instance 16-Json]]></description>
-</item><item>
-    <title>Go Instance 15</title>
-    <link>http://example.org/go-instance-15/</link>
-    <pubDate>Mon, 22 Mar 2021 14:46:01 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-15/</guid>
-    <description><![CDATA[Go Instance 15-字符串格式化、正则表达式]]></description>
 </item></channel>
 </rss>

@@ -1,5 +1,6 @@
 # Go Interview 02
 
+<!--more-->
 ## 在Go中，Printf()、Sprintf()和Fprintf()函数的区别用法是什么
 都是把格式好的字符串输出，只是输出的目标不同
 
