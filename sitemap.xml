@@ -2,12 +2,14 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>http://example.org/categories/</loc><lastmod>2021-03-24T09:47:35&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://example.org/</loc><lastmod>2021-03-24T09:47:35&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/categories/</loc><lastmod>2021-03-24T14:10:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/</loc><lastmod>2021-03-24T14:10:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/go-interview-02/</loc><lastmod>2021-03-24T14:10:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/tags/golang/</loc><lastmod>2021-03-24T14:10:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/posts/</loc><lastmod>2021-03-24T14:10:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/tags/</loc><lastmod>2021-03-24T14:10:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>http://example.org/categories/%E9%9D%A2%E8%AF%95/</loc><lastmod>2021-03-24T14:10:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://example.org/go-instance-23/</loc><lastmod>2021-03-24T09:47:35&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://example.org/tags/golang/</loc><lastmod>2021-03-24T09:47:35&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://example.org/posts/</loc><lastmod>2021-03-24T09:47:35&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://example.org/tags/</loc><lastmod>2021-03-24T09:47:35&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://example.org/categories/%E5%AE%9E%E4%BE%8B/</loc><lastmod>2021-03-24T09:47:35&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://example.org/go-instance-22/</loc><lastmod>2021-03-23T17:58:31&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>http://example.org/go-instance-21/</loc><lastmod>2021-03-23T16:58:29&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
@@ -29,7 +31,7 @@
             <loc>http://example.org/redis-interview-01/</loc><lastmod>2021-03-11T11:03:51&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url><url>
             <loc>http://example.org/tags/mysql/</loc><lastmod>2021-03-11T11:03:02&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url><url>
             <loc>http://example.org/mysql-interview-05/</loc><lastmod>2021-03-11T11:03:02&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url><url>
-            <loc>http://example.org/mysql-interview-04/</loc><lastmod>2021-03-10T11:10:43&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url><url>
+            <loc>http://example.org/mysql-interview-04/</loc><lastmod>2021-03-10T11:10:43&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url><url>
             <loc>http://example.org/mysql-interview-03/</loc><lastmod>2021-03-09T14:58:38&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url><url>
             <loc>http://example.org/mysql-interview-02/</loc><lastmod>2021-03-09T09:50:33&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url><url>
             <loc>http://example.org/mysql-interview-01/</loc><lastmod>2021-03-08T10:23:18&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url><url>
@@ -54,12 +56,11 @@
             <loc>http://example.org/go-study-14/</loc><lastmod>2021-02-21T21:33:17&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url><url>
             <loc>http://example.org/go-study-13/</loc><lastmod>2021-02-21T20:47:36&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url><url>
             <loc>http://example.org/go-interview-01/</loc><lastmod>2021-02-20T16:11:01&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url><url>
-            <loc>http://example.org/categories/%E9%9D%A2%E8%AF%95/</loc><lastmod>2021-02-20T16:11:01&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url><url>
             <loc>http://example.org/go-instance-01/</loc><lastmod>2021-02-19T11:17:58&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url><url>
             <loc>http://example.org/go-study-12/</loc><lastmod>2021-02-18T16:53:11&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url><url>
             <loc>http://example.org/go-study-11/</loc><lastmod>2021-02-18T12:02:44&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url><url>
-            <loc>http://example.org/go-study-10/</loc><lastmod>2021-02-17T14:44:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url><url>
-            <loc>http://example.org/go-study-09/</loc><lastmod>2021-02-17T13:51:06&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url><url>
+            <loc>http://example.org/go-study-10/</loc><lastmod>2021-02-17T14:44:49&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>http://example.org/go-study-09/</loc><lastmod>2021-02-17T13:51:06&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>http://example.org/go-study-08/</loc><lastmod>2021-02-16T16:15:16&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>http://example.org/go-study-07/</loc><lastmod>2021-02-16T14:27:28&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>http://example.org/go-study-06/</loc><lastmod>2021-02-16T11:39:25&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
