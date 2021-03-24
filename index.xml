@@ -3,15 +3,22 @@
         <title>CC&#39;s Blog</title>
         <link>http://example.org/</link>
         <description>这是我的全新 Hugo 网站</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 23 Mar 2021 17:58:31 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 24 Mar 2021 09:47:35 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Go Instance 23</title>
+    <link>http://example.org/go-instance-23/</link>
+    <pubDate>Wed, 24 Mar 2021 09:47:35 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-instance-23/</guid>
+    <description><![CDATA[Go Instance 23-信号、退出]]></description>
+</item><item>
     <title>Go Instance 22</title>
     <link>http://example.org/go-instance-22/</link>
     <pubDate>Tue, 23 Mar 2021 17:58:31 &#43;0800</pubDate>
     <author>作者</author>
     <guid>http://example.org/go-instance-22/</guid>
-    <description><![CDATA[Go Instance 22-读文件、写文件]]></description>
+    <description><![CDATA[Go Instance 22-行过滤器、命令号标志]]></description>
 </item><item>
     <title>Go Instance 21</title>
     <link>http://example.org/go-instance-21/</link>
@@ -68,12 +75,5 @@
     <author>作者</author>
     <guid>http://example.org/go-instance-14/</guid>
     <description><![CDATA[Go Instance 14-组合函数、字符串函数]]></description>
-</item><item>
-    <title>Go Instance 13</title>
-    <link>http://example.org/go-instance-13/</link>
-    <pubDate>Mon, 22 Mar 2021 10:23:00 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-13/</guid>
-    <description><![CDATA[Go Instance 13-panic、defer]]></description>
 </item></channel>
 </rss>
