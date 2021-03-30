@@ -180,19 +180,25 @@
 <ul>
 <li>200 ok，表示从客户端发来的请求在服务端被正确处理</li>
 <li>204 No Content，表示请求成功，但响应报文不含实体的主体部分</li>
-<li>206 Partial Content，进行范围请求
-3xx 重定向</li>
+<li>206 Partial Content，进行范围请求</li>
+</ul>
+<p>3xx 重定向</p>
+<ul>
 <li>301 moved permanently，永久性重定向，表示资源已被分配了新的URL</li>
 <li>302 found，临时性重定向，表示资源临时被分配了新的URL</li>
 <li>303 see other，表示资源存在另一个URL，应使用GET方法定向获取资源</li>
 <li>304 not modified，表示服务器允许访问资源，但因发生请求未满足条件的情况</li>
-<li>307 temporary redirect，临时重定向，和302含义相同
-4xx 客户端错误</li>
+<li>307 temporary redirect，临时重定向，和302含义相同</li>
+</ul>
+<p>4xx 客户端错误</p>
+<ul>
 <li>400 bad request，请求报文存在语法错误</li>
 <li>401 unauthorized，表示发送的请求需要有通过HTTP认证的认证信息</li>
 <li>403 forbidden，表示对请求资源的访问被服务器拒绝</li>
-<li>404 not found，表示服务器上没有找到对应资源
-5xx 服务器错误</li>
+<li>404 not found，表示服务器上没有找到对应资源</li>
+</ul>
+<p>5xx 服务器错误</p>
+<ul>
 <li>500 internal server error，表示服务器端执行请求时发生错误</li>
 <li>503 service unavailable，表示服务器暂时处于超负载或正在停机维护，无法处理请求</li>
 </ul>
@@ -217,9 +223,9 @@
 <h2 id="tcp和udp的区别">TCP和UDP的区别</h2>
 <ul>
 <li>TCP：面向连接，可靠，速度慢，效率低</li>
-<li>UDP：无连接，不可靠，速度快，效率高
-当进程需要传输可靠的数据时应使用TCP，当进程需要高效传输数据，可以忽略可靠性时应使用UDP</li>
+<li>UDP：无连接，不可靠，速度快，效率高</li>
 </ul>
+<p>当进程需要传输可靠的数据时应使用TCP，当进程需要高效传输数据，可以忽略可靠性时应使用UDP</p>
 <p>TCP如何保证可靠性：</p>
 <ul>
 <li>数据包校验</li>

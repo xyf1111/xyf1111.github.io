@@ -11,7 +11,7 @@
 ### 性能测试
 - testing.B的使用
 ### 使用pprof进行性能调优
-1. 终端进入项目目录下
+1. 终端进入有测试文件的项目目录下
 2. go test -bench . -cpuprofile cpu.out生成cpu.out
 3. go tool pprof cpu.out查看cpu.out
 4. 在交互式命令行输入web进行查看

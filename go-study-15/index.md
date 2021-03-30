@@ -247,7 +247,7 @@ func main() {
 	signal <- "world"
 	//可以在default前使用多个case子句实现一个多路的非阻塞的选择器
 	//这里尝试在message和signal上同时使用非阻塞的接收操作
-	//如果case1和case2都满足，只执行case1
+	//如果case1和case2都满足，随机执行case1或case2
 	select {
 	case msg := <-message:
 		fmt.Println("receives message:", msg)
