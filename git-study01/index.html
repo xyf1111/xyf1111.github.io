@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Git Study01 - CC&#39;s Blog</title><meta name="Description" content="Git Study 01"><meta property="og:title" content="Git Study01" />
+<meta property="og:description" content="Git Study 01" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/git-study01/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-04-11T18:58:52+08:00" />
+<meta property="article:modified_time" content="2021-04-11T18:58:52+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Git Study01"/>
+<meta name="twitter:description" content="Git Study 01"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/git-study01/" /><link rel="prev" href="http://example.org/linux-study01/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Git Study01",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/git-study01\/"
+        },"genre": "posts","keywords": "Git学习","wordcount":  1601 ,
+        "url": "http:\/\/example.org\/git-study01\/","datePublished": "2021-04-11T18:58:52+08:00","dateModified": "2021-04-11T18:58:52+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "Git Study 01"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Git Study01</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-11">2021-04-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1601 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#git配置">Git配置</a>
+      <ul>
+        <li><a href="#查看配置">查看配置</a></li>
+        <li><a href="#文件配置">文件配置</a></li>
+        <li><a href="#设置用户名和邮箱">设置用户名和邮箱</a></li>
+      </ul>
+    </li>
+    <li><a href="#git基本理论">Git基本理论</a>
+      <ul>
+        <li><a href="#工作区域">工作区域</a></li>
+        <li><a href="#工作流程">工作流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#git项目搭建">Git项目搭建</a>
+      <ul>
+        <li><a href="#创建工作目录与常用指令">创建工作目录与常用指令</a></li>
+        <li><a href="#本地仓库搭建">本地仓库搭建</a></li>
+        <li><a href="#克隆远程仓库">克隆远程仓库</a></li>
+      </ul>
+    </li>
+    <li><a href="#git文件操作">Git文件操作</a>
+      <ul>
+        <li><a href="#文件4种状态">文件4种状态</a></li>
+        <li><a href="#查看文件状态">查看文件状态</a></li>
+        <li><a href="#忽略文件">忽略文件</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="git配置">Git配置</h2>
+<h3 id="查看配置">查看配置</h3>
+<ul>
+<li>git config -l : git的配置清单</li>
+<li>git config  &ndash;system &ndash;list : git的系统配置</li>
+<li>git config &ndash;global &ndash;list : git的用户配置</li>
+</ul>
+<h3 id="文件配置">文件配置</h3>
+<ul>
+<li>系统配置 : E:\git\Git\mingw64\etc\gitconfig</li>
+<li>用户配置 : C:\Users\Administrator.gitconfig</li>
+</ul>
+<h3 id="设置用户名和邮箱">设置用户名和邮箱</h3>
+<ul>
+<li>git config &ndash;global user.name &ldquo;xyf1111&rdquo; : 设置名称</li>
+<li>git config &ndash;global user.email <a href="mailto:2219316464@qq.com">2219316464@qq.com</a> : 设置邮箱</li>
+</ul>
+<h2 id="git基本理论">Git基本理论</h2>
+<h3 id="工作区域">工作区域</h3>
+<p>Git本地有三个工作区域：工作目录(Working Directory)、暂存区(Stage/Index)、资源库(Repository或Git Directory)。如果在加上远程的Git仓库(Remote Directory)就可以分为四个工作区域。文件在这四个区域之间的转换关系如下：</p>
+<ul>
+<li>Workspace : 工作区，就是你平时存放项目代码的地方</li>
+<li>Index/Stage : 暂存区，用于临时存放你的改动，事实上她只是一个文件，保存即将提交到文件列表的信息</li>
+<li>Repository : 仓库区(或本地仓库)，就是安全存放数据的位置，这里面有你提交到所有版本的数据。其中Head指向最新放入仓库的版本</li>
+<li>Rempte : 远程仓库，托管代码的服务器，可以简单的认为是你项目组中的一台电脑用于远程数据交换</li>
+</ul>
+<h3 id="工作流程">工作流程</h3>
+<ol>
+<li>在工作目录中添加、修改文件</li>
+<li>将需要进行版本管理的文件放入暂存区</li>
+<li>将暂存区的文件提交到git仓库
+因此，git管理的文件有三种状态：已修改，已暂存，已提交</li>
+</ol>
+<h2 id="git项目搭建">Git项目搭建</h2>
+<h3 id="创建工作目录与常用指令">创建工作目录与常用指令</h3>
+<p>工作目录(WorkSpace)一般就是你希望Git帮你管理的文件夹，可以是项目的目录，也可以是一个空目录，建议不要有中文。</p>
+<p>日常使用只要记住以下6个命令
+<figure><a class="lightgallery" href="/images/git1.png" title="&amp;ldquo;Git日常命令&amp;rdquo;" data-thumbnail="/images/git1.png" data-sub-html="<h2>Git日常命令</h2><p>&amp;ldquo;Git日常命令&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/git1.png"
+            data-srcset="/images/git1.png, /images/git1.png 1.5x, /images/git1.png 2x"
+            data-sizes="auto"
+            alt="/images/git1.png" />
+    </a><figcaption class="image-caption">Git日常命令</figcaption>
+    </figure></p>
+<h3 id="本地仓库搭建">本地仓库搭建</h3>
+<ol>
+<li>创建全新的仓库，需要用GIT管理的项目的根目录执行：</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 在当前目录新建一个Git代码库</span>
+$ git init
+</code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>执行后可以看见，在项目中多出了一个git目录，关于版本等的所有信息都在这个目录里面</li>
+</ol>
+<h3 id="克隆远程仓库">克隆远程仓库</h3>
+<ol>
+<li>将远程服务器上的仓库完全镜像一份至本地</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 克隆一个项目和她的整个代码历史(版本信息)</span>
+$ git clone <span class="o">[</span>url<span class="o">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="git文件操作">Git文件操作</h2>
+<h3 id="文件4种状态">文件4种状态</h3>
+<p>版本控制就是对文件的版本控制，要对文件进行修改、提交等操作，首先要知道文件当前在什么状态，不然可能会提交了现在不想提交的文件，或者要提交的文件没提交上</p>
+<ul>
+<li>Untracked : 未跟踪，此文件在文件夹中，但是并没有加入到git库，不参与版本控制，通过 git add 状态变为 Staged</li>
+<li>Unmodify : 文件已经入库，未修改，即版本库中的文件快照内容与文件中完全一致，这种类型的文件有两种去处，如果她被修改，而变为 Modified 。如果使用 git rm 移出版本库，则称为 Untracked 文件</li>
+<li>Modified : 文件已修改，仅仅是修改，并没有进行其他操作，这个文件也有两个去处，通过 git add 可进入暂存 Staged 状态，使用 git checkout 则丢弃修改过的，返回 Unmodify 状态，这个 git checkout 即从库中取出文件，覆盖当前修改</li>
+<li>Staged : 暂存状态，执行 git commit 则将修改同步到库中，这时库中的文件和本地的文件又变为一致，文件为 UNmodify 状态，执行 git reset HEAD filename 取消暂存，文件状态为 Modified</li>
+</ul>
+<h3 id="查看文件状态">查看文件状态</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 查看指定文件状态</span>
+git status <span class="o">[</span>filename<span class="o">]</span>
+
+<span class="c1"># 查看所有文件状态</span>
+git status
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="忽略文件">忽略文件</h3>
+<p>有些时候不想把某些文件纳入版本控制中，比如数据库文件，临时文件，设计文件等
+在主目录下建立&quot;.gitingnore&quot;文件，此文件有如下规则</p>
+<ol>
+<li>忽略文件中的空行或者以井号(#)开始的行都会被忽略</li>
+<li>可以使用Linux通配符。例如：星号(*)代表任意多个字符，问号(?)代表一个字符，方括号([abc])代表可选字符范围，大括号({string1,string2&hellip;})代表可选的字符串等</li>
+<li>如果名称的最前面有一个感叹号(!)，表示例外规则，将不被忽略</li>
+<li>如果名称的最前面是一个路径分隔符(/)，表示要忽略的文件在此目录下，而子目录中的文件不被忽略</li>
+<li>如果名称的最后名是一个路径分隔符(/)，表示要忽略的是此目录下该名称的子目录，而非文件(默认文件或目录都被忽略)</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 为注释</span>
+
+<span class="c1"># 忽略所有 .txt 结尾的文件</span>
+*.txt
+
+<span class="c1"># lib.txt 除外</span>
+!lib.txt
+
+<span class="c1"># 忽略项目根目录下的temp文件，不包含其他目录</span>
+/temp
+
+<span class="c1"># 忽略build/目录下的所有文件</span>
+build/
+
+<span class="c1"># 忽略doc/file.txt但是不包括 doc/xx/aa.txt</span>
+doc/*.txt
+</code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-04-11</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/git-study01/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/git-study01/" data-title="Git Study01" data-via="xxxx" data-hashtags="Git学习"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/git-study01/" data-hashtag="Git学习"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/git-study01/" data-title="Git Study01" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/git-study01/" data-title="Git Study01"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/git-study01/" data-title="Git Study01"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/git-study01/" data-title="Git Study01" data-description="Git Study 01"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/git-study01/" data-title="Git Study01" data-description="Git Study 01"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/git-study01/" data-title="Git Study01"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/git%E5%AD%A6%E4%B9%A0/">Git学习</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/linux-study01/" class="prev" rel="prev" title="Linux Study01"><i class="fas fa-angle-left fa-fw"></i>Linux Study01</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
