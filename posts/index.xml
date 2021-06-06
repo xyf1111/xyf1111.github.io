@@ -3,7 +3,21 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 11 Apr 2021 18:58:52 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 03 Jun 2021 21:53:53 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>GoContextStudy</title>
+    <link>http://example.org/gocontextstudy/</link>
+    <pubDate>Thu, 03 Jun 2021 21:53:53 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/gocontextstudy/</guid>
+    <description><![CDATA[Go context study]]></description>
+</item><item>
+    <title>Git Study02</title>
+    <link>http://example.org/git-study02/</link>
+    <pubDate>Sun, 25 Apr 2021 21:06:58 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/git-study02/</guid>
+    <description><![CDATA[Git Study 01]]></description>
+</item><item>
     <title>Git Study01</title>
     <link>http://example.org/git-study01/</link>
     <pubDate>Sun, 11 Apr 2021 18:58:52 &#43;0800</pubDate>
@@ -59,19 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-interview-05/</guid>
     <description><![CDATA[Go Interview 05-select机制|进程、线程、协程区别]]></description>
-</item><item>
-    <title>Go Interview 04</title>
-    <link>http://example.org/go-interview-04/</link>
-    <pubDate>Wed, 24 Mar 2021 16:03:35 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-interview-04/</guid>
-    <description><![CDATA[Go Interview 04-beego|goconvey|GoStub]]></description>
-</item><item>
-    <title>Go Interview 03</title>
-    <link>http://example.org/go-interview-03/</link>
-    <pubDate>Wed, 24 Mar 2021 15:38:14 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-interview-03/</guid>
-    <description><![CDATA[Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景]]></description>
 </item></channel>
 </rss>

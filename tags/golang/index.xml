@@ -3,7 +3,14 @@
         <title>golang - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/golang/</link>
         <description>golang - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 25 Mar 2021 17:50:41 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 03 Jun 2021 21:53:53 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>GoContextStudy</title>
+    <link>http://example.org/gocontextstudy/</link>
+    <pubDate>Thu, 03 Jun 2021 21:53:53 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/gocontextstudy/</guid>
+    <description><![CDATA[Go context study]]></description>
+</item><item>
     <title>Go Interview 08</title>
     <link>http://example.org/go-interview-08/</link>
     <pubDate>Thu, 25 Mar 2021 17:50:41 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-instance-22/</guid>
     <description><![CDATA[Go Instance 22-行过滤器、命令号标志]]></description>
-</item><item>
-    <title>Go Instance 21</title>
-    <link>http://example.org/go-instance-21/</link>
-    <pubDate>Tue, 23 Mar 2021 16:58:29 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-21/</guid>
-    <description><![CDATA[Go Instance 21-读文件、写文件]]></description>
 </item></channel>
 </rss>
