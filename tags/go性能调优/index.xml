@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Go性能调优 - 标签 - CC&#39;s Blog</title>
+        <link>http://example.org/tags/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</link>
+        <description>Go性能调优 - 标签 - CC&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 13 Jun 2021 19:49:31 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" rel="self" type="application/rss+xml" /><item>
+    <title>Go性能调优</title>
+    <link>http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</link>
+    <pubDate>Sun, 13 Jun 2021 19:49:31 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</guid>
+    <description><![CDATA[Go性能优化 Go语言项目中的性能优化主要有以下几个方面 CPU profile：报告程序的CPU使用情况，按照一定频率去采集应用程序在CPU和寄存器]]></description>
+</item></channel>
+</rss>

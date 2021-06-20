@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Go性能调优 - CC&#39;s Blog</title><meta name="Description" content="Go性能调优"><meta property="og:title" content="Go性能调优" />
+<meta property="og:description" content="Go性能调优" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-06-13T19:49:31+08:00" />
+<meta property="article:modified_time" content="2021-06-13T19:49:31+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Go性能调优"/>
+<meta name="twitter:description" content="Go性能调优"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" /><link rel="prev" href="http://example.org/gocontextstudy/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go性能调优",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98\/"
+        },"genre": "posts","keywords": "Go性能调优","wordcount":  2750 ,
+        "url": "http:\/\/example.org\/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98\/","datePublished": "2021-06-13T19:49:31+08:00","dateModified": "2021-06-13T19:49:31+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "Go性能调优"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go性能调优</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-06-13">2021-06-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2750 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#go性能优化">Go性能优化</a></li>
+    <li><a href="#采集性能数据">采集性能数据</a></li>
+    <li><a href="#工具型应用">工具型应用</a>
+      <ul>
+        <li><a href="#cpu性能分析">CPU性能分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#内存性能优化">内存性能优化</a></li>
+    <li><a href="#服务型应用">服务型应用</a></li>
+    <li><a href="#go-tool-pprof命令">go tool pprof命令</a></li>
+    <li><a href="#具体示例">具体示例</a></li>
+    <li><a href="#go-torch和火焰图">go-torch和火焰图</a>
+      <ul>
+        <li><a href="#安装go-torch">安装go-torch</a></li>
+        <li><a href="#安装flamegraph">安装FlameGraph</a></li>
+        <li><a href="#压测工具">压测工具</a></li>
+        <li><a href="#使用go-torch">使用go-torch</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="go性能优化">Go性能优化</h2>
+<p>Go语言项目中的性能优化主要有以下几个方面</p>
+<ul>
+<li>CPU profile：报告程序的CPU使用情况，按照一定频率去采集应用程序在CPU和寄存器上面的数据</li>
+<li>Memory Profile (Heap Profile)：报告程序的内存使用情况</li>
+<li>Block Profiling：报告goroutine不在运行时状态的情况，可以用来分析和查找死锁等性能瓶颈</li>
+<li>Goroutine Profiling：报告goroutines的使用情况，有哪些goroutine，它们的调用关系是怎样的</li>
+</ul>
+<h2 id="采集性能数据">采集性能数据</h2>
+<p>Go语言内置了获取程序运行数据的工具，包括以下两个标准库：</p>
+<ul>
+<li>runtime/pprof：采集工具型应用运行数据进行分析</li>
+<li>net/http/pprof：采集服务型应用运行数据进行分析
+pprof开启后，每个一段时间(10ms)就会收集下当前的堆栈信息，获取各个函数占用的CPU以及内存资源；最后通过对这些采样数据进行分析，形成一个性能分析报告。</li>
+</ul>
+<p>注意，我们只应该在性能测试的时候才在代码中引入pprof</p>
+<h2 id="工具型应用">工具型应用</h2>
+<p>如果你的应用程序是运行一段时间就退出类型。那么最好的方法是在应用退出的时候把profiling的报告保存到文件中，进行分析。对于这种情况，可以使用runtime/pprof库。首先在代码中导入runtime/pprof工具：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="s">&#34;runtime/pprof&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="cpu性能分析">CPU性能分析</h3>
+<p>开启CPU性能分析</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">pprof</span><span class="p">.</span><span class="nf">StartCPUProfile</span><span class="p">(</span><span class="nx">w</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Writer</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>停止CPU性能分析</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">pprof</span><span class="p">.</span><span class="nf">StopCPUProfile</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>应用执行结束后，就会生成一个文件，保存了我们的CPU profiling数据。得到采样数据之后，使用go tool pprof工具进行CPU性能分析</p>
+<h2 id="内存性能优化">内存性能优化</h2>
+<p>记录程序的堆栈信息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">pprof</span><span class="p">.</span><span class="nf">WriteHeapProfile</span><span class="p">(</span><span class="nx">w</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Writer</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>得到采样数据之后，使用go tool pprof工具进行内存性能分析。</p>
+<p>go tool pprof默认是使用-inuse_space进行统计，还可以使用-inuse-objects查看分配对象的数量。</p>
+<h2 id="服务型应用">服务型应用</h2>
+<p>如果你的程序是一直运行的，比如web应用，可以使用net/http/pprof库，它能够在提供HTTP服务进行分析。如果使用了默认的http.DefaultServeMux(通常是代码直接用http.ListenAndServe(&ldquo;0.0.0.0:8000&rdquo;, nil))，只需要在你的web server端代码中按如下方式导入net/http/pprof</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="nx">_</span> <span class="s">&#34;net/http/pprof&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果使用自定义的Mux，则需要手动注册一些路由规则</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">r</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/debug/pprof/&#34;</span><span class="p">,</span> <span class="nx">pprof</span><span class="p">.</span><span class="nx">Index</span><span class="p">)</span>
+<span class="nx">r</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/debug/pprof/cmdline&#34;</span><span class="p">,</span> <span class="nx">pprof</span><span class="p">.</span><span class="nx">Cmdline</span><span class="p">)</span>
+<span class="nx">r</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/debug/pprof/profile&#34;</span><span class="p">,</span> <span class="nx">pprof</span><span class="p">.</span><span class="nx">Profile</span><span class="p">)</span>
+<span class="nx">r</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/debug/pprof/symbol&#34;</span><span class="p">,</span> <span class="nx">pprof</span><span class="p">.</span><span class="nx">Symbol</span><span class="p">)</span>
+<span class="nx">r</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/debug/pprof/trace&#34;</span><span class="p">,</span> <span class="nx">pprof</span><span class="p">.</span><span class="nx">Trace</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果使用的是gin框架，那么推荐使用github.com/gin-contrib/pprof，在代码中通过以下命令注册pprof相关路由</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">pprof</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="nx">router</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>不管哪种方式，你的HTTP服务都会多出/debug/pprof endpoint,可以通过(0.0.0.0:8080/debug/pprof)进行访问</p>
+<p>这个路径下还有几个子页面：</p>
+<ul>
+<li>/debug/pprof/profile：访问这个链接会自动进行CPU profiling，持续30s，并生成一个文件供下载</li>
+<li>/debug/pprof/heap：Memory Profiling的路径，访问这个链接会得到一个内存Profiling结果的文件</li>
+<li>/debug/pprof/block：block Profiling的路径</li>
+<li>/debug/pprof/goroutines：运行的goroutines列表，以及调用关系</li>
+</ul>
+<h2 id="go-tool-pprof命令">go tool pprof命令</h2>
+<p>不管是工具型还是服务型应用，我们使用相应的pprof库获取数据之后，下一步的都要对这些数据进行分析，我们可以使用go tool pprof命令行工具。</p>
+<p>go tool pprof最简单的使用方式为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">tool</span> <span class="nx">pprof</span> <span class="p">[</span><span class="nx">binary</span><span class="p">]</span> <span class="p">[</span><span class="nx">source</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中：</p>
+<ul>
+<li>binary是应用的二进制文件，可以解析各种符号</li>
+<li>source表示profile数据的来源，可以是本地的文件，也可以是http地址
+注意事项：获取的Profiling数据是动态的，要想获得有效的数据，请保证应用处于较大的负载(比如正在生成中运行的服务，或者通过其他工具模拟访问压力)。否则如果应用处于空闲状态，得到的结果可能没有任何意义。</li>
+</ul>
+<h2 id="具体示例">具体示例</h2>
+<h2 id="go-torch和火焰图">go-torch和火焰图</h2>
+<p>火焰图(Flame Graph)是Bredan Gregg创建的一种性能分析表图，因为它的样子近似火焰而得名。上面的profiling结果也转换成火焰图，如果对火焰图比较了解可以手动来操作，不过这里我们要介绍一个工具：go-torch。这是Uber开源的一个工具，可以直接读取golang profiling数据，并生成一个火焰图的svg文件</p>
+<h3 id="安装go-torch">安装go-torch</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">get</span> <span class="o">-</span><span class="nx">v</span> <span class="nx">githug</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">uber</span><span class="o">/</span><span class="k">go</span><span class="o">-</span><span class="nx">torch</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>火焰图svg文件可以通过浏览器打开，它对调用图的最大优点是它是动态的：可以通过点击每个方块来zoom in分析它上面的内容。</p>
+<p>火焰图的调用顺序从下到上，每个方块代表一个函数，它上面一层表示这个函数会调用哪些函数，方块的大小代表了占用CPU使用的长短。火焰图的配色并没有特殊的意义，默认的红、黄配色是为了更像火焰而已。</p>
+<p>go-torch工具的使用非常简单，没有任何参数的话，它会尝试从http://localhost:8080/debug/pprof/profile获取profiling数据。它有三个常用的参数可以调整：</p>
+<ul>
+<li>-u -url：要访问的URL，这里只是主机和端口部分</li>
+<li>-s -suffix：pprof profile的路径，默认为/debug/pprof/profile</li>
+<li>-seconds：要执行profiling的时间长度，默认为30s</li>
+</ul>
+<h3 id="安装flamegraph">安装FlameGraph</h3>
+<p>要生成火焰图，需要事先安装FlameGraph工具，这个工具安装很简单(需要perl环境支持)，只要把对应的可执行文件加入到环境变量中即可。</p>
+<ol>
+<li>下载安装perl：https://www.perl.org/get.html</li>
+<li>下载FlameGraph：git clone <a href="https://github.com/brendangregg/FlameGraph.git">https://github.com/brendangregg/FlameGraph.git</a></li>
+<li>将FrameGraph目录加入到操作系统的环境变量中</li>
+<li>window只需要把go-torch/render/flamegraph.go文件中的GenerateFlameGraph按如下方式修改，然后在go-torch目录下执行go install即可</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// GenerateFlameGraph runs the flamegraph script to generate a flame graph SVG. func GenerateFlameGraph(graphInput []byte, args ...string) ([]byte, error) {
+</span><span class="c1"></span><span class="nx">flameGraph</span> <span class="o">:=</span> <span class="nf">findInPath</span><span class="p">(</span><span class="nx">flameGraphScripts</span><span class="p">)</span>
+<span class="k">if</span> <span class="nx">flameGraph</span> <span class="o">==</span> <span class="s">&#34;&#34;</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errNoPerlScript</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="nx">runtime</span><span class="p">.</span><span class="nx">GOOS</span> <span class="o">==</span> <span class="s">&#34;windows&#34;</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nf">runScript</span><span class="p">(</span><span class="s">&#34;perl&#34;</span><span class="p">,</span> <span class="nb">append</span><span class="p">([]</span><span class="kt">string</span><span class="p">{</span><span class="nx">flameGraph</span><span class="p">},</span> <span class="nx">args</span><span class="o">...</span><span class="p">),</span> <span class="nx">graphInput</span><span class="p">)</span>
+<span class="p">}</span>
+  <span class="k">return</span> <span class="nf">runScript</span><span class="p">(</span><span class="nx">flameGraph</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">graphInput</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="压测工具">压测工具</h3>
+<p>推荐使用https://github.com/wg/wrk 或 <a href="https://github.com/adjust/go-wrk">https://github.com/adjust/go-wrk</a></p>
+<h3 id="使用go-torch">使用go-torch</h3>
+<p>使用wrk进行压测</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span><span class="o">-</span><span class="nx">work</span> <span class="o">-</span><span class="nx">n</span> <span class="mi">50000</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//127.0.0.1:8080/book/list
+</span></code></pre></td></tr></table>
+</div>
+</div><p>在上面进行压测的同时，打开另一个终端执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span><span class="o">-</span><span class="nx">torch</span> <span class="o">-</span><span class="nx">u</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//127.0.0.1:8080 -t 30
+</span></code></pre></td></tr></table>
+</div>
+</div><p>30秒之后终端就会出现如下提示</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Writing</span> <span class="nx">svg</span> <span class="nx">to</span> <span class="nx">torch</span><span class="p">.</span><span class="nx">svg</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后我们使用浏览器打开torch.svg就能看到火焰图了</p>
+<p>火焰图的y轴表示cpu调用方法的先后，x轴表示在每个采样调用时间内，方法所占的时间百分比，越宽代表占据CPU时间越多。通过火焰图我们就可以更清楚的找出耗时长的函数调用，然后不断的修正代码，重新采样不断优化。</p>
+<p>此外还可以借助火焰图分析内存性能数据：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span><span class="o">-</span><span class="nx">torch</span> <span class="o">-</span><span class="nx">inuse_space</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//127.0.0.1:8080/debug/pprof/heap
+</span><span class="c1"></span><span class="k">go</span><span class="o">-</span><span class="nx">torch</span> <span class="o">-</span><span class="nx">inuse_objects</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//127.0.0.1:8080/debug/pprof/heap
+</span><span class="c1"></span><span class="k">go</span><span class="o">-</span><span class="nx">torch</span> <span class="o">-</span><span class="nx">alloc_space</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//127.0.0.1:8080/debug/pprof/heap
+</span><span class="c1"></span><span class="k">go</span><span class="o">-</span><span class="nx">torch</span> <span class="o">-</span><span class="nx">alloc_objects</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//127.0.0.1:8080/debug/pprof/heap
+</span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-06-13</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" data-title="Go性能调优" data-via="xxxx" data-hashtags="Go性能调优"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" data-hashtag="Go性能调优"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" data-title="Go性能调优" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" data-title="Go性能调优"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" data-title="Go性能调优"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" data-title="Go性能调优" data-description="Go性能调优"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" data-title="Go性能调优" data-description="Go性能调优"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" data-title="Go性能调优"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/">Go性能调优</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/gocontextstudy/" class="prev" rel="prev" title="GoContextStudy"><i class="fas fa-angle-left fa-fw"></i>GoContextStudy</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
