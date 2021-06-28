@@ -3,7 +3,14 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 23 Jun 2021 21:26:34 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 28 Jun 2021 21:21:33 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>RabbitMQ2</title>
+    <link>http://example.org/rabbitmq2/</link>
+    <pubDate>Mon, 28 Jun 2021 21:21:33 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/rabbitmq2/</guid>
+    <description><![CDATA[任务队列/工作队列 在第一个教程中，我们编写程序从命名的队列发送和接收消息。在这一节中，我们将创建一个工作队列，该队列将用于多个工人之间分配耗]]></description>
+</item><item>
     <title>RabbitMQ1</title>
     <link>http://example.org/rabbitmq1/</link>
     <pubDate>Wed, 23 Jun 2021 21:26:34 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-interview-07/</guid>
     <description><![CDATA[Go Interview 07-Go互斥锁的两种实现]]></description>
-</item><item>
-    <title>Httptcpip Study 01</title>
-    <link>http://example.org/httptcpip-study-01/</link>
-    <pubDate>Thu, 25 Mar 2021 14:12:51 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/httptcpip-study-01/</guid>
-    <description><![CDATA[Http,TCP/IP学习]]></description>
 </item></channel>
 </rss>
