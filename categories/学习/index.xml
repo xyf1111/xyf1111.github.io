@@ -3,7 +3,14 @@
         <title>学习 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E5%AD%A6%E4%B9%A0/</link>
         <description>学习 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 28 Jun 2021 21:21:33 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 14 Jul 2021 20:55:37 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E5%AD%A6%E4%B9%A0/" rel="self" type="application/rss+xml" /><item>
+    <title>RabbitMQ3</title>
+    <link>http://example.org/rabbitmq3/</link>
+    <pubDate>Wed, 14 Jul 2021 20:55:37 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/rabbitmq3/</guid>
+    <description><![CDATA[发布订阅 在上一个教程中，我们创建了一个工作队列。工作队列背后的假设是每个任务只传递给一个工人。在这一部分中，我们将做一些完全不同的事情&nd]]></description>
+</item><item>
     <title>RabbitMQ2</title>
     <link>http://example.org/rabbitmq2/</link>
     <pubDate>Mon, 28 Jun 2021 21:21:33 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/redis-interview-02/</guid>
     <description><![CDATA[redis面试02]]></description>
-</item><item>
-    <title>Redis Study 04</title>
-    <link>http://example.org/redis-study-04/</link>
-    <pubDate>Mon, 15 Mar 2021 17:00:21 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/redis-study-04/</guid>
-    <description><![CDATA[redis学习04]]></description>
 </item></channel>
 </rss>
