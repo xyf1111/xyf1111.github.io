@@ -3,7 +3,14 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 14 Jul 2021 20:55:37 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 18 Jul 2021 21:25:50 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Study 16</title>
+    <link>http://example.org/go-study-16/</link>
+    <pubDate>Sun, 18 Jul 2021 21:25:50 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study-16/</guid>
+    <description><![CDATA[复制 将切片a中的元素复制到切片b中。 最简单的、最常用的方法就是使用内置的copy方法 1 2 3 // 一次将内存申请到位 b = make([]T, len(a)) copy(b, a) 除了使用内置的co]]></description>
+</item><item>
     <title>RabbitMQ3</title>
     <link>http://example.org/rabbitmq3/</link>
     <pubDate>Wed, 14 Jul 2021 20:55:37 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/interview-2021-04-06/</guid>
     <description><![CDATA[20210406启禾网络]]></description>
-</item><item>
-    <title>Go Interview 08</title>
-    <link>http://example.org/go-interview-08/</link>
-    <pubDate>Thu, 25 Mar 2021 17:50:41 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-interview-08/</guid>
-    <description><![CDATA[Go Interview 08-Go map]]></description>
 </item></channel>
 </rss>

@@ -3,7 +3,14 @@
         <title>golang - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/golang/</link>
         <description>golang - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 03 Jun 2021 21:53:53 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 18 Jul 2021 21:25:50 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Study 16</title>
+    <link>http://example.org/go-study-16/</link>
+    <pubDate>Sun, 18 Jul 2021 21:25:50 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study-16/</guid>
+    <description><![CDATA[复制 将切片a中的元素复制到切片b中。 最简单的、最常用的方法就是使用内置的copy方法 1 2 3 // 一次将内存申请到位 b = make([]T, len(a)) copy(b, a) 除了使用内置的co]]></description>
+</item><item>
     <title>GoContextStudy</title>
     <link>http://example.org/gocontextstudy/</link>
     <pubDate>Thu, 03 Jun 2021 21:53:53 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-instance-23/</guid>
     <description><![CDATA[Go Instance 23-信号、退出]]></description>
-</item><item>
-    <title>Go Instance 22</title>
-    <link>http://example.org/go-instance-22/</link>
-    <pubDate>Tue, 23 Mar 2021 17:58:31 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-22/</guid>
-    <description><![CDATA[Go Instance 22-行过滤器、命令号标志]]></description>
 </item></channel>
 </rss>
