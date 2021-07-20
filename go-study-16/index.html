@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/go-study-16\/"
-        },"genre": "posts","keywords": "golang","wordcount":  1174 ,
+        },"genre": "posts","keywords": "golang","wordcount":  2033 ,
         "url": "http:\/\/example.org\/go-study-16\/","datePublished": "2021-07-18T21:25:50+08:00","dateModified": "2021-07-18T21:25:50+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,8 +106,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Go Study 16</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-07-18">2021-07-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1174 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-07-18">2021-07-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2033 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -132,6 +132,17 @@
     <li><a href="#追加">追加</a></li>
     <li><a href="#弹出">弹出</a></li>
     <li><a href="#前插">前插</a></li>
+    <li><a href="#其他技巧">其他技巧</a>
+      <ul>
+        <li><a href="#过滤而不分配内存">过滤而不分配内存</a></li>
+        <li><a href="#翻转">翻转</a></li>
+        <li><a href="#洗牌">洗牌</a></li>
+        <li><a href="#使用最小分配进行批处理">使用最小分配进行批处理</a></li>
+        <li><a href="#原地删除重复元素元素可比较">原地删除重复元素(元素可比较)</a></li>
+        <li><a href="#存在就移到前面不存在就插到前面">存在就移到前面，不存在就插到前面</a></li>
+        <li><a href="#滑动窗口">滑动窗口</a></li>
+      </ul>
+    </li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="复制">复制</h2>
@@ -374,6 +385,296 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a</span> <span class="p">=</span> <span class="nb">append</span><span class="p">([]</span><span class="nx">T</span><span class="p">{</span><span class="nx">x</span><span class="p">},</span> <span class="nx">a</span><span class="o">...</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="其他技巧">其他技巧</h2>
+<h3 id="过滤而不分配内存">过滤而不分配内存</h3>
+<p>此技巧使用了一个事实，即切片b与原始切片a共享相同的底层数组和容量，因此原存储空间已重新用于过滤后的切片。当然原始切片的内容被修改了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">b</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">x</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">a</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nf">f</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">b</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>对于必须被垃圾回收的元素，在完成上述操作后可以添加一下代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+    <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="翻转">翻转</h3>
+<p>将切片a的元素顺序翻转</p>
+<p>通过迭代两两互换元素完成</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">{</span>
+    <span class="nx">opp</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="nx">i</span>
+    <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">a</span><span class="p">[</span><span class="nx">opp</span><span class="p">]</span> <span class="p">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">opp</span><span class="p">],</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>同样的操作：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="nx">left</span><span class="p">,</span> <span class="nx">right</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">left</span> <span class="p">&lt;</span> <span class="nx">right</span><span class="p">;</span> <span class="nx">left</span><span class="p">,</span> <span class="nx">right</span> <span class="p">=</span> <span class="nx">left</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nx">right</span><span class="o">-</span><span class="mi">1</span> <span class="p">{</span>
+    <span class="nx">a</span><span class="p">[</span><span class="nx">left</span><span class="p">],</span> <span class="nx">a</span><span class="p">[</span><span class="nx">right</span><span class="p">]</span> <span class="p">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">right</span><span class="p">],</span> <span class="nx">a</span><span class="p">[</span><span class="nx">left</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="洗牌">洗牌</h3>
+<p>打乱切片a中元素的顺序</p>
+<p>Fisher-Yates算法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">{</span>
+    <span class="nx">j</span> <span class="o">:=</span> <span class="nx">rand</span><span class="p">.</span><span class="nf">Intn</span><span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">a</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="p">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>从go1.10开始，可以使用math/rand.Shuffle</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">rand</span><span class="p">.</span><span class="nf">Shuffle</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">a</span><span class="p">),</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">a</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="p">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+<span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="使用最小分配进行批处理">使用最小分配进行批处理</h3>
+<p>如果你想对一个大型切片a的元素分批进行处理，这会很有用。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">actions</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">}</span>
+<span class="nx">batchSize</span> <span class="o">:=</span> <span class="mi">3</span>
+<span class="nx">batches</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">actions</span><span class="p">)</span><span class="o">+</span><span class="nx">batchSize</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="nx">batchSize</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="nx">batchSize</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">actions</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">actions</span><span class="p">,</span> <span class="nx">batches</span> <span class="p">=</span> <span class="nx">actions</span><span class="p">[</span><span class="nx">batchSize</span><span class="p">:],</span> <span class="nb">append</span><span class="p">(</span><span class="nx">batches</span><span class="p">,</span> <span class="nx">actions</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nx">batchSize</span><span class="p">:</span><span class="nx">batchSize</span><span class="p">])</span>
+<span class="p">}</span>
+<span class="nx">batches</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">batches</span><span class="p">,</span> <span class="nx">actions</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>得到的效果如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="o">[[</span>0, 1, 2<span class="o">]</span>, <span class="o">[</span>3, 4, 5<span class="o">]</span>, <span class="o">[</span>6, 7, 8<span class="o">]</span>, <span class="o">[</span>9<span class="o">]]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="原地删除重复元素元素可比较">原地删除重复元素(元素可比较)</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="s">&#34;sort&#34;</span>
+
+<span class="c1">// 切片元素可以是任何可排序的类型
+</span><span class="c1"></span><span class="nx">in</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">}</span>
+<span class="nx">sort</span><span class="p">.</span><span class="nf">Ints</span><span class="p">(</span><span class="nx">in</span><span class="p">)</span>
+<span class="nx">j</span> <span class="o">:=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">in</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">in</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">==</span> <span class="nx">in</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">{</span>
+        <span class="k">continue</span>
+    <span class="p">}</span>
+    <span class="nx">j</span><span class="o">++</span>
+    <span class="c1">// 需要保存原始数据时
+</span><span class="c1"></span>    <span class="c1">// in[i], in[j] = in[j], in[i]
+</span><span class="c1"></span>    <span class="c1">// 只需要保存需要的数据时
+</span><span class="c1"></span>    <span class="nx">in</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="p">=</span> <span class="nx">in</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="nx">result</span> <span class="o">:=</span> <span class="nx">in</span><span class="p">[:</span><span class="nx">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1">// [1, 2, 3, 4]
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="存在就移到前面不存在就插到前面">存在就移到前面，不存在就插到前面</h3>
+<p>如果给定的元素在切片中存在则把该元素移到切片的头部，如果不存在则将该元素插入到切片的头部。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">moveToFront</span><span class="p">(</span><span class="nx">needle</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">haystack</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="p">[]</span><span class="kt">string</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">haystack</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">haystack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nx">needle</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">haystack</span>
+    <span class="p">}</span>
+    <span class="nx">prev</span> <span class="o">:=</span> <span class="nx">needle</span>
+    <span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">elem</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">haystack</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="nx">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nx">haystack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="nx">needle</span>
+            <span class="nx">prev</span> <span class="p">=</span> <span class="nx">elem</span>
+        <span class="k">case</span> <span class="nx">elem</span> <span class="o">==</span> <span class="nx">needle</span><span class="p">:</span>
+            <span class="nx">haystack</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">prev</span>
+            <span class="k">return</span> <span class="nx">haystack</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="nx">haystack</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">prev</span>
+            <span class="nx">prev</span> <span class="p">=</span> <span class="nx">elem</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">append</span><span class="p">(</span><span class="nx">haystack</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// [a, b, c, d, e]
+</span><span class="c1"></span><span class="nx">haystack</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">,</span> <span class="s">&#34;c&#34;</span><span class="p">,</span> <span class="s">&#34;d&#34;</span><span class="p">,</span> <span class="s">&#34;e&#34;</span><span class="p">}</span>
+<span class="nx">haystack</span> <span class="p">=</span> <span class="nf">moveToFront</span><span class="p">(</span><span class="s">&#34;c&#34;</span><span class="p">,</span> <span class="nx">haystack</span><span class="p">)</span>
+<span class="nx">haystack</span> <span class="p">=</span> <span class="nf">moveToFront</span><span class="p">(</span><span class="s">&#34;f&#34;</span><span class="p">,</span> <span class="nx">haystack</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="滑动窗口">滑动窗口</h3>
+<p>将切片input生成size大小的滑动窗口</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">slidingWindow</span><span class="p">(</span><span class="nx">size</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">input</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">[][]</span><span class="kt">int</span> <span class="p">{</span>
+    <span class="c1">// 返回入参的切片作为第一个元素
+</span><span class="c1"></span>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">input</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nx">size</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">[][]</span><span class="kt">int</span><span class="p">{</span><span class="nx">input</span><span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 以所需的精确大小分配切片
+</span><span class="c1"></span>    <span class="nx">r</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">input</span><span class="p">)</span><span class="o">-</span><span class="nx">size</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">size</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">input</span><span class="p">);</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="p">=</span> <span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nx">j</span><span class="o">+</span><span class="mi">1</span> <span class="p">{</span>
+        <span class="nx">r</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">input</span><span class="p">[</span><span class="nx">i</span><span class="p">:</span><span class="nx">j</span><span class="p">])</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">r</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+<span class="nx">res</span> <span class="nx">L</span><span class="p">=</span> <span class="nf">slidingWindow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>输出：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]</span>
 </code></pre></td></tr></table>
 </div>
 </div></div><div class="post-footer" id="post-footer">

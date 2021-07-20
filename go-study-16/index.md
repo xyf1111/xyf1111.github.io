@@ -154,3 +154,161 @@ x, a = a[0], a[i:]
 ```go
 a = append([]T{x}, a...)
 ```
+
+## 其他技巧
+
+### 过滤而不分配内存
+此技巧使用了一个事实，即切片b与原始切片a共享相同的底层数组和容量，因此原存储空间已重新用于过滤后的切片。当然原始切片的内容被修改了。
+```go
+b := a[:0]
+for _, x := range a {
+    if f(x) {
+        b = append(b, x)
+    }
+}
+```
+对于必须被垃圾回收的元素，在完成上述操作后可以添加一下代码
+```go
+for i := len(b); i < len(a); i++ {
+    a[i] = nil
+}
+```
+
+### 翻转
+将切片a的元素顺序翻转
+
+通过迭代两两互换元素完成
+```go
+for i := len(a)/2-1; i >= 0; i-- {
+    opp := len(a)-1-i
+    a[i], a[opp] = a[opp], a[i]
+}
+```
+同样的操作：
+```go
+for left, right := 0, len(a)-1; left < right; left, right = left+1, right-1 {
+    a[left], a[right] = a[right], a[left]
+}
+```
+
+### 洗牌
+打乱切片a中元素的顺序
+
+Fisher-Yates算法：
+```go
+for i := len(a)-1; i > 0; i-- {
+    j := rand.Intn(i+1)
+    a[i], a[j] = a[j], a[i]
+}
+```
+从go1.10开始，可以使用math/rand.Shuffle
+```go
+rand.Shuffle(len(a), func(i, j int) {
+    a[i], a[j] = a[j], a[i]
+})
+```
+
+### 使用最小分配进行批处理
+如果你想对一个大型切片a的元素分批进行处理，这会很有用。
+```go
+actions := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+batchSize := 3
+batches := make([][]int, 0, (len(actions)+batchSize-1)/batchSize)
+
+for batchSize < len(actions) {
+    actions, batches = actions[batchSize:], append(batches, actions[0:batchSize:batchSize])
+}
+batches = append(batches, actions)
+```
+
+得到的效果如下：
+```bash
+[[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
+```
+
+### 原地删除重复元素(元素可比较)
+```go
+import "sort"
+
+// 切片元素可以是任何可排序的类型
+in := []int{3, 2, 1, 4, 3, 2, 1, 4, 1}
+sort.Ints(in)
+j := 0
+for i := 1; i < len(in); i++ {
+    if in[j] == in[i] {
+        continue
+    }
+    j++
+    // 需要保存原始数据时
+    // in[i], in[j] = in[j], in[i]
+    // 只需要保存需要的数据时
+    in[j] = in[i]
+}
+result := in[:j+1]
+// [1, 2, 3, 4]
+fmt.Println(result)
+```
+
+### 存在就移到前面，不存在就插到前面
+如果给定的元素在切片中存在则把该元素移到切片的头部，如果不存在则将该元素插入到切片的头部。
+
+```go
+func moveToFront(needle string, haystack []string) []string {
+    if len(haystack) != 0 && haystack[0] == needle {
+        return haystack
+    }
+    prev := needle
+    for i, elem := range haystack {
+        switch {
+        case i == 0:
+            haystack[0] = needle
+            prev = elem
+        case elem == needle:
+            haystack[i] = prev
+            return haystack
+        default:
+            haystack[i] = prev
+            prev = elem
+        }
+    }
+    return append(haystack, prev)
+}
+
+// [a, b, c, d, e]
+haystack := []string{"a", "b", "c", "d", "e"}
+haystack = moveToFront("c", haystack)
+haystack = moveToFront("f", haystack)
+```
+
+### 滑动窗口
+将切片input生成size大小的滑动窗口
+
+```go
+func slidingWindow(size int, input []int) [][]int {
+    // 返回入参的切片作为第一个元素
+    if len(input) <= size {
+        return [][]int{input}
+    }
+
+    // 以所需的精确大小分配切片
+    r := make([][]int, 0, len(input)-size+1)
+
+    for i, j := 0, size; j <= len(input); i, j = i+1, j+1 {
+        r = append(r, input[i:j])
+    }
+
+    return r
+}
+```
+
+示例：
+```go
+a := []int{1, 2, 3, 4, 5}
+res L= slidingWindow(2, a)
+fmt.Println(res)
+```
+
+输出：
+```go
+[[1, 2] [2, 3] [3, 4] [4, 5]]
+```
