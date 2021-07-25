@@ -3,7 +3,14 @@
         <title>golang - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/golang/</link>
         <description>golang - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 18 Jul 2021 21:25:50 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 22 Jul 2021 22:44:20 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Study17</title>
+    <link>http://example.org/go-study17/</link>
+    <pubDate>Thu, 22 Jul 2021 22:44:20 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study17/</guid>
+    <description><![CDATA[select语句介绍 Go语言中的select语句用于监控并选择一组case语句执行相应的代码。它看起来类似于switch语句，但是selec]]></description>
+</item><item>
     <title>Go Study 16</title>
     <link>http://example.org/go-study-16/</link>
     <pubDate>Sun, 18 Jul 2021 21:25:50 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-interview-02/</guid>
     <description><![CDATA[Go Interview 02-Printf()、Sprintf()和Fprintf()函数的区别用法是什么|数组和切片的区别|解释go常用命令的作用|说说go中的协程]]></description>
-</item><item>
-    <title>Go Instance 23</title>
-    <link>http://example.org/go-instance-23/</link>
-    <pubDate>Wed, 24 Mar 2021 09:47:35 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-instance-23/</guid>
-    <description><![CDATA[Go Instance 23-信号、退出]]></description>
 </item></channel>
 </rss>
