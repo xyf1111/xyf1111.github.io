@@ -3,7 +3,14 @@
         <title>golang - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/golang/</link>
         <description>golang - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 22 Jul 2021 22:44:20 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 25 Jul 2021 21:37:46 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Study18</title>
+    <link>http://example.org/go-study18/</link>
+    <pubDate>Sun, 25 Jul 2021 21:37:46 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study18/</guid>
+    <description><![CDATA[在web开发中一个不可避免的环节就是对请求参数进行校验，通常我们对在代码中定义和请求参数相对应的模型(结构体)，借助模型绑定快捷地解析请求中]]></description>
+</item><item>
     <title>Go Study17</title>
     <link>http://example.org/go-study17/</link>
     <pubDate>Thu, 22 Jul 2021 22:44:20 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-interview-03/</guid>
     <description><![CDATA[Go Interview 03-for循环|switch|没有隐藏的this指针|引用类型|指针运算|main函数|同步锁|channel特性|触发异常场景]]></description>
-</item><item>
-    <title>Go Interview 02</title>
-    <link>http://example.org/go-interview-02/</link>
-    <pubDate>Wed, 24 Mar 2021 14:10:49 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-interview-02/</guid>
-    <description><![CDATA[Go Interview 02-Printf()、Sprintf()和Fprintf()函数的区别用法是什么|数组和切片的区别|解释go常用命令的作用|说说go中的协程]]></description>
 </item></channel>
 </rss>

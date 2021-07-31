@@ -3,7 +3,14 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 22 Jul 2021 22:44:20 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 25 Jul 2021 21:37:46 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Study18</title>
+    <link>http://example.org/go-study18/</link>
+    <pubDate>Sun, 25 Jul 2021 21:37:46 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-study18/</guid>
+    <description><![CDATA[在web开发中一个不可避免的环节就是对请求参数进行校验，通常我们对在代码中定义和请求参数相对应的模型(结构体)，借助模型绑定快捷地解析请求中]]></description>
+</item><item>
     <title>Go Study17</title>
     <link>http://example.org/go-study17/</link>
     <pubDate>Thu, 22 Jul 2021 22:44:20 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/git-study01/</guid>
     <description><![CDATA[Git Study 01]]></description>
-</item><item>
-    <title>Linux Study01</title>
-    <link>http://example.org/linux-study01/</link>
-    <pubDate>Sun, 11 Apr 2021 18:26:36 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/linux-study01/</guid>
-    <description><![CDATA[Linux Study 01]]></description>
 </item></channel>
 </rss>
