@@ -3,7 +3,14 @@
         <title>生活 - 分类 - CC&#39;s Blog</title>
         <link>http://example.org/categories/%E7%94%9F%E6%B4%BB/</link>
         <description>生活 - 分类 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 07 Mar 2021 17:26:25 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E7%94%9F%E6%B4%BB/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 28 Oct 2021 10:31:44 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E7%94%9F%E6%B4%BB/" rel="self" type="application/rss+xml" /><item>
+    <title>20211028感慨</title>
+    <link>http://example.org/20211028sighwithemotion/</link>
+    <pubDate>Thu, 28 Oct 2021 10:31:44 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/20211028sighwithemotion/</guid>
+    <description><![CDATA[刺激的周一下午 日常开发的周一下午（2021年10月25日），午睡完之后怀疑人生的一段悠闲时光过后，刚要把一个commit提交。忽然一声大喝：]]></description>
+</item><item>
     <title>Resume</title>
     <link>http://example.org/resume/</link>
     <pubDate>Sun, 07 Mar 2021 17:26:25 &#43;0800</pubDate>

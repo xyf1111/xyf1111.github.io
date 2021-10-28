@@ -3,9 +3,23 @@
         <title>CC&#39;s Blog</title>
         <link>http://example.org/</link>
         <description>这是我的全新 Hugo 网站</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 25 Sep 2021 18:06:44 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 28 Oct 2021 10:31:44 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>20211028感慨</title>
+    <link>http://example.org/20211028sighwithemotion/</link>
+    <pubDate>Thu, 28 Oct 2021 10:31:44 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/20211028sighwithemotion/</guid>
+    <description><![CDATA[刺激的周一下午 日常开发的周一下午（2021年10月25日），午睡完之后怀疑人生的一段悠闲时光过后，刚要把一个commit提交。忽然一声大喝：]]></description>
+</item><item>
+    <title>RabbitMQ6</title>
+    <link>http://example.org/rabbitmq6/</link>
+    <pubDate>Wed, 29 Sep 2021 20:49:11 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/rabbitmq6/</guid>
+    <description><![CDATA[远程过程调用(RPC) 在第二个教程中，我们学会了如何使用工作队列在多个worker之间分配耗时的任务。 但是，如果我们需要在远程计算机上运行函]]></description>
+</item><item>
     <title>RabbitMQ5</title>
     <link>http://example.org/rabbitmq5/</link>
     <pubDate>Sat, 25 Sep 2021 18:06:44 &#43;0800</pubDate>
@@ -61,19 +75,5 @@
     <author>作者</author>
     <guid>http://example.org/rabbitmq1/</guid>
     <description><![CDATA[先决条件 本教程假设RabbitMQ已安装并运行在本机上的标准端口(5672)。如果你使用不同的主机、端口或凭据，则需要调整连接设置 RabbitMQ Go语言]]></description>
-</item><item>
-    <title>Go性能调优</title>
-    <link>http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</link>
-    <pubDate>Sun, 13 Jun 2021 19:49:31 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</guid>
-    <description><![CDATA[Go性能优化 Go语言项目中的性能优化主要有以下几个方面 CPU profile：报告程序的CPU使用情况，按照一定频率去采集应用程序在CPU和寄存器]]></description>
-</item><item>
-    <title>GoContextStudy</title>
-    <link>http://example.org/gocontextstudy/</link>
-    <pubDate>Thu, 03 Jun 2021 21:53:53 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/gocontextstudy/</guid>
-    <description><![CDATA[Go context study]]></description>
 </item></channel>
 </rss>
