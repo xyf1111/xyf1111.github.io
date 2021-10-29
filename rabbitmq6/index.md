@@ -193,18 +193,167 @@ func main() {
 
             log.Printf(" [.] fib(%d)", n)
             response := fib(n)
-            ch.Publish(
+            err = ch.Publish(
                 "",
                 d.ReplyTo,
                 false,
                 false,
-                amqp.Publishing(
+                amqp.Publishing{
                     ContentType:    "text/plain",
                     CorrelationId:  d.CorrelationId,
                     Body:           []byte(strconv.Itoa(response)),
-                )
+                }
             )
+            failOnError(err, "failed to publish a message")
+
+            d.Ask(false)
         }
-    }
+    }()
+    log.Printf(" [*] Awaiting RPC requests")
+    <-forever
 }
 ```
+
+服务器代码非常简单：
+
+- 和往常一样，我们首先建立连接，通道并声明队列
+- 我们可能要运行多个服务器进程。为了将负载平均分配给多个服务器，我们需要在通道上设置prefetsh设置
+- 我们使用Channel.Consume获取去队列，我们从队列中接收消息。然后我们进入goroutine进行工作，并将响应发送回去。
+  
+我们的RPC客户端rpc_client的代码
+
+```go
+package main
+
+import (
+    "log"
+    "math/rand"
+    "os"
+    "strconv"
+    "strings"
+    "time"
+
+    "github.com/streadway/amqp"
+)
+
+func failOnError(err error, msg string) {
+    if err != nil {
+        log.Fatalf("%s: %s", msg, err)
+    }
+}
+
+func randomString(l int) string {
+    bytes := make([]byte, l)
+    for int i := 0; i < l; i++ {
+        bytes[i] := byte(randInt(65, 90))
+    }
+    return string(bytes)
+}
+
+func randInt(min int, max int) int {
+    return min + rand.Intn(max-min)
+}
+
+func fibonacciRPC(n int) (res int, err error) {
+    conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+    failOnError(err, "Failed to connect to RabbitMQ")
+    defer conn.Close()
+
+    ch, err := conn.Channel()
+    failOnError(err, "Failed to open a channel")
+    defer ch.Close()
+
+    q, err := ch.QueueDeclare(
+        // name
+        "",
+        // durable
+        false,
+        // delete when unused
+        false,
+        // exclusive
+        true,
+        // noWait
+        false,
+        // arguments
+        nil,
+    )
+    failOnError(err, "Failed to declare a queue")
+
+    msg, err := ch.Consume(
+        // queue
+        q.Name,
+        // consumer
+        "",
+        // auto-ack
+        true,
+        // exclusive
+        false,
+        // no-local
+        false,
+        // no-wait
+        false,
+        // args
+        nil,
+    )
+    failOnError(err, "Failed to register a consumer")
+    
+    corrId := randomString(32)
+
+    err = ch.Publish(
+        "",
+        "rpc_queue",
+        false,
+        false,
+        amqp.Publishing{
+            ContentType: "text/plain",
+            CorrelationId:  corrId,
+            ReplyTo:    q.Name,
+            Body:   []byte(strconv.Itoa(n)),
+        }
+    )
+    failOnError(err, "Failed to publish a message")
+
+    for d := range msgs {
+        if corrId == d.CorrelationId {
+            res, err := strconv.Atoi(string(d.Body))
+            failOnError(err, "Failed to convert body to integer")
+            break
+        }
+    }
+    return
+}
+
+func main() {
+    rand.Seed(time.Now().UTC().UnixNano())
+    n := bodyFrom(os.Args)
+    log.Printf(" [X] Requesting fib (%d)", n)
+    res, err := fibonacciRPC(n)
+    failOnError(err, "Failed to handle RPC request")
+
+    log.Printf(" [.] Got %d", res)
+}
+
+func bodyFrom(args []string) int {
+    var s string
+    if (len(args) < 2) || args[1] == "" {
+        s = "30"
+    } else {
+        s = strings.Join(args[1:], " ")
+    }
+    n, err := strconv.Atoi(s)
+    failOnError(err, "Failed to convert arg to integer")
+    return n
+}
+```
+
+这里介绍的设计不是RPC服务唯一可能的实现，但是它具有一些重要的特点：
+
+- 如果RPC服务器太慢，则可以通过运行另一台RPC服务器来进行扩展。尝试在新控制台中运行另一个rpc_server.go
+- 在客户端，RPC只需要发送和接收一条消息。结果，RPC客户端只需要一个网络往返就可以处理单个RPC请求
+
+我们的代码仍然非常简单，并且不会尝试解决更复杂（但很重要）的问题，例如：
+
+- 如果没有服务器在运行，客户端如何反应？
+- 客户端是否应该为RPC设置某种超时时间？
+- 如果服务器发生异常并引发故障，是否应该将其转发给客户端？
+- 在处理之前防止无效的传入消息（例如检查边界，类型）。
