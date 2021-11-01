@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Go测试从零到溜1-单元测试 - CC&#39;s Blog</title><meta name="Description" content="Go测试从零到溜1-单元测试"><meta property="og:title" content="Go测试从零到溜1-单元测试" />
+<meta property="og:description" content="Go测试从零到溜1-单元测试" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/go-test1/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-10-31T20:48:32+08:00" />
+<meta property="article:modified_time" content="2021-10-31T20:48:32+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Go测试从零到溜1-单元测试"/>
+<meta name="twitter:description" content="Go测试从零到溜1-单元测试"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-test1/" /><link rel="prev" href="http://example.org/20211028sighwithemotion/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go测试从零到溜1-单元测试",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/go-test1\/"
+        },"genre": "posts","keywords": "Golang测试","wordcount":  4222 ,
+        "url": "http:\/\/example.org\/go-test1\/","datePublished": "2021-10-31T20:48:32+08:00","dateModified": "2021-10-31T20:48:32+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "Go测试从零到溜1-单元测试"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go测试从零到溜1-单元测试</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-10-31">2021-10-31</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4222 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 9 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#go语言测试">Go语言测试</a>
+      <ul>
+        <li><a href="#go-test工具">go test工具</a></li>
+        <li><a href="#单元测试函数">单元测试函数</a></li>
+        <li><a href="#单元测试示例">单元测试示例</a></li>
+        <li><a href="#go-test--v">go test -v</a></li>
+        <li><a href="#go-test--run">go test -run</a></li>
+        <li><a href="#回归测试">回归测试</a></li>
+        <li><a href="#跳过某些测试用例">跳过某些测试用例</a></li>
+        <li><a href="#子测试">子测试</a></li>
+        <li><a href="#表格驱动测试">表格驱动测试</a></li>
+        <li><a href="#测试覆盖率">测试覆盖率</a></li>
+      </ul>
+    </li>
+    <li><a href="#testifyassert">testify/assert</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#使用示例">使用示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="go语言测试">Go语言测试</h2>
+<h3 id="go-test工具">go test工具</h3>
+<p>Go语言中的测试依赖<code>go test</code>命令。编写测试代码和编写普通的Go代码过程是类似的，并不需要学习新的语法、规则和工具。</p>
+<p><code>go test</code>命令是一个按照一定约定和组织的测试代码的驱动程序。在包目录内，所有以<code>_test.go</code>为后缀名的源代码文件都是<code>go test</code>测试的一部分，不会被<code>go build</code>编译到最终可执行文件中。</p>
+<p>在<code>*_test.go</code>文件中有三种类型的函数，单元测试函数、基准测试函数和示例函数。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>格式</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>测试函数</td>
+<td>函数名前缀为Test</td>
+<td>测试程序的一些逻辑行为是否正确</td>
+</tr>
+<tr>
+<td>基准函数</td>
+<td>函数名前缀为Benchmark</td>
+<td>测试函数的性能</td>
+</tr>
+<tr>
+<td>示例函数</td>
+<td>函数名前缀为Example</td>
+<td>为文档提供示例文档</td>
+</tr>
+</tbody>
+</table>
+<p><code>go test</code>命令会遍历所有的<code>*_test.go</code>文件中符合上述命名规则的函数，然后生成一个临时的main包用于调用相应的测试函数，然后构建并运行、报告测试结果，最后清理测试中产生的临时文件。</p>
+<h3 id="单元测试函数">单元测试函数</h3>
+<p><strong>格式</strong></p>
+<p>每个函数必须导入<code>testing</code>包，测试函数的基本格式(签名)如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">TestName</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>测试函数的名字必须以<code>Test</code>开头，可选的后缀名必须以大写字母开头，举几个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">TestAdd</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{}</span>
+<span class="kd">func</span> <span class="nf">TestSum</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{}</span>
+<span class="kd">func</span> <span class="nf">TestLog</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中参数<code>t</code>用于报告测试失败和附加的日志信息。<code>testing.T</code>拥有的方法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">Cleanup</span><span class="p">(</span><span class="kd">func</span><span class="p">())</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">Error</span><span class="p">(</span><span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">Errorf</span><span class="p">(</span><span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">Fail</span><span class="p">()</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">FailNow</span><span class="p">()</span>
+<span class="o">...</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="单元测试示例">单元测试示例</h3>
+<p>就像细胞是构成我们身体的基本单位，一个软件程序也是由很多单元组件构成的。单元组件可以是函数、结构体、方法和最终用户可能依赖的任意东西。总之我们需要确保这些 组件是能够正常运行的。单元测试是一些利用各种方法测试单元组件的程序，它会将结果与预期输出进行比较。</p>
+<p>接下来，我们在<code>base_demo</code>包中定义了一个<code>Split</code>函数，具体实现如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">base_demo</span>
+
+<span class="kn">import</span> <span class="s">&#34;strings&#34;</span>
+
+<span class="c1">// Split 把字符串s按照指定的分隔符sep进行分割返回字符串切片
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">Split</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">sep</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">result</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">i</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Index</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">sep</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="nx">i</span> <span class="p">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="p">{</span>
+        <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">s</span><span class="p">[:</span><span class="nx">i</span><span class="p">])</span>
+        <span class="nx">s</span> <span class="p">=</span> <span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="nx">i</span> <span class="p">=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Index</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">sep</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在当前目录下我们创建一个<code>split_test.go</code>的测试文件，并定义一个测试函数如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">split</span>
+
+<span class="kn">import</span><span class="p">(</span>
+    <span class="s">&#34;reflect&#34;</span>
+    <span class="s">&#34;testing&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">// 函数名必须以Test开头，必须接收一个*testing.T类型参数
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">TestSplit</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 程序输出结果
+</span><span class="c1"></span>    <span class="nx">got</span> <span class="o">:=</span> <span class="nf">Split</span><span class="p">(</span><span class="s">&#34;a🅱️c&#34;</span><span class="p">,</span> <span class="s">&#34;:&#34;</span><span class="p">)</span>
+    <span class="c1">// 期望的结果
+</span><span class="c1"></span>    <span class="nx">want</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">,</span> <span class="s">&#34;c&#34;</span><span class="p">}</span>
+    <span class="c1">// 因为slice不能比较直接，借助反射包中的方法比较
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nf">DeepEqual</span><span class="p">(</span><span class="nx">want</span><span class="p">,</span> <span class="nx">got</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 测试失败输出错误提示
+</span><span class="c1"></span>        <span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;expected: %v, got: %v&#34;</span><span class="p">,</span> <span class="nx">want</span><span class="p">,</span> <span class="nx">got</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在当前路径下执行<code>go test</code>命令，可以看见输出结果</p>
+<h3 id="go-test--v">go test -v</h3>
+<p>一个测试用例有点单薄，我们再编写一个测试使用多个字符切割字符串的例子，在<code>split_test.go</code>中添加如下测试函数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">TestSplitWithComplexSep</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">got</span> <span class="o">:=</span> <span class="nf">Split</span><span class="p">(</span><span class="s">&#34;abcd&#34;</span><span class="p">,</span> <span class="s">&#34;bc&#34;</span><span class="p">)</span>
+    <span class="nx">want</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;d&#34;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nf">DeepEqual</span><span class="p">(</span><span class="nx">want</span><span class="p">,</span> <span class="nx">got</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;expected: %v, got: %v&#34;</span><span class="p">,</span> <span class="nx">want</span><span class="p">,</span> <span class="nx">got</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>现在我们有多个测试用例了，为了能更好的在输出结果中看见每一个测试用例的执行情况，我们可以为<code>go test</code>命令添加<code>-v</code>参数，让它输出完整的测试结果</p>
+<p>从输出结果我们能清楚的看到<code>TestSplitWithComplexSep</code>这个测试用例没有测试通过。</p>
+<h3 id="go-test--run">go test -run</h3>
+<p>单元测试的结果表明<code>split</code>这个函数的实现并不可靠，没有考虑到传入的sep参数是多个字符的情况，下面修复这个bug：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">base_demo</span>
+
+<span class="kn">import</span> <span class="s">&#34;strings&#34;</span>
+
+<span class="c1">// Split 把字符串s按照指定的分隔符sep进行分割返回字符串切片
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">Split</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">sep</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">result</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">i</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Index</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">sep</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="nx">i</span> <span class="p">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="p">{</span>
+        <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">s</span><span class="p">[:</span><span class="nx">i</span><span class="p">])</span>
+        <span class="c1">// 这里使用len(sep)获取sep的长度
+</span><span class="c1"></span>        <span class="nx">s</span> <span class="p">=</span> <span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="nx">sep</span><span class="p">):]</span>
+        <span class="nx">i</span> <span class="p">=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Index</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">sep</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">result</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在执行<code>go test</code>命令的时候可以添加<code>-run</code>参数，它对应的是一个正则表达式，只有函数名匹配上的测试函数才会被<code>go test</code>命令执行</p>
+<p>例如通过给<code>go test</code>添加<code>-run=Sep</code>参数来告诉它本次测试只运行TestSplitWithComplexSep这个测试用例</p>
+<h3 id="回归测试">回归测试</h3>
+<p>修改代码后仅仅执行那些失败的测试用例或新引入的测试用例是错误且危险的，正确的做法应该是完整运行所有的测试用例，保证不会因为修改代码而引入新的问题</p>
+<p>通过这个示例我们可以看到，有了单元测试就能够在代码改动后快速进行回归测试，极大地提高开发效率和保证代码的质量。</p>
+<h3 id="跳过某些测试用例">跳过某些测试用例</h3>
+<p>为了节省时间支持在单元测试时跳过某些耗时的测试用例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">TestTimeConsuming</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">testing</span><span class="p">.</span><span class="nf">Short</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nf">Skip</span><span class="p">(</span><span class="s">&#34;Short 模式下会跳过该测试用例&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当执行<code>go test short</code>时就不会执行上面的TestTimeConsuming测试用例</p>
+<h3 id="子测试">子测试</h3>
+<p>在上面的示例中我们为每一个测试数据编写一个测试函数，而通常单元测试中需要多组测试数据保证测试的效果。Go1.7+中新增了子测试，支持在测试函数中使用t.Run执行一组测试用例，这样就不需要为不用的测试数据定义多个测试函数了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">TestXXX</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="s">&#34;case1&#34;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">){})</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="s">&#34;case2&#34;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">){})</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="s">&#34;case3&#34;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">){})</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="表格驱动测试">表格驱动测试</h3>
+<p><strong>介绍</strong></p>
+<p>表格驱动测试不是工具、包或其他任何东西，它只是编写更清晰测试的一种方式和视角</p>
+<p>编写好的测试并非易事，但在许多情况下，表格驱动测试可以涵盖很多方面：表格里的每一个条目都是一个完整的测试用例，包含输入和预期结果，有时还包含测试名称等附加信息，以使测试输出易于阅读。</p>
+<p>使用表格驱动测试能够很方便的维护多个测试用例，避免在编写单元测试时频繁的复制粘贴。</p>
+<p>表格驱动测试的步骤通常是定义一个测试用例表格，然后遍历表格，并使用<code>t.Run</code>对每一个条目执行必要的测试。</p>
+<p><strong>示例</strong></p>
+<p>官方标准库中有很多表格驱动测试的示例，例如fmt包中就有如下测试代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">flagtests</span> <span class="p">=</span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">in</span>  <span class="kt">string</span>
+	<span class="nx">out</span> <span class="kt">string</span>
+<span class="p">}{</span>
+	<span class="p">{</span><span class="s">&#34;%a&#34;</span><span class="p">,</span> <span class="s">&#34;[%a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%-a&#34;</span><span class="p">,</span> <span class="s">&#34;[%-a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%+a&#34;</span><span class="p">,</span> <span class="s">&#34;[%+a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%#a&#34;</span><span class="p">,</span> <span class="s">&#34;[%#a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;% a&#34;</span><span class="p">,</span> <span class="s">&#34;[% a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%0a&#34;</span><span class="p">,</span> <span class="s">&#34;[%0a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%1.2a&#34;</span><span class="p">,</span> <span class="s">&#34;[%1.2a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%-1.2a&#34;</span><span class="p">,</span> <span class="s">&#34;[%-1.2a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%+1.2a&#34;</span><span class="p">,</span> <span class="s">&#34;[%+1.2a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%-+1.2a&#34;</span><span class="p">,</span> <span class="s">&#34;[%+-1.2a]&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%-+1.2abc&#34;</span><span class="p">,</span> <span class="s">&#34;[%+-1.2a]bc&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;%-1.2abc&#34;</span><span class="p">,</span> <span class="s">&#34;[%-1.2a]bc&#34;</span><span class="p">},</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nf">TestFlagParser</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">flagprinter</span> <span class="nx">flagPrinter</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">tt</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">flagtests</span> <span class="p">{</span>
+		<span class="nx">t</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">in</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">s</span> <span class="o">:=</span> <span class="nf">Sprintf</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">in</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">flagprinter</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">s</span> <span class="o">!=</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">out</span> <span class="p">{</span>
+				<span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;got %q, want %q&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">out</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="p">})</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>通常表格是匿名结构体的切片，可以定义结构体或使用已经存在的结构进行结构体数组声明。name属性用来描述特定的测试用例。</p>
+<p>接下来让我们试着自己编写表格驱动测试：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">TestSplitAll</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// 定义测试表格
+</span><span class="c1"></span>	<span class="c1">// 这里使用匿名结构体定义了若干个测试用例
+</span><span class="c1"></span>	<span class="c1">// 并且为每个测试用例设置了一个名称
+</span><span class="c1"></span>	<span class="nx">tests</span> <span class="o">:=</span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+		<span class="nx">name</span>  <span class="kt">string</span>
+		<span class="nx">input</span> <span class="kt">string</span>
+		<span class="nx">sep</span>   <span class="kt">string</span>
+		<span class="nx">want</span>  <span class="p">[]</span><span class="kt">string</span>
+	<span class="p">}{</span>
+		<span class="p">{</span><span class="s">&#34;base case&#34;</span><span class="p">,</span> <span class="s">&#34;a🅱️c&#34;</span><span class="p">,</span> <span class="s">&#34;:&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">,</span> <span class="s">&#34;c&#34;</span><span class="p">}},</span>
+		<span class="p">{</span><span class="s">&#34;wrong sep&#34;</span><span class="p">,</span> <span class="s">&#34;a🅱️c&#34;</span><span class="p">,</span> <span class="s">&#34;,&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a🅱️c&#34;</span><span class="p">}},</span>
+		<span class="p">{</span><span class="s">&#34;more sep&#34;</span><span class="p">,</span> <span class="s">&#34;abcd&#34;</span><span class="p">,</span> <span class="s">&#34;bc&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;d&#34;</span><span class="p">}},</span>
+		<span class="p">{</span><span class="s">&#34;leading sep&#34;</span><span class="p">,</span> <span class="s">&#34;沙河有沙又有河&#34;</span><span class="p">,</span> <span class="s">&#34;沙&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;&#34;</span><span class="p">,</span> <span class="s">&#34;河有&#34;</span><span class="p">,</span> <span class="s">&#34;又有河&#34;</span><span class="p">}},</span>
+	<span class="p">}</span>
+	<span class="c1">// 遍历测试用例
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">tt</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">tests</span> <span class="p">{</span>
+		<span class="nx">t</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 使用t.Run()执行子测试
+</span><span class="c1"></span>			<span class="nx">got</span> <span class="o">:=</span> <span class="nf">Split</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">input</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">sep</span><span class="p">)</span>
+			<span class="k">if</span> <span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nf">DeepEqual</span><span class="p">(</span><span class="nx">got</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">want</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;expected:%#v, got:%#v&#34;</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">want</span><span class="p">,</span> <span class="nx">got</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="p">})</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在终端执行<code>go test -v</code>， 会得到测试输出结果</p>
+<p><strong>并行测试</strong></p>
+<p>表格驱动测试中通常会定义比较多的测试用例，而Go语言又天生支持并发，所以很容易就发挥自身并发优势将表格驱动测试并行化。想要在单元测试过程中使用并行测试，可以像下面的代码示例中那样通过添加<code>t.Parallel()</code>来实现</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">TestSplitAll</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">t</span><span class="p">.</span><span class="nf">Parallel</span><span class="p">()</span>  <span class="c1">// 将 TLog 标记为能够与其他测试并行运行
+</span><span class="c1"></span>	<span class="c1">// 定义测试表格
+</span><span class="c1"></span>	<span class="c1">// 这里使用匿名结构体定义了若干个测试用例
+</span><span class="c1"></span>	<span class="c1">// 并且为每个测试用例设置了一个名称
+</span><span class="c1"></span>	<span class="nx">tests</span> <span class="o">:=</span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+		<span class="nx">name</span>  <span class="kt">string</span>
+		<span class="nx">input</span> <span class="kt">string</span>
+		<span class="nx">sep</span>   <span class="kt">string</span>
+		<span class="nx">want</span>  <span class="p">[]</span><span class="kt">string</span>
+	<span class="p">}{</span>
+		<span class="p">{</span><span class="s">&#34;base case&#34;</span><span class="p">,</span> <span class="s">&#34;a🅱️c&#34;</span><span class="p">,</span> <span class="s">&#34;:&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">,</span> <span class="s">&#34;c&#34;</span><span class="p">}},</span>
+		<span class="p">{</span><span class="s">&#34;wrong sep&#34;</span><span class="p">,</span> <span class="s">&#34;a🅱️c&#34;</span><span class="p">,</span> <span class="s">&#34;,&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a🅱️c&#34;</span><span class="p">}},</span>
+		<span class="p">{</span><span class="s">&#34;more sep&#34;</span><span class="p">,</span> <span class="s">&#34;abcd&#34;</span><span class="p">,</span> <span class="s">&#34;bc&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;d&#34;</span><span class="p">}},</span>
+		<span class="p">{</span><span class="s">&#34;leading sep&#34;</span><span class="p">,</span> <span class="s">&#34;沙河有沙又有河&#34;</span><span class="p">,</span> <span class="s">&#34;沙&#34;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;&#34;</span><span class="p">,</span> <span class="s">&#34;河有&#34;</span><span class="p">,</span> <span class="s">&#34;又有河&#34;</span><span class="p">}},</span>
+	<span class="p">}</span>
+	<span class="c1">// 遍历测试用例
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">tt</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">tests</span> <span class="p">{</span>
+		<span class="nx">tt</span> <span class="o">:=</span> <span class="nx">tt</span>  <span class="c1">// 注意这里重新声明tt变量（避免多个goroutine中使用了相同的变量）
+</span><span class="c1"></span>		<span class="nx">t</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 使用t.Run()执行子测试
+</span><span class="c1"></span>			<span class="nx">t</span><span class="p">.</span><span class="nf">Parallel</span><span class="p">()</span>  <span class="c1">// 将每个测试用例标记为能够彼此并行运行
+</span><span class="c1"></span>			<span class="nx">got</span> <span class="o">:=</span> <span class="nf">Split</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">input</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">sep</span><span class="p">)</span>
+			<span class="k">if</span> <span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nf">DeepEqual</span><span class="p">(</span><span class="nx">got</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">want</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;expected:%#v, got:%#v&#34;</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">want</span><span class="p">,</span> <span class="nx">got</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="p">})</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这样我们执行<code>go test -v</code>的时候就会看到每个测试用例并不是按照我们定义的顺序执行的，而是互相并行的。</p>
+<p><strong>使用工具生成测试代码</strong></p>
+<p>社区里有很多自动生成表格驱动测试函数的工具，比如<code>gotests</code>等，很多编辑器如Goland也支持快速生成测试文件。这里简单演示一下<code>gotests</code>的使用。</p>
+<p>安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">go get -u github.com/cweill/gotests/...
+</code></pre></td></tr></table>
+</div>
+</div><p>执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">gotests -all -w split.go
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的命令表示，为<code>split.go</code>文件的所有函数生成测试代码至<code>split_test.go</code>文件(目录下如果事先存在这个文件就不再生成了)</p>
+<p>代码格式与我们上面的类似，只需要在TODO位置添加我们的测试逻辑就可以了</p>
+<h3 id="测试覆盖率">测试覆盖率</h3>
+<p>测试覆盖率是指代码被测试套件覆盖的百分比。通常我们使用的语句都是有覆盖率，也就是在测试中至少被运行一次的代码占总代码的比例。在公司内部一般会要求测试覆盖率达到80%左右。</p>
+<p>Go提供内置功能来检查你的代码覆盖率，即使用<code>go test -cover</code>来查看测试覆盖率</p>
+<p>Go还提供了一个额外的<code>-coverprofile</code>参数，用来将覆盖率相关的记录信息输出到一个文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">go <span class="nb">test</span> -cover -coverprofil<span class="o">=</span>c.out
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的命令会将覆盖率相关的信息输出到当前文件夹下面的<code>c.out</code>文件中</p>
+<p>然后我们执行<code>go tool cover -html=c.out</code>，使用<code>cover</code>工具来处理生成的记录信息，该命令会打开本地的浏览器窗口生成一个html报告</p>
+<h2 id="testifyassert">testify/assert</h2>
+<p>testify是一个社区非常流行的Go单元测试工具包，其中使用最多的就是它提供的断言工具&ndash;<code>testify/assert</code>或<code>testify/require</code></p>
+<h3 id="安装">安装</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">go get github.com/stretchr/testify
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="使用示例">使用示例</h3>
+<p>我们在写单元测试的时候，通常需要使用断言来校验测试结果，但是由于Go语言官方没有提供断言，所以我们会写出很多的<code>if...else...</code>语句。而<code>testify/assert</code>为我们提供了很多常用的断言函数，并且能够输出友好，易于阅读的错误描述信息。</p>
+<p>比如之前在<code>TestSplit</code>测试函数中就使用了<code>reflect.DeepEqual</code>来判断期待结果与实际结果是否一致。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">t</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 使用t.Run()执行子测试
+</span><span class="c1"></span>	<span class="nx">got</span> <span class="o">:=</span> <span class="nf">Split</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">input</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">sep</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nf">DeepEqual</span><span class="p">(</span><span class="nx">got</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">want</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;expected:%#v, got:%#v&#34;</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">want</span><span class="p">,</span> <span class="nx">got</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>使用<code>testify/assert</code>之后就能将上述判断过程简化如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">t</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 使用t.Run()执行子测试
+</span><span class="c1"></span>	<span class="nx">got</span> <span class="o">:=</span> <span class="nf">Split</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">input</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">sep</span><span class="p">)</span>
+	<span class="nx">assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">got</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">want</span><span class="p">)</span>  <span class="c1">// 使用assert提供的断言函数
+</span><span class="c1"></span><span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当我们有多个断言语句时，还可以使用<code>assert := assert.New(t)</code>创建一个assert对象，它拥有前面所有的断言方法，只是不需要再传入Testing.T参数了。</p>
+<h2 id="总结">总结</h2>
+<p>本文介绍了Go语言单元测试的基本用法，通过为Split函数编写单元测试的真实案例，模拟了日常开发过程中的场景，一步一步详细介绍了表格驱动测试、回归测试和常用的测试工具<code>testify/assert</code>的使用。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-10-31</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/go-test1/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-test1/" data-title="Go测试从零到溜1-单元测试" data-via="xxxx" data-hashtags="Golang测试"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-test1/" data-hashtag="Golang测试"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-test1/" data-title="Go测试从零到溜1-单元测试" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-test1/" data-title="Go测试从零到溜1-单元测试"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-test1/" data-title="Go测试从零到溜1-单元测试"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-test1/" data-title="Go测试从零到溜1-单元测试" data-description="Go测试从零到溜1-单元测试"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-test1/" data-title="Go测试从零到溜1-单元测试" data-description="Go测试从零到溜1-单元测试"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-test1/" data-title="Go测试从零到溜1-单元测试"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang%E6%B5%8B%E8%AF%95/">Golang测试</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/20211028sighwithemotion/" class="prev" rel="prev" title="20211028感慨"><i class="fas fa-angle-left fa-fw"></i>20211028感慨</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
