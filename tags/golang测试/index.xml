@@ -3,7 +3,14 @@
         <title>Golang测试 - 标签 - CC&#39;s Blog</title>
         <link>http://example.org/tags/golang%E6%B5%8B%E8%AF%95/</link>
         <description>Golang测试 - 标签 - CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 02 Nov 2021 09:40:17 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang%E6%B5%8B%E8%AF%95/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 02 Nov 2021 11:31:40 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/golang%E6%B5%8B%E8%AF%95/" rel="self" type="application/rss+xml" /><item>
+    <title>Go测试从零到溜3-MySQL和Redis测试</title>
+    <link>http://example.org/go-test3/</link>
+    <pubDate>Tue, 02 Nov 2021 11:31:40 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-test3/</guid>
+    <description><![CDATA[go-sqlmock sqlmock是一个实现sql/driver的mock库。它不需要建立真正的数据库连接就可以在测试中模拟任何sql驱动程序的行为。使用它可]]></description>
+</item><item>
     <title>Go测试从零到溜2-网络测试</title>
     <link>http://example.org/go-test2/</link>
     <pubDate>Tue, 02 Nov 2021 09:40:17 &#43;0800</pubDate>
