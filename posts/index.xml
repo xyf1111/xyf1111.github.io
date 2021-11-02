@@ -3,7 +3,14 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 31 Oct 2021 20:48:32 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 02 Nov 2021 09:40:17 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Go测试从零到溜2-网络测试</title>
+    <link>http://example.org/go-test2/</link>
+    <pubDate>Tue, 02 Nov 2021 09:40:17 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-test2/</guid>
+    <description><![CDATA[httptest 在Web开发场景下的单元测试，如果涉及到HTTP请求推荐大家使用Go标准库net/http/httptest进行测试，能够显著提升效率。 在]]></description>
+</item><item>
     <title>Go测试从零到溜1-单元测试</title>
     <link>http://example.org/go-test1/</link>
     <pubDate>Sun, 31 Oct 2021 20:48:32 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/rabbitmq3/</guid>
     <description><![CDATA[发布订阅 在上一个教程中，我们创建了一个工作队列。工作队列背后的假设是每个任务只传递给一个工人。在这一部分中，我们将做一些完全不同的事情&nd]]></description>
-</item><item>
-    <title>RabbitMQ2</title>
-    <link>http://example.org/rabbitmq2/</link>
-    <pubDate>Mon, 28 Jun 2021 21:21:33 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/rabbitmq2/</guid>
-    <description><![CDATA[任务队列/工作队列 在第一个教程中，我们编写程序从命名的队列发送和接收消息。在这一节中，我们将创建一个工作队列，该队列将用于多个工人之间分配耗]]></description>
 </item></channel>
 </rss>

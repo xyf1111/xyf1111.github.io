@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Go测试从零到溜2-网络测试 - CC&#39;s Blog</title><meta name="Description" content="Go测试从零到溜2-网络测试"><meta property="og:title" content="Go测试从零到溜2-网络测试" />
+<meta property="og:description" content="Go测试从零到溜2-网络测试" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/go-test2/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-11-02T09:40:17+08:00" />
+<meta property="article:modified_time" content="2021-11-02T09:40:17+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Go测试从零到溜2-网络测试"/>
+<meta name="twitter:description" content="Go测试从零到溜2-网络测试"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-test2/" /><link rel="prev" href="http://example.org/go-test1/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go测试从零到溜2-网络测试",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/go-test2\/"
+        },"genre": "posts","keywords": "Golang测试","wordcount":  1486 ,
+        "url": "http:\/\/example.org\/go-test2\/","datePublished": "2021-11-02T09:40:17+08:00","dateModified": "2021-11-02T09:40:17+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "Go测试从零到溜2-网络测试"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go测试从零到溜2-网络测试</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-02">2021-11-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1486 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#httptest">httptest</a></li>
+    <li><a href="#gock">gock</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#使用示例">使用示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="httptest">httptest</h2>
+<p>在Web开发场景下的单元测试，如果涉及到HTTP请求推荐大家使用Go标准库<code>net/http/httptest</code>进行测试，能够显著提升效率。</p>
+<p>在这一小节，我们以常见的gin框架为例，演示如何为http server编写单元测试</p>
+<p>假设我们的业务逻辑是搭建一个http server端，对外提供http服务。我们编写一个<code>helloHandle</code>函数，用来处理用户请求。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// gin.go
+</span><span class="c1"></span><span class="kn">package</span> <span class="nx">httptest_demo</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+    <span class="s">&#34;net/http&#34;</span>
+
+    <span class="s">&#34;github.com/gin-gonic/gin&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">// Param 请求参数
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Param</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span>    <span class="kt">string</span>  <span class="s">`json:&#34;name&#34;`</span>
+<span class="p">}</span>
+
+<span class="c1">// helloHandle /hello请求处理函数
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">helloHandler</span><span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">gin</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">p</span> <span class="nx">Param</span>
+
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">c</span><span class="p">.</span><span class="nf">ShouldBindJSON</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">p</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">c</span><span class="p">.</span><span class="nf">JSON</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusOK</span><span class="p">,</span> <span class="nx">gin</span><span class="p">.</span><span class="nx">H</span><span class="p">{</span>
+            <span class="s">&#34;msg&#34;</span><span class="p">:</span> <span class="s">&#34;we need a name&#34;</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="nx">c</span><span class="p">.</span><span class="nf">JSON</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">StatusOK</span><span class="p">,</span> <span class="nx">gin</span><span class="p">.</span><span class="nx">H</span><span class="p">{</span>
+        <span class="s">&#34;msg&#34;</span><span class="p">:</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;hello %s&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1">// 路由
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">SetupRouter</span><span class="p">()</span> <span class="o">*</span><span class="nx">gin</span><span class="p">.</span><span class="nx">Engine</span> <span class="p">{</span>
+    <span class="nx">router</span> <span class="o">:=</span> <span class="nx">gin</span><span class="p">.</span><span class="nf">Default</span><span class="p">()</span>
+    <span class="nx">router</span><span class="p">.</span><span class="nf">POST</span><span class="p">(</span><span class="s">&#34;/hello&#34;</span><span class="p">,</span> <span class="nx">helloHandler</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">router</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>现在我们需要为<code>helloHander</code>函数编写单元测试，这种情况下我们就可以使用<code>httptest</code>这个工具mock一个HTTP请求和响应记录器，让我们的server端接收并处理我们mock的HTTP请求，同时使用响应记录器来记录server端返回的响应内容。</p>
+<p>单元测试的示例代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// gin_test.go
+</span><span class="c1"></span><span class="kn">package</span> <span class="nx">httptest_demo</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;encoding/json&#34;</span>
+    <span class="s">&#34;net/http&#34;</span>
+    <span class="s">&#34;net/http/httptest&#34;</span>
+    <span class="s">&#34;strings&#34;</span>
+    <span class="s">&#34;testing&#34;</span>
+
+    <span class="s">&#34;github.com/stretchr/testify/assert&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">Test_helloHandler</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 定义两个测试用例
+</span><span class="c1"></span>    <span class="nx">tests</span> <span class="o">:=</span> <span class="p">[]</span><span class="kd">struct</span><span class="p">{</span>
+        <span class="nx">name</span>    <span class="kt">string</span>
+        <span class="nx">param</span>   <span class="kt">string</span>
+        <span class="nx">expect</span>  <span class="kt">string</span>
+    <span class="p">}</span> <span class="p">{</span>
+        <span class="p">{</span><span class="s">&#34;base case&#34;</span><span class="p">,</span> <span class="s">`{&#34;name&#34;: &#34;cc&#34;}`</span><span class="p">,</span> <span class="s">&#34;hello cc&#34;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">&#34;bad case&#34;</span><span class="p">,</span> <span class="s">&#34;&#34;</span><span class="p">,</span> <span class="s">&#34;we need a name&#34;</span><span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="nx">r</span> <span class="o">:=</span> <span class="nf">SetupRouter</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">tt</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">tests</span> <span class="p">{</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nf">Run</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// mock一个http请求
+</span><span class="c1"></span>            <span class="nx">req</span> <span class="o">:=</span> <span class="nx">httptest</span><span class="p">.</span><span class="nf">NewRequest</span><span class="p">(</span>
+                <span class="c1">// 请求方法
+</span><span class="c1"></span>                <span class="s">&#34;POST&#34;</span><span class="p">,</span>
+                <span class="c1">// 请求URL
+</span><span class="c1"></span>                <span class="s">&#34;/hello&#34;</span><span class="p">,</span>
+                <span class="c1">// 请求参数
+</span><span class="c1"></span>                <span class="nx">strings</span><span class="p">.</span><span class="nf">NewReader</span><span class="p">(</span><span class="nx">tt</span><span class="p">.</span><span class="nx">Param</span><span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="c1">// mock一个响应记录器
+</span><span class="c1"></span>            <span class="nx">w</span> <span class="o">:=</span> <span class="nx">httptest</span><span class="p">.</span><span class="nf">NewRecorder</span><span class="p">()</span>
+
+            <span class="c1">// 让server端处理mock请求并记录返回的响应内容
+</span><span class="c1"></span>            <span class="nx">r</span><span class="p">.</span><span class="nf">ServeHttp</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">req</span><span class="p">)</span>
+
+            <span class="c1">// 校验状态码是否符合预期
+</span><span class="c1"></span>            <span class="nx">assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusOK</span><span class="p">,</span> <span class="nx">w</span><span class="p">.</span><span class="nx">Code</span><span class="p">)</span>
+
+            <span class="c1">// 解析并检验响应内容是否符合预期
+</span><span class="c1"></span>            <span class="kd">var</span> <span class="nx">resp</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span>
+            <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Unmarshal</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">w</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nf">String</span><span class="p">()),</span> <span class="o">&amp;</span><span class="nx">resp</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nf">Nil</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">tt</span><span class="p">.</span><span class="nx">expect</span><span class="p">,</span> <span class="nx">resp</span><span class="p">[</span><span class="s">&#34;msg&#34;</span><span class="p">])</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>通过这个示例我们就掌握了如何使用httptest在HTTP Server服务中为请求处理函数编写单元测试了。</p>
+<h2 id="gock">gock</h2>
+<p>上面的示例介绍了如何在HTTP Server服务类场景下为请求处理函数编写单元测试，那么如果我们是在代码中请求外部API的场景(比如通过API调用其他服务获取返回值)又该怎么编写单元测试呢？</p>
+<p>例如，我们有以下业务逻辑代码，依赖外部API：<code>http://your-api.com/post</code>提供的数据。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// api.go
+</span><span class="c1"></span>
+<span class="c1">// ReqParam API请求参数
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">ReqParam</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">X</span>   <span class="kt">int</span> <span class="s">`json:&#34;x&#34;`</span>
+<span class="p">}</span>
+
+<span class="c1">// Result API返回结果
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Result</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Value</span>   <span class="kt">int</span> <span class="s">`json:&#34;value&#34;`</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">GetResultByAPI</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">ReqParam</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="nx">x</span><span class="p">}</span>
+    <span class="nx">b</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
+
+    <span class="c1">// 调用其他服务的API
+</span><span class="c1"></span>    <span class="nx">resp</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">Post</span><span class="p">(</span>
+        <span class="s">&#34;http://your-api.com/post&#34;</span><span class="p">,</span>
+        <span class="s">&#34;application/json&#34;</span><span class="p">,</span>
+        <span class="nx">bytes</span><span class="p">.</span><span class="nf">NewBuffer</span><span class="p">(</span><span class="nx">b</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="p">}</span>
+
+    <span class="nx">body</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nf">ReadAll</span><span class="p">(</span><span class="nx">resp</span><span class="p">.</span><span class="nx">Body</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">ret</span> <span class="nx">Result</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">body</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">ret</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 这里是对API返回的数据做一些逻辑处理
+</span><span class="c1"></span>    <span class="k">return</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">Value</span> <span class="o">+</span> <span class="nx">y</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在对类似上述这类业务代码编写单元测试的时候，如果不想在测试过程中真正去发送请求或者依赖的外部接口还没开发完成时，我们可以在单元测试中对依赖的API进行mock。</p>
+<h3 id="安装">安装</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">go get -u gopkg.in/h2non/gock.v1
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="使用示例">使用示例</h3>
+<p>使用<code>gock</code>对外部API进行mock，即mock指定参数返回约定好的响应内容。下面的代码中mock了两组数据，组成了两个测试用例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// api_test.go
+</span><span class="c1"></span><span class="kn">package</span> <span class="nx">gock_demo</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;testing&#34;</span>
+
+    <span class="s">&#34;github.com/stretchr/testify/assert&#34;</span>
+    <span class="s">&#34;gopkg.in/h2non/gock.v1&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">TestGetResultByAPI</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 测试执行结束后刷新挂起的mock
+</span><span class="c1"></span>    <span class="k">defer</span> <span class="nx">gock</span><span class="p">.</span><span class="nf">Off</span><span class="p">()</span>
+
+    <span class="c1">// mock请求外部api时传参x=1返回100
+</span><span class="c1"></span>    <span class="nx">gock</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;http://your-api.com&#34;</span><span class="p">).</span>
+        <span class="nf">Post</span><span class="p">(</span><span class="s">&#34;/post&#34;</span><span class="p">).</span>
+        <span class="nf">MatchType</span><span class="p">(</span><span class="s">&#34;json&#34;</span><span class="p">).</span>
+        <span class="nf">JSON</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">&#34;x&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}).</span>
+        <span class="nf">Reply</span><span class="p">(</span><span class="mi">200</span><span class="p">).</span>
+        <span class="nf">JSON</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">&#34;value&#34;</span><span class="p">:</span> <span class="mi">100</span><span class="p">})</span>
+
+    <span class="c1">// 调用我们的业务函数
+</span><span class="c1"></span>    <span class="nx">res</span> <span class="o">:=</span> <span class="nf">GetResultByAPI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1">// 校验返回结果是否符合预期
+</span><span class="c1"></span>    <span class="nx">assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>
+
+    <span class="c1">// mock请求外部API时传参x=2返回200
+</span><span class="c1"></span>    <span class="nx">gock</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;http://your-api.com&#34;</span><span class="p">).</span>
+        <span class="nf">Post</span><span class="p">(</span><span class="s">&#34;/post&#34;</span><span class="p">).</span>
+        <span class="nf">MatchType</span><span class="p">(</span><span class="s">&#34;json&#34;</span><span class="p">).</span>
+        <span class="nf">JSON</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">&#34;x&#34;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}).</span>
+        <span class="nf">Reply</span><span class="p">(</span><span class="mi">200</span><span class="p">).</span>
+        <span class="nf">JSON</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">&#34;value&#34;</span><span class="p">:</span> <span class="mi">200</span><span class="p">})</span>
+
+    <span class="c1">// 调用我们的业务函数
+</span><span class="c1"></span>    <span class="nx">res</span> <span class="p">=</span> <span class="nf">GetResultByAPI</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="c1">// 校验返回结果是否符合预期
+</span><span class="c1"></span>    <span class="nx">assert</span><span class="p">.</span><span class="nf">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="mi">202</span><span class="p">)</span>
+
+    <span class="c1">// 断言mock被触发
+</span><span class="c1"></span>    <span class="nx">assert</span><span class="p">.</span><span class="nf">True</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">gock</span><span class="p">.</span><span class="nf">IsDone</span><span class="p">())</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>测试结果和预期完全一致</p>
+<h2 id="总结">总结</h2>
+<p>作为日常开发中为代码编写单元测试时如何处理外部依赖是最常见的问题，本文介绍了如何使用<code>httptest</code>和<code>gock</code>工具mock相关依赖。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-11-02</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/go-test2/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-test2/" data-title="Go测试从零到溜2-网络测试" data-via="xxxx" data-hashtags="Golang测试"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-test2/" data-hashtag="Golang测试"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-test2/" data-title="Go测试从零到溜2-网络测试" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-test2/" data-title="Go测试从零到溜2-网络测试"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-test2/" data-title="Go测试从零到溜2-网络测试"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-test2/" data-title="Go测试从零到溜2-网络测试" data-description="Go测试从零到溜2-网络测试"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-test2/" data-title="Go测试从零到溜2-网络测试" data-description="Go测试从零到溜2-网络测试"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-test2/" data-title="Go测试从零到溜2-网络测试"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/golang%E6%B5%8B%E8%AF%95/">Golang测试</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/go-test1/" class="prev" rel="prev" title="Go测试从零到溜1-单元测试"><i class="fas fa-angle-left fa-fw"></i>Go测试从零到溜1-单元测试</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
