@@ -134,3 +134,121 @@ func TestShouldRollbackStatUpdateOnFailure(t *testing.T) {
 ```
 
 上面的代码中，定义了一个执行成功的测试用例和一个执行失败回滚的测试用例，确保我们代码中的每个逻辑分支都能被测试到，提高单元测试覆盖率的同时也保证了代码的健壮性。
+
+## miniredis
+
+除了经常用到MySQL外，Redis在日常开发中也会经常用到。
+
+miniredis是一个纯go实现的用于单元测试的redis server。它是一个简单易用的，基于内存的redis替代品，它具有真正的TCP接口，你可以把它当成redis版本的`net/http/httptest`
+
+当我们为一些包含Redis操作的代码编写单元测试时就可以用它来mock Redis操作
+
+### 安装
+
+```bash
+go get github.com/alicebob/miniredis/v2
+```
+
+### 使用示例
+
+这里以`github.com/go-redis/redis`库为例，编写了一个包含若干个Redis操作的`DoSomethingWithRedis`函数
+
+```go
+// redis_op.go
+package miniredis_demo
+
+import (
+    "context"
+    "strings"
+    "time"
+
+    "github.com/go-redis/redis/v8"
+)
+
+const (
+    KeyValidWebsite = "app:valid:website:list"
+)
+
+func DoSomethingWithRedis(rdb *redis.Client, key string) bool {
+    // 这里可以是对Redis操作的一些逻辑
+    ctx := context.TODO()
+    if !rdb.SisMember(ctx, KeyValidWebsite, key).Val() {
+        return false
+    }
+
+    val, err := rdb.Get(ctx, key).Result()
+    if err != nil {
+        return false
+    }
+
+    if !strings.HasPrefix(val, "https://") {
+        val = "https://" + val
+    }
+
+    // 设置blog key五秒过期
+    if err = rdb.Set(ctx, "blog", val, 5 * time.Second).Err(); err != nil {
+        return false
+    }
+
+    return true
+}
+```
+
+下面代码使用`miniredis`库为`DoSomethingWithRedis`函数编写单元测试代码，其中`miniredis`不仅支持mock常用的Redis操作，还提供了很多实用的帮助函数，例如检查key的值是否与预期相等的`s.CheckGet()`和帮助检查key过期时间的`s.FastForward()`
+
+```go
+// redis_op_test.go
+
+package miniredis_demo
+
+import (
+    "testing"
+    "time"
+
+    "github.com/alicebob/miniredis/v2"
+    "github.com/go-redis/redis/v8"
+)
+
+func TestDoSomethingWithRedis(t *testing.T) {
+    // mock 一个redis server
+    s, err := minireids.Run()
+    if err != nil {
+        panic(err)
+    }
+    defer s.Close()
+
+    // 准备数据
+    s.Set("cc", "cc.com")
+    s.SAdd(KeyValidWebsite, "cc")
+
+    // 连接mock的redis server
+    rdb := redis.NewClient(&redis.Options{
+        // mock redis server 地址
+        Addr: s.Addr(),
+    })
+
+    // 调用函数
+    ok := DoSomethingWithRedis(rdb, "cc")
+    if !ok {
+        t.Fatal()
+    }
+
+    // 可以手动检查redis中的值是否符合预期
+    if got, err := s.Get("blog"); err != nil || got != "https://cc.com" {
+        t.Fatalf("'blog' has the wrong value")
+    }
+
+    // 也可以使用帮助工具检查
+    s.CheckGet(t, "blog", "https://cc.com")
+
+    // 过期检查
+    s.FastForward(5 * time.Second)  // 快进5秒
+    if s.Exists("blog") {
+        t.Fatal("'blog' should not have existed anymore")
+    }
+}
+```
+
+## 总结
+
+在日常工作开发中为代码编写单元测试时如何处理数据库依赖是最常见的问题，本文介绍了如何使用`go-sqlmock`和`miniredis`工具mock相关依赖。

@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/go-test3\/"
-        },"genre": "posts","keywords": "Golang测试","wordcount":  1090 ,
+        },"genre": "posts","keywords": "Golang测试","wordcount":  1941 ,
         "url": "http:\/\/example.org\/go-test3\/","datePublished": "2021-11-02T11:31:40+08:00","dateModified": "2021-11-02T11:31:40+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,8 +106,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Go测试从零到溜3-MySQL和Redis测试</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-02">2021-11-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1090 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-02">2021-11-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1941 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -121,6 +121,13 @@
         <li><a href="#使用示例">使用示例</a></li>
       </ul>
     </li>
+    <li><a href="#miniredis">miniredis</a>
+      <ul>
+        <li><a href="#安装-1">安装</a></li>
+        <li><a href="#使用示例-1">使用示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="go-sqlmock">go-sqlmock</h2>
@@ -368,6 +375,212 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>上面的代码中，定义了一个执行成功的测试用例和一个执行失败回滚的测试用例，确保我们代码中的每个逻辑分支都能被测试到，提高单元测试覆盖率的同时也保证了代码的健壮性。</p>
+<h2 id="miniredis">miniredis</h2>
+<p>除了经常用到MySQL外，Redis在日常开发中也会经常用到。</p>
+<p>miniredis是一个纯go实现的用于单元测试的redis server。它是一个简单易用的，基于内存的redis替代品，它具有真正的TCP接口，你可以把它当成redis版本的<code>net/http/httptest</code></p>
+<p>当我们为一些包含Redis操作的代码编写单元测试时就可以用它来mock Redis操作</p>
+<h3 id="安装-1">安装</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">go get github.com/alicebob/miniredis/v2
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="使用示例-1">使用示例</h3>
+<p>这里以<code>github.com/go-redis/redis</code>库为例，编写了一个包含若干个Redis操作的<code>DoSomethingWithRedis</code>函数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// redis_op.go
+</span><span class="c1"></span><span class="kn">package</span> <span class="nx">miniredis_demo</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;context&#34;</span>
+    <span class="s">&#34;strings&#34;</span>
+    <span class="s">&#34;time&#34;</span>
+
+    <span class="s">&#34;github.com/go-redis/redis/v8&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">const</span> <span class="p">(</span>
+    <span class="nx">KeyValidWebsite</span> <span class="p">=</span> <span class="s">&#34;app:valid:website:list&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">DoSomethingWithRedis</span><span class="p">(</span><span class="nx">rdb</span> <span class="o">*</span><span class="nx">redis</span><span class="p">.</span><span class="nx">Client</span><span class="p">,</span> <span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="c1">// 这里可以是对Redis操作的一些逻辑
+</span><span class="c1"></span>    <span class="nx">ctx</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nf">TODO</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">!</span><span class="nx">rdb</span><span class="p">.</span><span class="nf">SisMember</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">KeyValidWebsite</span><span class="p">,</span> <span class="nx">key</span><span class="p">).</span><span class="nf">Val</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span>
+    <span class="p">}</span>
+
+    <span class="nx">val</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">rdb</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">key</span><span class="p">).</span><span class="nf">Result</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">!</span><span class="nx">strings</span><span class="p">.</span><span class="nf">HasPrefix</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="s">&#34;https://&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">val</span> <span class="p">=</span> <span class="s">&#34;https://&#34;</span> <span class="o">+</span> <span class="nx">val</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 设置blog key五秒过期
+</span><span class="c1"></span>    <span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">rdb</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&#34;blog&#34;</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="mi">5</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">).</span><span class="nf">Err</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>下面代码使用<code>miniredis</code>库为<code>DoSomethingWithRedis</code>函数编写单元测试代码，其中<code>miniredis</code>不仅支持mock常用的Redis操作，还提供了很多实用的帮助函数，例如检查key的值是否与预期相等的<code>s.CheckGet()</code>和帮助检查key过期时间的<code>s.FastForward()</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// redis_op_test.go
+</span><span class="c1"></span>
+<span class="kn">package</span> <span class="nx">miniredis_demo</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;testing&#34;</span>
+    <span class="s">&#34;time&#34;</span>
+
+    <span class="s">&#34;github.com/alicebob/miniredis/v2&#34;</span>
+    <span class="s">&#34;github.com/go-redis/redis/v8&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">TestDoSomethingWithRedis</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// mock 一个redis server
+</span><span class="c1"></span>    <span class="nx">s</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">minireids</span><span class="p">.</span><span class="nf">Run</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+
+    <span class="c1">// 准备数据
+</span><span class="c1"></span>    <span class="nx">s</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;cc&#34;</span><span class="p">,</span> <span class="s">&#34;cc.com&#34;</span><span class="p">)</span>
+    <span class="nx">s</span><span class="p">.</span><span class="nf">SAdd</span><span class="p">(</span><span class="nx">KeyValidWebsite</span><span class="p">,</span> <span class="s">&#34;cc&#34;</span><span class="p">)</span>
+
+    <span class="c1">// 连接mock的redis server
+</span><span class="c1"></span>    <span class="nx">rdb</span> <span class="o">:=</span> <span class="nx">redis</span><span class="p">.</span><span class="nf">NewClient</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">redis</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
+        <span class="c1">// mock redis server 地址
+</span><span class="c1"></span>        <span class="nx">Addr</span><span class="p">:</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Addr</span><span class="p">(),</span>
+    <span class="p">})</span>
+
+    <span class="c1">// 调用函数
+</span><span class="c1"></span>    <span class="nx">ok</span> <span class="o">:=</span> <span class="nf">DoSomethingWithRedis</span><span class="p">(</span><span class="nx">rdb</span><span class="p">,</span> <span class="s">&#34;cc&#34;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 可以手动检查redis中的值是否符合预期
+</span><span class="c1"></span>    <span class="k">if</span> <span class="nx">got</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;blog&#34;</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="o">||</span> <span class="nx">got</span> <span class="o">!=</span> <span class="s">&#34;https://cc.com&#34;</span> <span class="p">{</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;&#39;blog&#39; has the wrong value&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 也可以使用帮助工具检查
+</span><span class="c1"></span>    <span class="nx">s</span><span class="p">.</span><span class="nf">CheckGet</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s">&#34;blog&#34;</span><span class="p">,</span> <span class="s">&#34;https://cc.com&#34;</span><span class="p">)</span>
+
+    <span class="c1">// 过期检查
+</span><span class="c1"></span>    <span class="nx">s</span><span class="p">.</span><span class="nf">FastForward</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>  <span class="c1">// 快进5秒
+</span><span class="c1"></span>    <span class="k">if</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Exists</span><span class="p">(</span><span class="s">&#34;blog&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">(</span><span class="s">&#34;&#39;blog&#39; should not have existed anymore&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="总结">总结</h2>
+<p>在日常工作开发中为代码编写单元测试时如何处理数据库依赖是最常见的问题，本文介绍了如何使用<code>go-sqlmock</code>和<code>miniredis</code>工具mock相关依赖。</p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
