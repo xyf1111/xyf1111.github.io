@@ -3,7 +3,21 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 02 Nov 2021 11:31:40 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 05 Nov 2021 16:30:01 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Docker</title>
+    <link>http://example.org/go-docker/</link>
+    <pubDate>Fri, 05 Nov 2021 16:30:01 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-docker/</guid>
+    <description><![CDATA[为什么需要Docker 1 使用docker的主要目标是容器化。也就是为你的应用程序提供一致的环境，而不依赖它运行的主机 想象一下你是否也会遇到下]]></description>
+</item><item>
+    <title>Mysql 调优1</title>
+    <link>http://example.org/mysql-optimize/</link>
+    <pubDate>Fri, 05 Nov 2021 15:12:39 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/mysql-optimize/</guid>
+    <description><![CDATA[如何回答面试中的问题 面试中问到的SQL如何优化 错误回答 1 2 3 4 5 **加索引** **看执行计划** **优化SQL语句** **分库分表** **表]]></description>
+</item><item>
     <title>Go测试从零到溜3-MySQL和Redis测试</title>
     <link>http://example.org/go-test3/</link>
     <pubDate>Tue, 02 Nov 2021 11:31:40 &#43;0800</pubDate>
@@ -59,19 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/go-study18/</guid>
     <description><![CDATA[在web开发中一个不可避免的环节就是对请求参数进行校验，通常我们对在代码中定义和请求参数相对应的模型(结构体)，借助模型绑定快捷地解析请求中]]></description>
-</item><item>
-    <title>Go Study17</title>
-    <link>http://example.org/go-study17/</link>
-    <pubDate>Thu, 22 Jul 2021 22:44:20 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study17/</guid>
-    <description><![CDATA[select语句介绍 Go语言中的select语句用于监控并选择一组case语句执行相应的代码。它看起来类似于switch语句，但是selec]]></description>
-</item><item>
-    <title>Go Study 16</title>
-    <link>http://example.org/go-study-16/</link>
-    <pubDate>Sun, 18 Jul 2021 21:25:50 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study-16/</guid>
-    <description><![CDATA[复制 将切片a中的元素复制到切片b中。 最简单的、最常用的方法就是使用内置的copy方法 1 2 3 // 一次将内存申请到位 b = make([]T, len(a)) copy(b, a) 除了使用内置的co]]></description>
 </item></channel>
 </rss>

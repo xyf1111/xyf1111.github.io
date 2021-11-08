@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Go Docker - CC&#39;s Blog</title><meta name="Description" content="如何使用Docker部署Go Web应用"><meta property="og:title" content="Go Docker" />
+<meta property="og:description" content="如何使用Docker部署Go Web应用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/go-docker/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-11-05T16:30:01+08:00" />
+<meta property="article:modified_time" content="2021-11-05T16:30:01+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Go Docker"/>
+<meta name="twitter:description" content="如何使用Docker部署Go Web应用"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-docker/" /><link rel="prev" href="http://example.org/mysql-optimize/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go Docker",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/go-docker\/"
+        },"genre": "posts","keywords": "go, docker","wordcount":  4282 ,
+        "url": "http:\/\/example.org\/go-docker\/","datePublished": "2021-11-05T16:30:01+08:00","dateModified": "2021-11-05T16:30:01+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "如何使用Docker部署Go Web应用"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Docker</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-05">2021-11-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4282 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 9 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#为什么需要docker">为什么需要Docker</a></li>
+    <li><a href="#docker部署示例">Docker部署示例</a>
+      <ul>
+        <li><a href="#准备代码">准备代码</a></li>
+        <li><a href="#创建docker镜像">创建Docker镜像</a></li>
+        <li><a href="#编写dockerfile">编写Dockerfile</a></li>
+        <li><a href="#构建镜像">构建镜像</a></li>
+      </ul>
+    </li>
+    <li><a href="#分阶段构建示例">分阶段构建示例</a></li>
+    <li><a href="#附带其他文件的部署示例">附带其他文件的部署示例</a>
+      <ul>
+        <li><a href="#关联其他容器">关联其他容器</a></li>
+      </ul>
+    </li>
+    <li><a href="#docker-compose模式">Docker Compose模式</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="为什么需要docker">为什么需要Docker</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-md" data-lang="md">使用docker的主要目标是容器化。也就是为你的应用程序提供一致的环境，而不依赖它运行的主机
+</code></pre></td></tr></table>
+</div>
+</div><p>想象一下你是否也会遇到下面这个场景，你在本地开发了你的应用程序，它很可能有很多依赖的环境或者包，甚至对依赖的具体版本都有严格要求，当开发过程完成后，你希望将应用程序部署到Web服务器。这个时候你必须确保所有的依赖项都安装正确并且版本也相同，否则程序可能会崩溃并且无法运行。如果你想在另一个web服务器上也部署该应用程序。那么你必须从头开始重复这个过程。这种场景就是docker发回作用的地方。</p>
+<p>对于运行我们程序的主机，不管是笔记本电脑还是服务器，我们唯一需要做的就是运行一个docker容器平台。从此以后，你就不需要担心你使用的MacOS，Ubuntu，Arch还是其他，你只需要定义一次应用，即可随时随地运行。</p>
+<h2 id="docker部署示例">Docker部署示例</h2>
+<h3 id="准备代码">准备代码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+    <span class="s">&#34;net/http&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">,</span> <span class="nx">hello</span><span class="p">)</span>
+    <span class="nx">server</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span>
+        <span class="nx">Addr</span><span class="p">:</span>   <span class="s">&#34;:8888&#34;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;server startup...&#34;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">server</span><span class="p">.</span><span class="nf">ListenAndSave</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;server startup failed, err: %v\n&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">hello</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">_</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">w</span><span class="p">.</span><span class="nf">Write</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;hello cc.com&#34;</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的代码通过<code>8888</code>端口对外提供服务，返回一个字段响应：<code>hello cc.com</code></p>
+<h3 id="创建docker镜像">创建Docker镜像</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-md" data-lang="md">镜像(image)包含运行应用程序所需的所有东西--代码或二进制文件、运行时、依赖项以及所需的任何其他文件系统对象。
+</code></pre></td></tr></table>
+</div>
+</div><p>或者简单的说，镜像(image)是定义应用程序及其运行所需的一切</p>
+<h3 id="编写dockerfile">编写Dockerfile</h3>
+<p>要创建Docker镜像(image)必须在配置文件中指定步骤。这个文件我们同城称为<code>Dockerfile</code>。(虽然这个文件可以随意命名它，但是最好还是使用默认的<code>Dockerfile</code>。)</p>
+<p><strong>注意：某些步骤不是唯一的，可以根据自己的需要修改诸如文件路径，最终可执行文件的名称等</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-md" data-lang="md">FROM golang:alpine
+
+<span class="c">&lt;!-- 为我们镜像设置必要的环境变量 --&gt;</span>
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64 \
+
+<span class="c">&lt;!-- 移动到工作目录 --&gt;</span>
+WORKDIR /build
+
+<span class="c">&lt;!-- 将代码复制到容器中 --&gt;</span>
+COPY . .
+
+<span class="c">&lt;!-- 将我们的代码编译成二进制可执行文件app --&gt;</span>
+RUN go build -o app .
+
+<span class="c">&lt;!-- 移动到用于存放生成二进制文件的 /dist 目录 --&gt;</span>
+WORKDIR /dist
+
+<span class="c">&lt;!-- 将二进制文件从 /build 目录复制到这里 --&gt;</span>
+RUN cp /build/app .
+
+<span class="c">&lt;!-- 声明服务端口 --&gt;</span>
+EXPOSE 8888
+
+<span class="c">&lt;!-- 启动容器时运行的命令 --&gt;</span>
+CMD [&#34;/dist/app&#34;]
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Dockerfile解析</strong></p>
+<p><em>From</em></p>
+<p>我们正在使用基础镜像<code>golang:alpine</code>来创建我们的镜像。这和我们要创建的镜像一样是一个我们能够访问的存储在Docker仓库的基础镜像。这个镜像运行的是alpine Linux发行版，该发行版的大小很小并且内置了Go，非常适合我们的用例。有大量公开可用的Docker镜像。</p>
+<p><em>Env</em></p>
+<p>用来设置我们编译阶段需要用的环境变量</p>
+<p><em>WORKDIR, COPY, RUN</em></p>
+<p>这几个命令做的事都写在注释里了，很好理解</p>
+<p><em>EXPORT, CMD</em></p>
+<p>最后我们声明服务端口，因为我们的应用程序监听的是这个端口并通过这个端口对外提供服务。并且我们还定义了在我们运行镜像的时候默认执行的命令<code>CMD [&quot;/dist/app&quot;]</code></p>
+<h3 id="构建镜像">构建镜像</h3>
+<p>在项目目录下，执行下面的命令创建镜像，并指定镜像名称为<code>goweb_app</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker build . -t goweb_app
+</code></pre></td></tr></table>
+</div>
+</div><p>等待构建过程结束，输出如下提示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">...
+Successfully built 90d9283286b7
+Successfully tagged goweb_app:latest
+</code></pre></td></tr></table>
+</div>
+</div><p>现在我们已经准备好了镜像，但是目前它什么也没做。我们接下来要做的就是运行我们的镜像，以便处理我们的请求。运行中的镜像称为容器。</p>
+<p>执行下面的命令来运行镜像：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker run -p 8888:8888 goweb_app
+</code></pre></td></tr></table>
+</div>
+</div><p>标志位<code>-p</code>用来定义端口绑定。由于容器中的应用程序在端口8888上运行，我们将其绑定到主机端口也是8888。如果要绑定到另一个端口，则可以使用<code>-p $HOST_POST:8888</code>。例如<code>-p 5000:8888</code></p>
+<p>现在就可以测试下我们的web程序是否工作正常，打开浏览器输入<code>http://127.0.0.1:8888</code>就能看见实现定义的响应内容</p>
+<h2 id="分阶段构建示例">分阶段构建示例</h2>
+<p>我们的Go程序编译之后会得到一个可执行的二进制文件，其实在最终的镜像是不需要go编译器的，也就是说我们只需要一个运行最终二进制文件的容器即可。</p>
+<p>Docker的最佳实践之一是通过仅保留二进制文件来减小镜像大小，为此，我们将使用一种多阶段构建的技术，这意味着我们将通过多个步骤构建镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">FROM golang:alpine AS builder
+
+<span class="c1"># 为我们的镜像设置必要的环境变量</span>
+ENV <span class="nv">GO111MODULE</span><span class="o">=</span>on <span class="se">\
+</span><span class="se"></span>    <span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span> <span class="se">\
+</span><span class="se"></span>    <span class="nv">GOOS</span><span class="o">=</span>linux <span class="se">\
+</span><span class="se"></span>    <span class="nv">GOARCH</span><span class="o">=</span>amd64
+
+<span class="c1"># 移动到工作目录：/build</span>
+WORKDIR /build
+
+<span class="c1"># 将代码复制到容器中</span>
+COPY . .
+
+<span class="c1"># 将我们的代码编译成二进制可执行文件 app</span>
+RUN go build -o app .
+
+<span class="c1">###################</span>
+<span class="c1"># 接下来创建一个小镜像</span>
+<span class="c1">###################</span>
+FROM scratch
+
+<span class="c1"># 从builder镜像中把/dist/app 拷贝到当前目录</span>
+COPY --from<span class="o">=</span>builder /build/app /
+
+<span class="c1"># 需要运行的命令</span>
+ENTRYPOINT <span class="o">[</span><span class="s2">&#34;/app&#34;</span><span class="o">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>使用这种技术，我们剥离了使用<code>golang:alpine</code>作为编译镜像来编译得到二进制可执行文件的过程，并基于<code>scratch</code>生成一个简单的非常小的新镜像。我们将二进制文件重命名为<code>builder</code>的第一个镜像中复制到新创建的<code>scratch</code>镜像中。</p>
+<h2 id="附带其他文件的部署示例">附带其他文件的部署示例</h2>
+<p>如果项目中带有静态文件或配置文件，需要将其拷贝到最终的镜像文件中。</p>
+<p>例如bubble项目中用到了静态文件和配置文件，具体目录结构如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">bubble</span>
+<span class="err">├──</span> <span class="nx">README</span><span class="p">.</span><span class="nx">md</span>
+<span class="err">├──</span> <span class="nx">bubble</span>
+<span class="err">├──</span> <span class="nx">conf</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">config</span><span class="p">.</span><span class="nx">ini</span>
+<span class="err">├──</span> <span class="nx">controller</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">controller</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">dao</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">mysql</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">example</span><span class="p">.</span><span class="nx">png</span>
+<span class="err">├──</span> <span class="k">go</span><span class="p">.</span><span class="nx">mod</span>
+<span class="err">├──</span> <span class="k">go</span><span class="p">.</span><span class="nx">sum</span>
+<span class="err">├──</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">models</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">todo</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">routers</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">routers</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">setting</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">setting</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">static</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="nx">css</span>
+<span class="err">│</span>   <span class="err">│</span>   <span class="err">├──</span> <span class="nx">app</span><span class="mf">.8</span><span class="nx">eeeaf31</span><span class="p">.</span><span class="nx">css</span>
+<span class="err">│</span>   <span class="err">│</span>   <span class="err">└──</span> <span class="nx">chunk</span><span class="o">-</span><span class="nx">vendors</span><span class="mf">.57</span><span class="nx">db8905</span><span class="p">.</span><span class="nx">css</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="nx">fonts</span>
+<span class="err">│</span>   <span class="err">│</span>   <span class="err">├──</span> <span class="nx">element</span><span class="o">-</span><span class="nx">icons</span><span class="mf">.535877</span><span class="nx">f5</span><span class="p">.</span><span class="nx">woff</span>
+<span class="err">│</span>   <span class="err">│</span>   <span class="err">└──</span> <span class="nx">element</span><span class="o">-</span><span class="nx">icons</span><span class="mf">.732389</span><span class="nx">de</span><span class="p">.</span><span class="nx">ttf</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">js</span>
+<span class="err">│</span>       <span class="err">├──</span> <span class="nx">app</span><span class="mf">.007</span><span class="nx">f9690</span><span class="p">.</span><span class="nx">js</span>
+<span class="err">│</span>       <span class="err">└──</span> <span class="nx">chunk</span><span class="o">-</span><span class="nx">vendors</span><span class="p">.</span><span class="nx">ddcb6f91</span><span class="p">.</span><span class="nx">js</span>
+<span class="err">└──</span> <span class="nx">templates</span>
+    <span class="err">├──</span> <span class="nx">favicon</span><span class="p">.</span><span class="nx">ico</span>
+    <span class="err">└──</span> <span class="nx">index</span><span class="p">.</span><span class="nx">html</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们需要将<code>templates</code>、<code>static</code>、<code>conf</code>三个文件夹中的内容拷贝到最终的镜像文件中，更新后的<code>Dockerfile</code>如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">FROM</span> <span class="nx">golang</span><span class="p">:</span><span class="nx">alpine</span> <span class="nx">AS</span> <span class="nx">builder</span>
+
+<span class="err">#</span> <span class="nx">为我们的镜像设置必要的环境变量</span>
+<span class="nx">ENV</span> <span class="nx">GO111MODULE</span><span class="p">=</span><span class="nx">on</span> \
+    <span class="nx">CGO_ENABLED</span><span class="p">=</span><span class="mi">0</span> \
+    <span class="nx">GOOS</span><span class="p">=</span><span class="nx">linux</span> \
+    <span class="nx">GOARCH</span><span class="p">=</span><span class="nx">amd64</span>
+
+<span class="err">#</span> <span class="nx">移动到工作目录</span><span class="err">：</span><span class="o">/</span><span class="nx">build</span>
+<span class="nx">WORKDIR</span> <span class="o">/</span><span class="nx">build</span>
+
+<span class="err">#</span> <span class="nx">复制项目中的</span> <span class="k">go</span><span class="p">.</span><span class="nx">mod</span> <span class="nx">和</span> <span class="k">go</span><span class="p">.</span><span class="nx">sum文件并下载依赖信息</span>
+<span class="nx">COPY</span> <span class="k">go</span><span class="p">.</span><span class="nx">mod</span> <span class="p">.</span>
+<span class="nx">COPY</span> <span class="k">go</span><span class="p">.</span><span class="nx">sum</span> <span class="p">.</span>
+<span class="nx">RUN</span> <span class="k">go</span> <span class="nx">mod</span> <span class="nx">download</span>
+
+<span class="err">#</span> <span class="nx">将代码复制到容器中</span>
+<span class="nx">COPY</span> <span class="p">.</span> <span class="p">.</span>
+
+<span class="err">#</span> <span class="nx">将我们的代码编译成二进制可执行文件</span> <span class="nx">bubble</span>
+<span class="nx">RUN</span> <span class="k">go</span> <span class="nx">build</span> <span class="o">-</span><span class="nx">o</span> <span class="nx">bubble</span> <span class="p">.</span>
+
+<span class="err">###################</span>
+<span class="err">#</span> <span class="nx">接下来创建一个小镜像</span>
+<span class="err">###################</span>
+<span class="nx">FROM</span> <span class="nx">scratch</span>
+
+<span class="nx">COPY</span> <span class="p">.</span><span class="o">/</span><span class="nx">templates</span> <span class="o">/</span><span class="nx">templates</span>
+<span class="nx">COPY</span> <span class="p">.</span><span class="o">/</span><span class="nx">static</span> <span class="o">/</span><span class="nx">static</span>
+<span class="nx">COPY</span> <span class="p">.</span><span class="o">/</span><span class="nx">conf</span> <span class="o">/</span><span class="nx">conf</span>
+
+<span class="err">#</span> <span class="nx">从builder镜像中把</span><span class="o">/</span><span class="nx">dist</span><span class="o">/</span><span class="nx">app</span> <span class="nx">拷贝到当前目录</span>
+<span class="nx">COPY</span> <span class="o">--</span><span class="nx">from</span><span class="p">=</span><span class="nx">builder</span> <span class="o">/</span><span class="nx">build</span><span class="o">/</span><span class="nx">bubble</span> <span class="o">/</span>
+
+<span class="err">#</span> <span class="nx">需要运行的命令</span>
+<span class="nx">ENTRYPOINT</span> <span class="p">[</span><span class="s">&#34;/bubble&#34;</span><span class="p">,</span> <span class="s">&#34;conf/config.ini&#34;</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>简单来说就是多了几步COPY的步骤</p>
+<p><strong>TIPS：这里把COPY静态文件的步骤放在上层，把COPY二进制可执行文件放在下层，争取多使用缓存</strong></p>
+<h3 id="关联其他容器">关联其他容器</h3>
+<p>因为项目中使用了MySQL，我们可以选择使用如下命令启动一个MySQL容器，它的别名为<code>mysql8019</code>；root用户的密码为<code>root1234</code>；挂载容器中的<code>/var/lib/mysql</code>到本地的<code>/Users/cc/docker/mysql</code>目录；内部服务端口为3306，映射到外部的13306端口。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker run --name mysql8019 -p 13306:3306 -e <span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span>root1234 -v /Users/cc/docker/mysql:/var/lib/mysql -d mysql:8.0.19
+</code></pre></td></tr></table>
+</div>
+</div><p>程序中配置的MySQL的host地址为容器的别名，使它们在内部通过的别名(mysql8019)联通</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="p">[</span><span class="nx">mysql</span><span class="p">]</span>
+<span class="nx">user</span> <span class="p">=</span> <span class="nx">root</span>
+<span class="nx">password</span> <span class="p">=</span> <span class="nx">root1234</span>
+<span class="nx">host</span> <span class="p">=</span> <span class="nx">mysql8019</span>
+<span class="nx">port</span> <span class="p">=</span> <span class="mi">3306</span>
+<span class="nx">db</span> <span class="p">=</span> <span class="nx">bubble</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>修改后重新构建<code>bubble_app</code>镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker build . -t bubble_app
+</code></pre></td></tr></table>
+</div>
+</div><p>我们这里运行<code>bubble_app</code>容器的时候需要使用<code>--link</code>的方式与上面的<code>mysql8019</code>容器关联起来，具体命令如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker run --link<span class="o">=</span>mysql8019:mysql8019 -p 8888:8888 bubble_app
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="docker-compose模式">Docker Compose模式</h2>
+<p>除了像上面一样使用<code>--link</code>的方式来关联两个容器之外，还可以使用<code>Docker Compose</code>来定义和运行多个容器。</p>
+<p><code>Compose</code>是用于定义和运行多容器Docker应用程序的工具。通过Compose，可以使用YML文件来配置应用程序需要的所有服务。然后，用一个命令，就可以从YML文件配置中创建并启动所有服务。</p>
+<p>使用Compose基本上是一个三步过程：</p>
+<ul>
+<li>使用<code>Dockerfile</code>定义你的应用环境以便可以在任何地方复制</li>
+<li>定义组成应用程序的服务，<code>docker-compose.yml</code>以便它们可以在隔离的环境中一起运行</li>
+<li>执行<code>docker-compose up</code>命令来启动并运行整个应用程序</li>
+</ul>
+<p>我们的项目需要两个容器分别运行<code>mysql</code>和<code>bubble_app</code>,我们编写的<code>docker-compose.yml</code>文件内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yml" data-lang="yml"><span class="c"># yaml 配置</span><span class="w">
+</span><span class="w"></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;3.7&#34;</span><span class="w">
+</span><span class="w"></span><span class="nt">services</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">mysql8019</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;mysql:8.0.19&#34;</span><span class="w">
+</span><span class="w">    </span><span class="nt">ports</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="s2">&#34;33061:3306&#34;</span><span class="w">
+</span><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;--default-authentication-plugin=mysql_native_password --init-file /data/application/init.sql&#34;</span><span class="w">
+</span><span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="nt">MYSQL_ROOT_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;root1234&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">MYSQL_DATABASE</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;bubble&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">MYSQL_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;root1234&#34;</span><span class="w">
+</span><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">./init.sql:/data/application/init.sql</span><span class="w">
+</span><span class="w">  </span><span class="nt">bubble_app</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l">.</span><span class="w">
+</span><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l">sh -c &#34;./wait-for.sh mysql8019:3306 -- ./bubble ./conf/config.ini&#34;</span><span class="w">
+</span><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">mysql8019</span><span class="w">
+</span><span class="w">    </span><span class="nt">ports</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="s2">&#34;8888:8888&#34;</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>这个Compose文件定义了两个服务：<code>bubble_app</code>和<code>mysql8019</code>。其中：</p>
+<p><strong>bubble_app</strong></p>
+<p>使用当前目录下的<code>Dockerfile</code>文件构建镜像，并通过<code>depends_on</code>指定依赖<code>mysql8019</code>服务，声明服务端口8888并绑定对外8888端口</p>
+<p><strong>mysql8019</strong></p>
+<p>mysql8019服务使用Docker Hub的公共mysql:8.0.19镜像，内部端口3306，外部端口33061。</p>
+<p>这里需要注意的一个问题，<code>bubble_app</code>容器需要等待<code>mysql8019</code>容器正常启动之后在尝试启动，因为Web程序在启动的时候会初始化MySQL连接。这里共有两个地方需要更改，第一个就是<code>Dockerfile</code>中要把最后一句注释掉。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># Dockerfile</span>
+...
+<span class="c1"># 需要运行的命令（注释掉这一句，因为需要等MySQL启动之后再启动我们的Web程序）</span>
+<span class="c1"># ENTRYPOINT [&#34;/bubble&#34;, &#34;conf/config.ini&#34;]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>第二个地方是在<code>bubble_app</code>下面添加如下命令，使用提前编写的<code>wait-for.sh</code>脚本检测<code>mysql8019:3306</code>正常后再执行后续启动Web应用程序的命令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">command: sh -c <span class="s2">&#34;./wait-for.sh mysql8019:3306 -- ./bubble ./conf/config.ini&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当然，因为现在要在<code>bubble_app</code>镜像中执行sh命令，所以不能在使用<code>scratch</code>镜像构建了，这里改为使用<code>debian:stretch-slim</code>，同时还要安装<code>wait-for.sh</code>脚本用到的<code>netcat</code>，最后不要忘了把<code>wait-for.sh</code>脚本文件COPY到最终的镜像中，并赋予可执行权限哦。更新后的<code>Dockerfile</code>内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">FROM golang:alpine AS builder
+
+<span class="c1"># 为我们的镜像设置必要的环境变量</span>
+ENV <span class="nv">GO111MODULE</span><span class="o">=</span>on <span class="se">\
+</span><span class="se"></span>    <span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span> <span class="se">\
+</span><span class="se"></span>    <span class="nv">GOOS</span><span class="o">=</span>linux <span class="se">\
+</span><span class="se"></span>    <span class="nv">GOARCH</span><span class="o">=</span>amd64
+
+<span class="c1"># 移动到工作目录：/build</span>
+WORKDIR /build
+
+<span class="c1"># 复制项目中的 go.mod 和 go.sum文件并下载依赖信息</span>
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+<span class="c1"># 将代码复制到容器中</span>
+COPY . .
+
+<span class="c1"># 将我们的代码编译成二进制可执行文件 bubble</span>
+RUN go build -o bubble .
+
+<span class="c1">###################</span>
+<span class="c1"># 接下来创建一个小镜像</span>
+<span class="c1">###################</span>
+FROM debian:stretch-slim
+
+COPY ./wait-for.sh /
+COPY ./templates /templates
+COPY ./static /static
+COPY ./conf /conf
+
+
+<span class="c1"># 从builder镜像中把/dist/app 拷贝到当前目录</span>
+COPY --from<span class="o">=</span>builder /build/bubble /
+
+RUN <span class="nb">set</span> -eux<span class="p">;</span> <span class="se">\
+</span><span class="se"></span>	apt-get update<span class="p">;</span> <span class="se">\
+</span><span class="se"></span>	apt-get install -y <span class="se">\
+</span><span class="se"></span>		--no-install-recommends <span class="se">\
+</span><span class="se"></span>		netcat<span class="p">;</span> <span class="se">\
+</span><span class="se"></span>        chmod <span class="m">755</span> wait-for.sh
+
+<span class="c1"># 需要运行的命令</span>
+<span class="c1"># ENTRYPOINT [&#34;/bubble&#34;, &#34;conf/config.ini&#34;]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>所有条件准备就绪后，就可以执行下面的命令跑起来了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">docker-compose up
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="总结">总结</h2>
+<p>使用Docker容器能够极大简化我们在配置依赖环境方面的操作，但同时也对我们的技术储备提了更高的要求。对于Docker不管你是熟悉抑或是不熟悉，技术发展的车轮都滚滚向前。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-11-05</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/go-docker/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-docker/" data-title="Go Docker" data-via="xxxx" data-hashtags="go,docker"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-docker/" data-hashtag="go"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-docker/" data-title="Go Docker" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-docker/" data-title="Go Docker"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-docker/" data-title="Go Docker"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-docker/" data-title="Go Docker" data-description="如何使用Docker部署Go Web应用"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-docker/" data-title="Go Docker" data-description="如何使用Docker部署Go Web应用"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-docker/" data-title="Go Docker"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/go/">go</a>,&nbsp;<a href="/tags/docker/">docker</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/mysql-optimize/" class="prev" rel="prev" title="Mysql 调优1"><i class="fas fa-angle-left fa-fw"></i>Mysql 调优1</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
