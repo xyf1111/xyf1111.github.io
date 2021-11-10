@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Go垃圾收集器 - CC&#39;s Blog</title><meta name="Description" content="Go垃圾收集器"><meta property="og:title" content="Go垃圾收集器" />
+<meta property="og:description" content="Go垃圾收集器" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/go-garbage-collector/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-11-09T17:25:06+08:00" />
+<meta property="article:modified_time" content="2021-11-09T17:25:06+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Go垃圾收集器"/>
+<meta name="twitter:description" content="Go垃圾收集器"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-garbage-collector/" /><link rel="prev" href="http://example.org/go-docker/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go垃圾收集器",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/go-garbage-collector\/"
+        },"genre": "posts","keywords": "mysql","wordcount":  5309 ,
+        "url": "http:\/\/example.org\/go-garbage-collector\/","datePublished": "2021-11-09T17:25:06+08:00","dateModified": "2021-11-09T17:25:06+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "Go垃圾收集器"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go垃圾收集器</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-09">2021-11-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5309 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 11 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#设计原理">设计原理</a></li>
+    <li><a href="#演进过程">演进过程</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="设计原理">设计原理</h2>
+<p>今天的编程语言通常会使用以手动和自动两种方式管理内存，C、C++以及Rust等编程语言使用手动方式管理内存，工程师需要主动申请或者释放内存；而Python、Ruby、Java和Go等语言使用自动的内存管理系统，一般都是垃圾回收机制，不过Objective-C却选择了自动引用计数，虽然引用计数也是自动的内存管理机制。</p>
+<p>相信很多人对垃圾收集器的印象都是暂停程序(Stop the world, STW)，随着用户程序申请越来越多的内存，系统中的垃圾也逐渐增多；当程序中的内存达到一定阈值时，整个应用程序就会全部暂停，垃圾收集器会扫描已经分配的所有对象并回收不再使用的内存空间，当这个过程结束后，用户程序才可以继续执行，Go语言在早期也使用这种策略实现垃圾收集，但是今天的实现已经复杂了很多。</p>
+<p><figure><a class="lightgallery" href="/images/memory-management-component.png" title="&amp;ldquo;内存管理的组件&amp;rdquo;" data-thumbnail="/images/memory-management-component.png" data-sub-html="<h2>内存管理的组件</h2><p>&amp;ldquo;内存管理的组件&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/memory-management-component.png"
+            data-srcset="/images/memory-management-component.png, /images/memory-management-component.png 1.5x, /images/memory-management-component.png 2x"
+            data-sizes="auto"
+            alt="/images/memory-management-component.png" />
+    </a><figcaption class="image-caption">内存管理的组件</figcaption>
+    </figure></p>
+<p>在上图中，用户程序(Mutator)会通过内存分配器(Allocator)在堆上申请内存，而垃圾收集器(Collector)负责回收堆上的内存空间，内存分配器和垃圾收集器共同管理着程序中的堆内存空间。</p>
+<p><strong>标记清除</strong></p>
+<p>标记清除(Mark-Sweep)算法是最常见的垃圾收集算法，标记清除收集器是跟踪式垃圾收集器，其执行过程可以分成标记(Mark)和清除(Sweep)两个阶段</p>
+<ul>
+<li>标记阶段(从根对象出发查找并标记堆中所有存活的对象)</li>
+<li>清除阶段(遍历堆中的全部对象，回收未被标记的垃圾对象并将回收的内存加入空闲链表)</li>
+</ul>
+<p>如下图所示，内存空间中包含多个对象，我们从根对象出发依次遍历对象的子对象并将从根节点可达的对象都标记为存活状态，即A、C和D三个对象，剩余B、E和F三个对象因为从根节点不可达，所以会被当成垃圾。</p>
+<p><figure><a class="lightgallery" href="/images/mark-sweep-mark-phase.png" title="&amp;ldquo;标记清除的标记阶段&amp;rdquo;" data-thumbnail="/images/mark-sweep-mark-phase.png" data-sub-html="<h2>标记清除的标记阶段</h2><p>&amp;ldquo;标记清除的标记阶段&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/mark-sweep-mark-phase.png"
+            data-srcset="/images/mark-sweep-mark-phase.png, /images/mark-sweep-mark-phase.png 1.5x, /images/mark-sweep-mark-phase.png 2x"
+            data-sizes="auto"
+            alt="/images/mark-sweep-mark-phase.png" />
+    </a><figcaption class="image-caption">标记清除的标记阶段</figcaption>
+    </figure></p>
+<p>标记阶段结束后会进入清除阶段，在该阶段中收集器会依次遍历堆中的所有对象，释放其中没有被标记的B、E和F三个对象并将新的空闲内存空间以链表的结构串联起来，方便内存分配器的使用</p>
+<p><figure><a class="lightgallery" href="/images/mark-sweep-mark-phase2.png" title="&amp;ldquo;标记清除的清除阶段&amp;rdquo;" data-thumbnail="/images/mark-sweep-mark-phase2.png" data-sub-html="<h2>标记清除的清除阶段</h2><p>&amp;ldquo;标记清除的清除阶段&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/mark-sweep-mark-phase2.png"
+            data-srcset="/images/mark-sweep-mark-phase2.png, /images/mark-sweep-mark-phase2.png 1.5x, /images/mark-sweep-mark-phase2.png 2x"
+            data-sizes="auto"
+            alt="/images/mark-sweep-mark-phase2.png" />
+    </a><figcaption class="image-caption">标记清除的清除阶段</figcaption>
+    </figure></p>
+<p>这里介绍的是最传统的标记清除算法，垃圾收集器从垃圾收集的根对象出发，递归遍历这些对象指向的子对象并将所有可达的对象标记成存活；标记阶段结束后，垃圾收集器会依次遍历堆中的对象并清除其中的垃圾，整个过程中需要标记对象的存活状态，用户程序在垃圾收集的过程中也不能执行，我们需要用到更复杂的机制来解决STW的问题。</p>
+<p><strong>三色抽象</strong></p>
+<p>为了解决原始标记清除算法带来的长时间STW，多数现代的追踪式垃圾收集器都会实现三色标记算法的变种以缩短STW的时间。三色标记算法将程序中的对象分成白色，黑色和灰色三类</p>
+<ul>
+<li>白色对象：潜在的垃圾，其内存可能会被垃圾收集器回收</li>
+<li>黑色对象：活跃的对象，包括不存在任何引用外部指针的对象以及从根对象可达的对象</li>
+<li>灰色对象：活跃的对象，因为存在指向白色对象的外部指针，垃圾收集器会扫描这些对象的子对象</li>
+</ul>
+<p><figure><a class="lightgallery" href="/images/tri-color-objects.png" title="&amp;ldquo;三色的对象&amp;rdquo;" data-thumbnail="/images/tri-color-objects.png" data-sub-html="<h2>三色的对象</h2><p>&amp;ldquo;三色的对象&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/tri-color-objects.png"
+            data-srcset="/images/tri-color-objects.png, /images/tri-color-objects.png 1.5x, /images/tri-color-objects.png 2x"
+            data-sizes="auto"
+            alt="/images/tri-color-objects.png" />
+    </a><figcaption class="image-caption">三色的对象</figcaption>
+    </figure></p>
+<p>在垃圾收集器开始工作时，程序中不存在任何的黑色对象，垃圾收集的根对象会被标记为灰色，垃圾收集器只会从灰色对象集合中取出对象开始扫描，当灰色集合中不再存在对象时，标记阶段就会结束。</p>
+<p><figure><a class="lightgallery" href="/images/tri-color-mark-sweep.png" title="&amp;ldquo;三色标记垃圾收集器的执行过程&amp;rdquo;" data-thumbnail="/images/tri-color-mark-sweep.png" data-sub-html="<h2>三色标记垃圾收集器的执行过程</h2><p>&amp;ldquo;三色标记垃圾收集器的执行过程&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/tri-color-mark-sweep.png"
+            data-srcset="/images/tri-color-mark-sweep.png, /images/tri-color-mark-sweep.png 1.5x, /images/tri-color-mark-sweep.png 2x"
+            data-sizes="auto"
+            alt="/images/tri-color-mark-sweep.png" />
+    </a><figcaption class="image-caption">三色标记垃圾收集器的执行过程</figcaption>
+    </figure></p>
+<p>三色标记垃圾收集器的工作原理很简单，我们可以将其归纳成一下几个步骤：</p>
+<ol>
+<li>从灰色对象的集合中选择一个灰色对象并将其标记成黑色。</li>
+<li>将黑色对象指向的所有对象都标记成灰色，保证该对象和被该对象引用的对象都不会被回收。</li>
+<li>重复上述两个步骤直到对象图中不存在灰色对象</li>
+</ol>
+<p>当三色的标记清除的标记阶段结束之后，应用程序的堆中就不存在任何的灰色对象，我们只能看到黑色的存活对象以及白色的垃圾对象，垃圾收集器可以回收这些白色垃圾，下面是使用三色标记垃圾收集器执行标记后的堆内存，堆中只有对象D待回收垃圾</p>
+<p><figure><a class="lightgallery" href="/images/tri-color-mark-sweep-after-mark-phase.png" title="&amp;ldquo;三色标记后的堆&amp;rdquo;" data-thumbnail="/images/tri-color-mark-sweep-after-mark-phase.png" data-sub-html="<h2>三色标记后的堆</h2><p>&amp;ldquo;三色标记后的堆&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/tri-color-mark-sweep-after-mark-phase.png"
+            data-srcset="/images/tri-color-mark-sweep-after-mark-phase.png, /images/tri-color-mark-sweep-after-mark-phase.png 1.5x, /images/tri-color-mark-sweep-after-mark-phase.png 2x"
+            data-sizes="auto"
+            alt="/images/tri-color-mark-sweep-after-mark-phase.png" />
+    </a><figcaption class="image-caption">三色标记后的堆</figcaption>
+    </figure></p>
+<p>因为用户程序可能在标记执行的过程中修改对象的指针，所以三色标记清除算法本身是不可以并发或者增量执行的，它仍然需要STW，在如下所示的三色标记过程中，用户程序建立了从A对象到D对象的引用，但是因为程序中已经不存在灰色对象了，所以D对象会被垃圾收集器错误的回收</p>
+<p><figure><a class="lightgallery" href="/images/tri-color-mark-sweep-and-mutator.png" title="&amp;ldquo;三色标记与用户程序&amp;rdquo;" data-thumbnail="/images/tri-color-mark-sweep-and-mutator.png" data-sub-html="<h2>三色标记与用户程序</h2><p>&amp;ldquo;三色标记与用户程序&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/tri-color-mark-sweep-and-mutator.png"
+            data-srcset="/images/tri-color-mark-sweep-and-mutator.png, /images/tri-color-mark-sweep-and-mutator.png 1.5x, /images/tri-color-mark-sweep-and-mutator.png 2x"
+            data-sizes="auto"
+            alt="/images/tri-color-mark-sweep-and-mutator.png" />
+    </a><figcaption class="image-caption">三色标记与用户程序</figcaption>
+    </figure></p>
+<p>本来不应该被回收的对象却被回收了，这在内存管理中是非常严重的错误，我们将这种错误称为悬挂指针，即指针没有指向特定类型的合法对象，影响了内存的安全性，想要并发或者增量的标记对象还是需要使用屏障技术</p>
+<p><strong>屏障技术</strong></p>
+<p>内存屏障技术是一种屏障指令，它可以让CPU或者编译器在执行内存相关操作时遵循特定的约束，目前多数的现代处理器都会乱序执行指令以最大化性能，但是该技术能够保证内存操作的顺序性，在内存屏障执行前的操作一定会先于内存屏障后执行的操作。</p>
+<p>想要在并发或者增量的标记算法中保证正确性，我们需要达成以下两种三色不变性(Tri-color-invariant)中的一种：</p>
+<ul>
+<li>强三色不变性：黑色对象不会指向白色对象，只会指向灰色对象或者黑色对象</li>
+<li>弱三色不变性：黑色对象指向的白色对象必须包含一条从灰色对象经由多个白色对象的可达路径</li>
+</ul>
+<p><figure><a class="lightgallery" href="/images/strong-weak-tricolor-invariant.png" title="&amp;ldquo;三色不变性&amp;rdquo;" data-thumbnail="/images/strong-weak-tricolor-invariant.png" data-sub-html="<h2>三色不变性</h2><p>&amp;ldquo;三色不变性&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/strong-weak-tricolor-invariant.png"
+            data-srcset="/images/strong-weak-tricolor-invariant.png, /images/strong-weak-tricolor-invariant.png 1.5x, /images/strong-weak-tricolor-invariant.png 2x"
+            data-sizes="auto"
+            alt="/images/strong-weak-tricolor-invariant.png" />
+    </a><figcaption class="image-caption">三色不变性</figcaption>
+    </figure></p>
+<p>上图分别展示了遵循三色不变性和弱三色不变性的堆内存，遵循上述两个不变性的任意一个，我们都能保证垃圾收集算法的正确性，而屏障技术就是在并发或者增量标记过程中保证三色不变性的重要技术。</p>
+<p>垃圾收集器中的屏障技术更像是一个钩子方法，它是在用户程序读取对象、创建新对象以及更新对象指针时执行的一段代码，根据操作类型的不同，我们可以将它们分成读屏障(Read barrier)和写屏障(Write barrier)两种，因为读屏障需要在读操作中加入代码片段，对用户程序的性能影响很大，所以编程语言往往会采用写屏障保证三色不变性。</p>
+<p>我们在这里想要介绍的是Go语言中使用的两种写屏障技术，分别是Dijkstra提出的插入写屏障和Yuasa提出的删除写屏障，这里会分析它们如何保证三色不变性和垃圾收集器的正确性。</p>
+<p>插入写屏障</p>
+<p>Dijkstra在1978年提出了插入写屏障，通过如下所示的写屏障，用户程序和垃圾收集器可以在交替工作下保证程序执行的正确性</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">writePointer(slot, ptr):
+    shade(ptr)
+    *slot = ptr
+</code></pre></td></tr></table>
+</div>
+</div><p>上述插入写屏障的伪代码非常好理解，每当执行类似<code>*slot=ptr</code>的表达式时，我们会执行上述写屏障通过<code>shade</code>函数尝试改变指针的颜色。如果ptr指针是白色的，那么该函数会将该对象设置为灰色，其他情况则不变。</p>
+<p><figure><a class="lightgallery" href="/images/dijkstra-insert-write-barrier.png" title="&amp;ldquo;Dijkstra插入写屏障&amp;rdquo;" data-thumbnail="/images/dijkstra-insert-write-barrier.png" data-sub-html="<h2>Dijkstra插入写屏障</h2><p>&amp;ldquo;Dijkstra插入写屏障&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/dijkstra-insert-write-barrier.png"
+            data-srcset="/images/dijkstra-insert-write-barrier.png, /images/dijkstra-insert-write-barrier.png 1.5x, /images/dijkstra-insert-write-barrier.png 2x"
+            data-sizes="auto"
+            alt="/images/dijkstra-insert-write-barrier.png" />
+    </a><figcaption class="image-caption">Dijkstra插入写屏障</figcaption>
+    </figure></p>
+<p>假设我们在应用程序中使用Dijkstra提出的插入写屏障，在一个垃圾收集器和用户程序交替运行的场景中会出现上图所示的标记过程</p>
+<ol>
+<li>垃圾收集器将根对象指向A对象标记成黑色并将A对象指向的对象B标记为灰色</li>
+<li>用户程序修改A对象的指针，将原本指向B对象的指针指向C对象，这时触发写屏障将C对象标记成灰色</li>
+<li>垃圾收集器一次遍历程序中的其他灰色对象，分别将它们标记成黑色</li>
+</ol>
+<p>Dijkstra的插入写屏障是一种相对保守的屏障技术，它会将<code>有存活可能的对象都标记成灰色</code>以满足三色不变性。在如上所示的垃圾收集过程中，实际上不再存活的B对象最后没有被回收；而如果我们在第二和第三步之间将指向C对象的指针改为指向B，垃圾收集器仍然认为C对象是存活的，这些被错误标记的垃圾对象只有在下一次循环才会被回收。</p>
+<p>插入式的Dijkstra写屏障虽然实现非常简单并且能保证强三色不变性，但是它也有明显的缺点。因为栈上的对象在垃圾收集中也会被认为是根对象，所以为了保证内存的安全，Dijkstra必须为栈上的对象增加写屏障或者在标记阶段完成重新对栈上的对象进行扫描，这两种方法各有各的缺点，前者会大幅度增加写入指针的额外开销，后者重新扫描栈对象时需要暂停程序，垃圾收集算法的设计者需要在这两者之间做出权衡。</p>
+<p><strong>删除写屏障</strong></p>
+<p>Yuasa在1990年的论文<code>Real-time garbage collection on general-purpose machines</code>中提出了删除写屏障，因为一旦该写屏障开始工作，它会保证开启写屏障时堆上所有对象的可达，所以也被称作为快照垃圾收集(Snapshot GC)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">This guarantees that no objects will become unreachable to the garbage collector traversal all objects which are live at the beginning of garbage collection will be reached even if the pointers to them are overwritten.
+</code></pre></td></tr></table>
+</div>
+</div><p>该算法会使用如下所示的写屏障保证增量或者并发执行垃圾收集时程序的正确性</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">writePointer(slot, ptr)
+    shade(*slot)
+    *slot = ptr
+</code></pre></td></tr></table>
+</div>
+</div><p>上述代码会在老对象的引用被删除时，将白色的老对象涂成灰色的，这样删除写屏障可以保证弱三色不变性，老对象引用的下游对象一定可以被灰色对象引用。</p>
+<p><figure><a class="lightgallery" href="/images/yuasa-delete-write-barrier.png" title="&amp;ldquo;Yuasa删除写屏障&amp;rdquo;" data-thumbnail="/images/yuasa-delete-write-barrier.png" data-sub-html="<h2>Yuasa删除写屏障</h2><p>&amp;ldquo;Yuasa删除写屏障&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/yuasa-delete-write-barrier.png"
+            data-srcset="/images/yuasa-delete-write-barrier.png, /images/yuasa-delete-write-barrier.png 1.5x, /images/yuasa-delete-write-barrier.png 2x"
+            data-sizes="auto"
+            alt="/images/yuasa-delete-write-barrier.png" />
+    </a><figcaption class="image-caption">Yuasa删除写屏障</figcaption>
+    </figure></p>
+<p>假设我们在应用程序中使用Yuasa提出的删除写屏障，在一个垃圾收集器和用户程序交替运行的场景中会出现上图所示的标记过程：</p>
+<ol>
+<li>垃圾收集器将根对象指向A对象标记成黑色并将A对象指向的对象B标记成灰色</li>
+<li>用户程序将A对象原本指向B的指针指向C，触发删除写屏障，但是因为B对象已经是灰色的，所以不做改变</li>
+<li>用户程序将B对象原本指向C的指针删除，触发删除写屏障，白色的C对象被涂成灰色</li>
+<li>垃圾收集器依次遍历程序中的其他灰色对象，将它们分别标记成黑色</li>
+</ol>
+<p>上述过程中的第三步触发了Yuasa删除写屏障的着色，因为用户程序删除了B指向C对象的指针，所以C和D两个对象会分别违反强三色不变性和弱三色不变性</p>
+<ul>
+<li>强三色不变性：黑色的A对象直接指向白色的C对象</li>
+<li>弱三色不变性：垃圾收集器无法从某个灰色对象出发，经过几个连续的白色对象访问白色的C和D两个对象</li>
+</ul>
+<p>Yuasa删除写屏障通过对C对象的着色，保证了C对象和下游的D对象能够在这一次垃圾收集的循环中存活，避免发生悬挂指针以保证用户程序的正确性</p>
+<p><strong>增量和并发</strong></p>
+<p>传统的垃圾收集算法会在垃圾收集的执行期间暂停应用程序，一旦触发垃圾收集，垃圾收集器会抢占CPU的使用权占据大量的计算资源以完成标记和清楚工作，然而 很多追求实时的应用程序无法接受长时间的STW</p>
+<p><figure><a class="lightgallery" href="/images/stop-the-world-collector.png" title="&amp;ldquo;垃圾收集与暂停程序&amp;rdquo;" data-thumbnail="/images/stop-the-world-collector.png" data-sub-html="<h2>垃圾收集与暂停程序</h2><p>&amp;ldquo;垃圾收集与暂停程序&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/stop-the-world-collector.png"
+            data-srcset="/images/stop-the-world-collector.png, /images/stop-the-world-collector.png 1.5x, /images/stop-the-world-collector.png 2x"
+            data-sizes="auto"
+            alt="/images/stop-the-world-collector.png" />
+    </a><figcaption class="image-caption">垃圾收集与暂停程序</figcaption>
+    </figure></p>
+<p>远古时代的计算资源还没有今天这么丰富，今天的计算机往往都是多核的处理器，垃圾收集器一旦开始执行就会浪费大量的计算资源，为了减少应用程序暂停的最长时间和垃圾收集的总暂停时间，我们便会使用下面的策略优化现代的垃圾处理器</p>
+<ul>
+<li>增量垃圾处理：增量的标记和清除垃圾，降低应用程序暂停的最长时间</li>
+<li>并发垃圾收集：利用多核的计算资源，在用户程序执行时并发标记和清除垃圾</li>
+</ul>
+<p>因为增量和并发这两种方式都可以与用户程序交替进行，所以我们需要<code>使用屏障技术</code>保证垃圾收集器的正确性；与此同时，应用程序也不能等到内存溢出时触发垃圾收集，因为当内存不足时，应用程序已经无法分配内存，这与直接暂停程序没有什么区别，增量和并发的垃圾收集需要提前触发并在内存不足前完成整个循环，避免程序的长时间暂停。</p>
+<p><strong>增量收集器</strong></p>
+<p>增量式(Incremental)的垃圾收集是减少程序最长暂停时间的一种方案，它可以将原本时间较长的暂停时间切分成多个更小的GC时间片，虽然从垃圾收集开始到结束的时间更长了，但是这也减少了应用程序暂停的最大时间</p>
+<p><figure><a class="lightgallery" href="/images/incremental-collector.png" title="&amp;ldquo;增量垃圾收集器&amp;rdquo;" data-thumbnail="/images/incremental-collector.png" data-sub-html="<h2>增量垃圾收集器</h2><p>&amp;ldquo;增量垃圾收集器&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/incremental-collector.png"
+            data-srcset="/images/incremental-collector.png, /images/incremental-collector.png 1.5x, /images/incremental-collector.png 2x"
+            data-sizes="auto"
+            alt="/images/incremental-collector.png" />
+    </a><figcaption class="image-caption">增量垃圾收集器</figcaption>
+    </figure></p>
+<p>需要注意的是，增量式的垃圾收集需要与三色标记法一起使用，为了保证垃圾收集的正确性，我们需要在垃圾收集开始前打开写屏障，这样用户程序修改内存都会先经过写屏障的处理，保证了堆内存中对象的强三色不变性或弱三色不变性。虽然增量式垃圾收集器能够减少最大的程序暂停时间，但是增量式收集也会增加一次GC循环的总时间，在垃圾收集期间，因为写屏障的影响用户程序也要承担额外的计算开销，所以增量式的垃圾收集也不是只带来好处的，但是总体来说还是利大于弊的。</p>
+<p><strong>并发收集器</strong></p>
+<p>并发(Concurrent)的垃圾收集不仅能够减少程序的最长暂停时间，还能减少整个垃圾收集阶段的时间，通过开启读写屏障、利用多核优势与用户程序并行执行，并发垃圾收集器确实能够减少垃圾收集对应用程序的影响：</p>
+<p><figure><a class="lightgallery" href="/images/concurrent-collector.png" title="&amp;ldquo;并发垃圾收集器&amp;rdquo;" data-thumbnail="/images/concurrent-collector.png" data-sub-html="<h2>并发垃圾收集器</h2><p>&amp;ldquo;并发垃圾收集器&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/concurrent-collector.png"
+            data-srcset="/images/concurrent-collector.png, /images/concurrent-collector.png 1.5x, /images/concurrent-collector.png 2x"
+            data-sizes="auto"
+            alt="/images/concurrent-collector.png" />
+    </a><figcaption class="image-caption">并发垃圾收集器</figcaption>
+    </figure></p>
+<p>虽然并发收集器能够与用户程序一起运行，但是并不是所有阶段都可以与用户程序一起运行，部分阶段还是需要暂停用户程序的，不过这与传统的算法相比，并发的垃圾收集器可以将能够并发执行的工作尽量并发执行；当然，因为读写屏障的引入，并发的垃圾收集器一定也会带来额外开销，不仅会增加垃圾收集的总时间，还会影响用户程序，这是我们在设计垃圾回收策略时必须要注意的。</p>
+<h2 id="演进过程">演进过程</h2>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-11-09</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/go-garbage-collector/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-garbage-collector/" data-title="Go垃圾收集器" data-via="xxxx" data-hashtags="mysql"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-garbage-collector/" data-hashtag="mysql"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-garbage-collector/" data-title="Go垃圾收集器" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-garbage-collector/" data-title="Go垃圾收集器"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-garbage-collector/" data-title="Go垃圾收集器"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-garbage-collector/" data-title="Go垃圾收集器" data-description="Go垃圾收集器"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-garbage-collector/" data-title="Go垃圾收集器" data-description="Go垃圾收集器"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-garbage-collector/" data-title="Go垃圾收集器"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/mysql/">mysql</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/go-docker/" class="prev" rel="prev" title="Go Docker"><i class="fas fa-angle-left fa-fw"></i>Go Docker</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

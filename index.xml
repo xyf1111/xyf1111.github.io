@@ -3,9 +3,16 @@
         <title>CC&#39;s Blog</title>
         <link>http://example.org/</link>
         <description>这是我的全新 Hugo 网站</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 05 Nov 2021 16:30:01 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 09 Nov 2021 17:25:06 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Go垃圾收集器</title>
+    <link>http://example.org/go-garbage-collector/</link>
+    <pubDate>Tue, 09 Nov 2021 17:25:06 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-garbage-collector/</guid>
+    <description><![CDATA[设计原理 今天的编程语言通常会使用以手动和自动两种方式管理内存，C、C++以及Rust等编程语言使用手动方式管理内存，工程师需要主动申请或者释]]></description>
+</item><item>
     <title>Go Docker</title>
     <link>http://example.org/go-docker/</link>
     <pubDate>Fri, 05 Nov 2021 16:30:01 &#43;0800</pubDate>
@@ -68,12 +75,5 @@
     <author>作者</author>
     <guid>http://example.org/rabbitmq4/</guid>
     <description><![CDATA[路由 在上一教程中，我们构建了一个简单的日志记录系统。我们能够向许多接收者广播日志消息。 在本教程中，我们将它添加一个特性&ndash;我们将使]]></description>
-</item><item>
-    <title>Go Study18</title>
-    <link>http://example.org/go-study18/</link>
-    <pubDate>Sun, 25 Jul 2021 21:37:46 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/go-study18/</guid>
-    <description><![CDATA[在web开发中一个不可避免的环节就是对请求参数进行校验，通常我们对在代码中定义和请求参数相对应的模型(结构体)，借助模型绑定快捷地解析请求中]]></description>
 </item></channel>
 </rss>
