@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/go-garbage-collector\/"
-        },"genre": "posts","keywords": "mysql","wordcount":  5309 ,
+        },"genre": "posts","keywords": "mysql","wordcount":  12914 ,
         "url": "http:\/\/example.org\/go-garbage-collector\/","datePublished": "2021-11-09T17:25:06+08:00","dateModified": "2021-11-09T17:25:06+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,8 +106,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Go垃圾收集器</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-09">2021-11-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5309 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 11 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-09">2021-11-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 12914 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 26 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -115,8 +115,28 @@
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#设计原理">设计原理</a></li>
-    <li><a href="#演进过程">演进过程</a></li>
+    <li><a href="#设计原理">设计原理</a>
+      <ul>
+        <li><a href="#标记清除">标记清除</a></li>
+        <li><a href="#三色抽象">三色抽象</a></li>
+        <li><a href="#屏障技术">屏障技术</a></li>
+        <li><a href="#增量和并发">增量和并发</a></li>
+      </ul>
+    </li>
+    <li><a href="#演进过程">演进过程</a>
+      <ul>
+        <li><a href="#并发垃圾收集">并发垃圾收集</a></li>
+        <li><a href="#回收堆目标">回收堆目标</a></li>
+        <li><a href="#混合写屏障">混合写屏障</a></li>
+      </ul>
+    </li>
+    <li><a href="#实现原理">实现原理</a>
+      <ul>
+        <li><a href="#全局变量">全局变量</a></li>
+        <li><a href="#触发时机">触发时机</a></li>
+        <li><a href="#垃圾收集启动">垃圾收集启动</a></li>
+      </ul>
+    </li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="设计原理">设计原理</h2>
@@ -133,7 +153,7 @@
     </a><figcaption class="image-caption">内存管理的组件</figcaption>
     </figure></p>
 <p>在上图中，用户程序(Mutator)会通过内存分配器(Allocator)在堆上申请内存，而垃圾收集器(Collector)负责回收堆上的内存空间，内存分配器和垃圾收集器共同管理着程序中的堆内存空间。</p>
-<p><strong>标记清除</strong></p>
+<h3 id="标记清除">标记清除</h3>
 <p>标记清除(Mark-Sweep)算法是最常见的垃圾收集算法，标记清除收集器是跟踪式垃圾收集器，其执行过程可以分成标记(Mark)和清除(Sweep)两个阶段</p>
 <ul>
 <li>标记阶段(从根对象出发查找并标记堆中所有存活的对象)</li>
@@ -162,7 +182,7 @@
     </a><figcaption class="image-caption">标记清除的清除阶段</figcaption>
     </figure></p>
 <p>这里介绍的是最传统的标记清除算法，垃圾收集器从垃圾收集的根对象出发，递归遍历这些对象指向的子对象并将所有可达的对象标记成存活；标记阶段结束后，垃圾收集器会依次遍历堆中的对象并清除其中的垃圾，整个过程中需要标记对象的存活状态，用户程序在垃圾收集的过程中也不能执行，我们需要用到更复杂的机制来解决STW的问题。</p>
-<p><strong>三色抽象</strong></p>
+<h3 id="三色抽象">三色抽象</h3>
 <p>为了解决原始标记清除算法带来的长时间STW，多数现代的追踪式垃圾收集器都会实现三色标记算法的变种以缩短STW的时间。三色标记算法将程序中的对象分成白色，黑色和灰色三类</p>
 <ul>
 <li>白色对象：潜在的垃圾，其内存可能会被垃圾收集器回收</li>
@@ -219,7 +239,7 @@
     </a><figcaption class="image-caption">三色标记与用户程序</figcaption>
     </figure></p>
 <p>本来不应该被回收的对象却被回收了，这在内存管理中是非常严重的错误，我们将这种错误称为悬挂指针，即指针没有指向特定类型的合法对象，影响了内存的安全性，想要并发或者增量的标记对象还是需要使用屏障技术</p>
-<p><strong>屏障技术</strong></p>
+<h3 id="屏障技术">屏障技术</h3>
 <p>内存屏障技术是一种屏障指令，它可以让CPU或者编译器在执行内存相关操作时遵循特定的约束，目前多数的现代处理器都会乱序执行指令以最大化性能，但是该技术能够保证内存操作的顺序性，在内存屏障执行前的操作一定会先于内存屏障后执行的操作。</p>
 <p>想要在并发或者增量的标记算法中保证正确性，我们需要达成以下两种三色不变性(Tri-color-invariant)中的一种：</p>
 <ul>
@@ -239,7 +259,7 @@
 <p>上图分别展示了遵循三色不变性和弱三色不变性的堆内存，遵循上述两个不变性的任意一个，我们都能保证垃圾收集算法的正确性，而屏障技术就是在并发或者增量标记过程中保证三色不变性的重要技术。</p>
 <p>垃圾收集器中的屏障技术更像是一个钩子方法，它是在用户程序读取对象、创建新对象以及更新对象指针时执行的一段代码，根据操作类型的不同，我们可以将它们分成读屏障(Read barrier)和写屏障(Write barrier)两种，因为读屏障需要在读操作中加入代码片段，对用户程序的性能影响很大，所以编程语言往往会采用写屏障保证三色不变性。</p>
 <p>我们在这里想要介绍的是Go语言中使用的两种写屏障技术，分别是Dijkstra提出的插入写屏障和Yuasa提出的删除写屏障，这里会分析它们如何保证三色不变性和垃圾收集器的正确性。</p>
-<p>插入写屏障</p>
+<p><strong>插入写屏障</strong></p>
 <p>Dijkstra在1978年提出了插入写屏障，通过如下所示的写屏障，用户程序和垃圾收集器可以在交替工作下保证程序执行的正确性</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -319,7 +339,7 @@
 <li>弱三色不变性：垃圾收集器无法从某个灰色对象出发，经过几个连续的白色对象访问白色的C和D两个对象</li>
 </ul>
 <p>Yuasa删除写屏障通过对C对象的着色，保证了C对象和下游的D对象能够在这一次垃圾收集的循环中存活，避免发生悬挂指针以保证用户程序的正确性</p>
-<p><strong>增量和并发</strong></p>
+<h3 id="增量和并发">增量和并发</h3>
 <p>传统的垃圾收集算法会在垃圾收集的执行期间暂停应用程序，一旦触发垃圾收集，垃圾收集器会抢占CPU的使用权占据大量的计算资源以完成标记和清楚工作，然而 很多追求实时的应用程序无法接受长时间的STW</p>
 <p><figure><a class="lightgallery" href="/images/stop-the-world-collector.png" title="&amp;ldquo;垃圾收集与暂停程序&amp;rdquo;" data-thumbnail="/images/stop-the-world-collector.png" data-sub-html="<h2>垃圾收集与暂停程序</h2><p>&amp;ldquo;垃圾收集与暂停程序&amp;rdquo;</p>">
         <img
@@ -364,6 +384,628 @@
     </figure></p>
 <p>虽然并发收集器能够与用户程序一起运行，但是并不是所有阶段都可以与用户程序一起运行，部分阶段还是需要暂停用户程序的，不过这与传统的算法相比，并发的垃圾收集器可以将能够并发执行的工作尽量并发执行；当然，因为读写屏障的引入，并发的垃圾收集器一定也会带来额外开销，不仅会增加垃圾收集的总时间，还会影响用户程序，这是我们在设计垃圾回收策略时必须要注意的。</p>
 <h2 id="演进过程">演进过程</h2>
+<p>Go语言的垃圾收集器从诞生的第一天起就一直在演进，除了少数的几个版本没有大更新之外，几乎每次发布的小版本都会提升垃圾收集的性能，而与性能一同提升的还有垃圾收集代码的复杂度，本节将从Go语言的v1.0版本开始分析垃圾收集器的演进过程。</p>
+<ol>
+<li>v1.0：完全串行的标记和清除过程，需要暂停整个程序</li>
+<li>v1.1：在多核主机上并行执行垃圾收集的标记和清除阶段</li>
+<li>v1.3：运行时基于<code>只有指针类型的值包含指针</code>的假设增加了对栈内存的精准扫描支持，实现了真正精准的垃圾收集
+<ul>
+<li>将<code>unsafe.Pointer</code> 类型转化成整数类型的值认定为不合法的，可能会造成悬挂指针等严重问题</li>
+</ul>
+</li>
+<li>v1.5：实现了基于<code>三色标记清扫的并发</code>垃圾收集器
+<ul>
+<li>大幅度降低垃圾收集的延迟从几百ms降低至10ms以下</li>
+<li>计算垃圾收集启动的合适时间并通过并发加速垃圾收集的过程</li>
+</ul>
+</li>
+<li>v1.6：实现了<code>去中心化</code>的垃圾收集协调器
+<ul>
+<li>基于显式的状态机使得任意Goroutine都能触发垃圾收集的状态迁移</li>
+<li>使用密集的位图代替空闲链表表示的堆内存，降低清除阶段的CPU占用</li>
+</ul>
+</li>
+<li>v1.7：通过<code>并行栈收缩</code>将垃圾收集的时间缩短至2ms以内</li>
+<li>v1.8：使用<code>混合写屏障</code>将垃圾收集的时间缩短至0.5ms以内</li>
+<li>v1.9：彻底移除暂停程序的重新扫描栈的过程</li>
+<li>v1.10：更新了垃圾收集调频器(Pacer)的实现，分离软硬堆大小的目标</li>
+<li>v1.12：使用<code>新的标记终止算法</code>简化垃圾收集器的几个阶段</li>
+<li>v1.13：通过新的Scavenger解决瞬间内存占用过高的应用程序向操作系统归还内存的问题</li>
+<li>v1.14：使用全新的页分配器<code>优化内存分配的速度</code></li>
+</ol>
+<p>我们从Go语言垃圾收集器的演进能够看到该组件的实现和算法变得越来越复杂，最开始的垃圾收集器还是不精准的单线程STW收集器，但是最新版本的垃圾收集器却支持并发垃圾收集、去中心化协调等特性，我们在这里将介绍与最新版垃圾收集器相关的组件和特性。</p>
+<h3 id="并发垃圾收集">并发垃圾收集</h3>
+<p>Go语言在v1.5中引入了并发的垃圾收集器，该垃圾收集器使用了我们上面提到的三色抽象和写屏障技术保证垃圾收集器执行的正确性，如何实现并发的垃圾收集器在这里就不展开介绍了，我们来了解一些并发垃圾收集器的工作流程。</p>
+<p>首先，并发垃圾收集器必须在合适的时间点触发垃圾收集循环，假设我们的Go语言运行在一台4核的物理机上，那么在垃圾收集开始后，收集器会占用25%计算资源在后台来扫描并标记内存中的对象。</p>
+<p><figure><a class="lightgallery" href="/images/golang-concurrent-collector.png" title="&amp;ldquo;语言的并发收集&amp;rdquo;" data-thumbnail="/images/golang-concurrent-collector.png" data-sub-html="<h2>语言的并发收集</h2><p>&amp;ldquo;语言的并发收集&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/golang-concurrent-collector.png"
+            data-srcset="/images/golang-concurrent-collector.png, /images/golang-concurrent-collector.png 1.5x, /images/golang-concurrent-collector.png 2x"
+            data-sizes="auto"
+            alt="/images/golang-concurrent-collector.png" />
+    </a><figcaption class="image-caption">语言的并发收集</figcaption>
+    </figure></p>
+<p>Go语言的并发垃圾收集器会在扫描对象之前暂停程序做一些标记对象的准备工作，其中包括启动后台标记的垃圾收集器以及开启写屏障，如果在后台执行的垃圾收集器不够快，应用程序申请内存的速度超过预期，运行时会让申请内存的应用程序辅助完成垃圾收集的扫描阶段，在标记和标记终止阶段结束之后就会进入异步的清理阶段，将不用的内存增量回收。</p>
+<p>v1.5版本实现的并发垃圾收集策略由专门的Goroutine负责在处理器间同步和协调垃圾收集的状态。当其他的Goroutine发现需要触发垃圾收集时，它们需要将该信息通知给负责修改状态的主Goroutine，然而这个通知的过程会带来一定的延迟，这个延迟的时间窗口是不可控的，用户程序会在这段时间继续分配内存。</p>
+<p>v1.6版本引入了去中心化的垃圾收集协调机制，将垃圾收集器变成一个显式的状态机，任意的Goroutine都可以调用方法触发状态的迁移，常见的状态迁移方法包括以下几个：</p>
+<ul>
+<li><code>runtime.gcStart</code>：从<code>_GCoff</code>阶段转换至<code>_GCmark</code>阶段，进入并发标记阶段并打开写屏障</li>
+<li><code>runtime.gcMarkDone</code>：如果所有可达对象都已经完成扫描调用<code>runtime.gcMarkTermination</code></li>
+<li><code>runtime.gcMarkTermination</code>：从<code>_GCmark</code>转换<code>_GCmarktermination</code>阶段，进入标记终止阶段并在完成后进入<code>_GCoff</code></li>
+</ul>
+<p>上述的三个方法是在与<code>runtime: replace GC coordinator with state machine</code>问题相关的提交中引入的，它们移除了过去中心化的状态迁移过程。</p>
+<h3 id="回收堆目标">回收堆目标</h3>
+<p>STW的垃圾收集器虽然需要暂停应用程序，但是它能够有效地控制堆内存的大小，Go语言运行时默认配置会在堆内存达到上一次垃圾收集的两倍时，触发新一轮的垃圾收集，这个行为可以通过环境变量<code>GOGC</code>调整，在默认情况下它的值为100，即增长100%的堆内存才会触发GC。</p>
+<p><figure><a class="lightgallery" href="/images/stop-the-world-garbage-collector-heap.png" title="&amp;ldquo;STW垃圾收集器的垃圾收集时间&amp;rdquo;" data-thumbnail="/images/stop-the-world-garbage-collector-heap.png" data-sub-html="<h2>STW垃圾收集器的垃圾收集时间</h2><p>&amp;ldquo;STW垃圾收集器的垃圾收集时间&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/stop-the-world-garbage-collector-heap.png"
+            data-srcset="/images/stop-the-world-garbage-collector-heap.png, /images/stop-the-world-garbage-collector-heap.png 1.5x, /images/stop-the-world-garbage-collector-heap.png 2x"
+            data-sizes="auto"
+            alt="/images/stop-the-world-garbage-collector-heap.png" />
+    </a><figcaption class="image-caption">STW垃圾收集器的垃圾收集时间</figcaption>
+    </figure></p>
+<p>因为并发垃圾收集器会和程序一起执行，所以它无法准确的控制内存的大小，并发收集器需要在达到目标前触发垃圾收集，这样才能够保证内存的大小可控，并发收集器需要尽可能保证垃圾收集结束时的堆内存与用户配置的<code>GOGC</code>一致。</p>
+<p><figure><a class="lightgallery" href="/images/concurrent-garbage-collector-heap.png" title="&amp;ldquo;并发收集器的堆内存&amp;rdquo;" data-thumbnail="/images/concurrent-garbage-collector-heap.png" data-sub-html="<h2>并发收集器的堆内存</h2><p>&amp;ldquo;并发收集器的堆内存&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/concurrent-garbage-collector-heap.png"
+            data-srcset="/images/concurrent-garbage-collector-heap.png, /images/concurrent-garbage-collector-heap.png 1.5x, /images/concurrent-garbage-collector-heap.png 2x"
+            data-sizes="auto"
+            alt="/images/concurrent-garbage-collector-heap.png" />
+    </a><figcaption class="image-caption">并发收集器的堆内存</figcaption>
+    </figure></p>
+<p>Go语言v1.5引入并发垃圾收集器的同时使用垃圾收集调步(Pacing)算法计算触及的垃圾收集的最佳时间，确保触发的时间既不会浪费计算资源，也不会超出预期的堆大小。如上图所示，其中黑色的部分是上一次垃圾收集后标记的堆大小，绿色部分是上次垃圾收集结束后新分配的内存，因为我们使用并发垃圾收集，所以黄色部分就是在垃圾收集期间分配的内存，最后的红色部分是垃圾收集结束时与目标的差值，我们希望尽可能减少红色部分的内存，降低垃圾收集带来的额外开销以及程序的暂停时间。</p>
+<p>垃圾收集调步算法是跟随v1.5一同引入的，该算法的目标是优化堆的增长速度和垃圾收集器的CPU利用率，而在v1.10版本中又对该算法进行了优化，将原有的目的堆大小拆分成软硬两个目标，因为调整垃圾收集的执行频率涉及较为复杂的公式，对理解垃圾收集原理帮助较为有限。</p>
+<h3 id="混合写屏障">混合写屏障</h3>
+<p>在Go语言v1.7版本之前，运行时会使用Dijkstra插入写屏障保证强三色不变性，但是运行时并没有在所有的垃圾收集根对象上开启插入写屏障。因为应用程序可能包含成百上千的Goroutine，而垃圾收集的根对象一般包括全局变量和栈对象，如果运行时需要在几百个Goroutine的栈上都开启写屏障，会带来巨大的额外开销，所以Go团队在实现上选择了在标记阶段完成时<code>暂停程序、将所有栈对象标记为灰色并重新扫描</code>，在活跃Goroutine非常多的程序中，重新扫描的过程需要占用10~100ms的时间。</p>
+<p>Go语言在v1.8组合Dijkstra插入写屏障和Yuasa删除写屏障构成了如下所示的混合写屏障，该写屏障会<code>将被覆盖的对象标记成灰色并在当前栈没有扫描时将新对象也标记成灰色</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nf">writePointer</span><span class="p">(</span><span class="nx">slot</span><span class="p">,</span> <span class="nx">ptr</span><span class="p">):</span>
+    <span class="nf">shade</span><span class="p">(</span><span class="o">*</span><span class="nx">slot</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">current</span> <span class="nx">stack</span> <span class="nx">is</span> <span class="nx">grey</span><span class="p">:</span>
+        <span class="nf">shade</span><span class="p">(</span><span class="nx">ptr</span><span class="p">)</span>
+    <span class="o">*</span><span class="nx">slot</span><span class="p">=</span><span class="nx">ptr</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>为了移除栈的重新扫描过程，除了引入混合写屏障之外，在垃圾收集的标记阶段，我们还需要<code>将创建的所有新对象都标记成黑色</code>，防止新分配的栈内存和堆内存中的对象被错误的回收，因为栈内存在标记阶段最终都会变为黑色，所以不需要再重新扫描栈空间。</p>
+<h2 id="实现原理">实现原理</h2>
+<p>在介绍垃圾收集器的演进过程之前，我们需要初步了解最新垃圾收集器的执行周期，这对我们了解其全局的设计会有比较大的帮助。Go语言的垃圾收集可以分成清除终止、标记、标记终止和清除四个不同阶段，它们分别完成了不同的工作。</p>
+<p><figure><a class="lightgallery" href="/images/garbage-collector-phaes.png" title="&amp;ldquo;垃圾收集的多个阶段&amp;rdquo;" data-thumbnail="/images/garbage-collector-phaes.png" data-sub-html="<h2>垃圾收集的多个阶段</h2><p>&amp;ldquo;垃圾收集的多个阶段&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/garbage-collector-phaes.png"
+            data-srcset="/images/garbage-collector-phaes.png, /images/garbage-collector-phaes.png 1.5x, /images/garbage-collector-phaes.png 2x"
+            data-sizes="auto"
+            alt="/images/garbage-collector-phaes.png" />
+    </a><figcaption class="image-caption">垃圾收集的多个阶段</figcaption>
+    </figure></p>
+<ol>
+<li>清理终止阶段
+<ol>
+<li>暂停程序，所有的处理器在这时会进入安全点(Safe Point)</li>
+<li>如果当前垃圾收集循环是强制触发的，我们还需要处理还未被清理的内存管理单元</li>
+</ol>
+</li>
+<li>标记阶段
+<ol>
+<li>将状态切换至<code>_GCmark</code>、开启写屏障、用户程序协助(Mutator Assists)并将根对象入队</li>
+<li>恢复执行程序，标记进程和用于协助的用户程序会开始并发标记内存中的对象，写屏障会将被覆盖的指针和新指针都标记成灰色，而所有新创建的对象都会被直接标记成黑色</li>
+<li>开始扫描根对象，包括所有Goroutine的栈、全局对象以及不在堆中的运行时数据结构，扫描Goroutine栈期间会暂停当前处理器</li>
+<li>依次处理灰色队列中的对象，将对象标记成黑色并将它们指向的对象标记成灰色</li>
+<li>使用分布式的终止算法检查剩余的工作，发现标记阶段完成后进入标记终止阶段</li>
+</ol>
+</li>
+<li>标记终止阶段
+<ol>
+<li>暂停程序、将状态切换至<code>_GCmarktermination</code>并关闭辅助标记的用户程序</li>
+<li>清理处理器上的线程缓存</li>
+</ol>
+</li>
+<li>清理阶段
+<ol>
+<li>将状态切换至<code>_GCoff</code>开始清理阶段，初始化清理状态并关闭写屏障</li>
+<li>恢复用户程序，所有新创建的对象会标记成白色</li>
+<li>后台并发清理所有的内存管理单元，当Goroutine申请新的内存管理单元时就会触发清理</li>
+</ol>
+</li>
+</ol>
+<p>运行时虽然只会使用<code>_GCoff</code>、<code>_GCmark</code>和<code>_GCmarktermination</code>三个状态表示垃圾收集的全部阶段，但是在实现上却复杂很多。本节将按照垃圾收集的不同阶段详细分析其实现原理</p>
+<h3 id="全局变量">全局变量</h3>
+<p>在垃圾收集中有一些比较重要的全局变量，在分析其过程之前，会逐一介绍这些重要的变量，这些变量在垃圾收集的各个阶段会反复出现，所以理解他们的功能是非常重要的，先介绍一些简单的变量：</p>
+<ul>
+<li><code>runtime.gcphase</code> 是垃圾收集器当前处于的阶段，可能处于<code>_GCoff</code>、<code>_GCmark</code>和<code>_GCmarktermination</code>，Goroutine在读取或者修改该阶段时需要保证原子性</li>
+<li><code>runtime.gcBlackenEnabled</code> 是一个布尔值，当垃圾收集处于标记阶段时，该变量会被置为1，在这里辅助垃圾收集的用户程序和后台标记的任务可以将对象涂黑</li>
+<li><code>runtime.gcController</code> 实现了垃圾收集的调步算法，它能够决定出发并行垃圾收集的时间和待处理的工作</li>
+<li><code>runtime.gcpercent</code> 是触发垃圾收集的内存增长百分比，默认情况下为100，即堆内存相比上次垃圾收集增长100%时应该触发GC，并行的垃圾收集器会在到达该目标前完成垃圾收集</li>
+<li><code>runtime.writerBarrier</code> 是一个包含写屏障状态的结构体，其中的<code>enable</code>字段表示写屏障的开启与关闭</li>
+<li><code>runtime.worldsema</code> 是全局的信号量，获取该信号量的线程有权利暂停当前应用程序</li>
+</ul>
+<p>除了上述全局的变量之外，我们在这里还需要简单了解一下<code>runtime.work</code>变量：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">work</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">full</span>    <span class="nx">lfstack</span>
+    <span class="nx">empty</span>   <span class="nx">lfstack</span>
+    <span class="nx">pad0</span>    <span class="nx">cpu</span><span class="p">.</span><span class="nx">CacheLinePad</span>
+
+    <span class="nx">wbufSpans</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="nx">lock</span>    <span class="nx">mutex</span>
+        <span class="nx">free</span>    <span class="nx">mSpanList</span>
+        <span class="nx">busy</span>    <span class="nx">mSpanList</span>
+    <span class="p">}</span>
+    <span class="o">...</span>
+    <span class="nx">nproc</span>   <span class="kt">uint32</span>
+    <span class="nx">tstart</span>  <span class="kt">int64</span>
+    <span class="nx">nwait</span>   <span class="kt">uint32</span>
+    <span class="nx">ndone</span>   <span class="kt">uint32</span>
+    <span class="o">...</span>
+    <span class="nx">mode</span>    <span class="nx">gcMode</span>
+    <span class="nx">cycles</span>  <span class="kt">uint32</span>
+    <span class="o">...</span>
+    <span class="nx">stwprocs</span><span class="p">,</span> <span class="nx">maxprocs</span>  <span class="kt">int32</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>该结构体中包含大量垃圾收集的相关字段，例如：表示完成的垃圾收集循环的次数、当前循环时间和CPU的利用率、垃圾收集的模式等等，我们会在后面的小节中见到该结构体中的更多字段</p>
+<h3 id="触发时机">触发时机</h3>
+<p>运行时会通过如下所示的<code>runtime.gcTrigger.test</code>方法决定是否需要触发垃圾收集，当满足触发垃圾收集的基本条件时：允许垃圾收集、程序没有崩溃并且没有处于垃圾收集循环，该方法会根据三种不同方式触发进行不同的检查：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="nx">gcTrigger</span><span class="p">)</span> <span class="nf">test</span><span class="p">()</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">!</span><span class="nx">memstats</span><span class="p">.</span><span class="nx">enablegc</span> <span class="o">||</span> <span class="nx">panicking</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">gcphase</span> <span class="o">!=</span> <span class="nx">_GCoff</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span>
+    <span class="p">}</span>
+    <span class="k">switch</span> <span class="nx">t</span><span class="p">.</span><span class="nx">kind</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nx">gcTriggerHeap</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nx">memstats</span><span class="p">.</span><span class="nx">heap_live</span> <span class="o">&gt;=</span> <span class="nx">memstats</span><span class="p">.</span><span class="nx">gc_trigger</span>
+    <span class="k">case</span> <span class="nx">gcTriggerTime</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nx">gcpercent</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span>
+        <span class="p">}</span>
+        <span class="nx">last</span> <span class="o">:=</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">atomic</span><span class="p">.</span><span class="nf">Load64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">memstats</span><span class="p">.</span><span class="nx">last_gc_nanotime</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nx">lastgc</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">t</span><span class="p">.</span><span class="nx">now</span><span class="o">-</span><span class="nx">lastgc</span> <span class="p">&gt;</span> <span class="nx">forcegcperiod</span>
+    <span class="k">case</span> <span class="nx">gcTriggerCycle</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int32</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">n</span><span class="o">-</span><span class="nx">work</span><span class="p">.</span><span class="nx">cycles</span><span class="p">)</span> <span class="p">&gt;</span> <span class="mi">0</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol>
+<li><code>gcTriggerHeap</code> 堆内存的分配达到控制器计算的触发堆大小</li>
+<li><code>gcTriggerTime</code> 如果一定时间内没有触发，就会触发新的循环，该触发条件有<code>runtime.forcegcperiod</code>变量控制，默认为2分钟</li>
+<li><code>gcTriggerCycle</code> 如果当前没有开启垃圾收集、则触发新的循环</li>
+</ol>
+<p>用于开启垃圾收集的方法<code>runtime.goStart</code>会接收一个<code>runtime.gcTrigger</code>类型的谓词，所有出现<code>runtime.gcTrigger</code>结构体的位置都是触发垃圾收集的代码</p>
+<ul>
+<li><code>runtime.sysmon</code>和<code>runtime.forcegchelper</code> 后台运行定时检查和垃圾收集</li>
+<li><code>runtime.GC</code> 用户程序手动触发垃圾收集</li>
+<li><code>runtime.mallocgc</code> 申请内存时根据堆大小触发垃圾收集</li>
+</ul>
+<p><figure><a class="lightgallery" href="/images/garbage-collector-trigger.png" title="&amp;ldquo;垃圾收集的触发&amp;rdquo;" data-thumbnail="/images/garbage-collector-trigger.png" data-sub-html="<h2>垃圾收集的触发</h2><p>&amp;ldquo;垃圾收集的触发&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/garbage-collector-trigger.png"
+            data-srcset="/images/garbage-collector-trigger.png, /images/garbage-collector-trigger.png 1.5x, /images/garbage-collector-trigger.png 2x"
+            data-sizes="auto"
+            alt="/images/garbage-collector-trigger.png" />
+    </a><figcaption class="image-caption">垃圾收集的触发</figcaption>
+    </figure></p>
+<p>除了使用后台运行的系统监控器和强制垃圾收集助手触发垃圾收集之外，另外两个办法会从任意处理器上触发垃圾收集，这种不需要中心组件协调的方式是在v1.6版本中引入的，接下来将展开介绍这三种不同的触发时机</p>
+<p><strong>后台触发</strong></p>
+<p>运行时会在应用程序启动时在后台开启一个用于强制触发垃圾收集的Goroutine，该Goroutine的职责非常简单(调用<code>runtime.gcStart</code>尝试启动新一轮的垃圾收集)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">go</span> <span class="nf">forcegchelper</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">forcegchelper</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">forcegc</span><span class="p">.</span><span class="nx">g</span> <span class="p">=</span> <span class="nf">getg</span><span class="p">()</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="nf">lock</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">forcegc</span><span class="p">.</span><span class="nx">lock</span><span class="p">)</span>
+        <span class="nx">atomic</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">forcegc</span><span class="p">.</span><span class="nx">idle</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="nf">goparkunlock</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">forcegc</span><span class="p">.</span><span class="nx">lock</span><span class="p">,</span> <span class="nx">waitReasonForceGGIdle</span><span class="p">,</span> <span class="nx">traceEvGoBlock</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="nf">gcStart</span><span class="p">(</span><span class="nx">gcTrigger</span><span class="p">{</span>
+            <span class="nx">kind</span><span class="p">:</span>   <span class="nx">gcTriggerTime</span><span class="p">,</span>
+            <span class="nx">now</span><span class="p">:</span>    <span class="nf">nanotime</span><span class="p">()</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>为了减少对计算资源的占用，该Goroutine会在循环中调用<code>runtime.goparkunlock</code>主动陷入休眠等待其他Goroutine的唤醒，<code>runtime.forcegchelper</code>在大多数时间都是陷入休眠的，但是它会被系统监控器<code>runtime.sysmon</code>在满足垃圾收集条件时唤醒：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">sysmon</span><span class="p">()</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="o">...</span>
+        <span class="k">if</span> <span class="nx">t</span> <span class="o">:=</span> <span class="p">(</span><span class="nx">gcTrigger</span><span class="p">{</span>
+            <span class="nx">kind</span><span class="p">:</span>   <span class="nx">gcTriggerTime</span><span class="p">,</span>
+            <span class="nx">now</span><span class="p">:</span>    <span class="nx">now</span><span class="p">,</span>
+        <span class="p">});</span> <span class="nx">t</span><span class="p">.</span><span class="nf">test</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">forcegc</span><span class="p">.</span><span class="nx">idle</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="nf">lock</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">forcegc</span><span class="p">.</span><span class="nx">lock</span><span class="p">)</span>
+            <span class="nx">forcegc</span><span class="p">.</span><span class="nx">idle</span> <span class="p">=</span> <span class="mi">0</span>
+            <span class="kd">var</span> <span class="nx">list</span> <span class="nx">gList</span>
+            <span class="nx">list</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="nx">forcegc</span><span class="p">.</span><span class="nx">g</span><span class="p">)</span>
+            <span class="nf">injectglist</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">list</span><span class="p">)</span>
+            <span class="nf">unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">forcegc</span><span class="p">.</span><span class="nx">lock</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>系统监控在每个循环中都会主动构建一个<code>runtime.gcTrigger</code>并检查垃圾收集的触发条件是否满足，如果满足条件，系统监控会将<code>runtime.forcegc</code>状态中持有的Goroutine加入全局队列等待调度器的调度</p>
+<p><strong>手动触发</strong></p>
+<p>用户程序会通过<code>runtime.GC</code>函数在程序运行期间主动通知运行时执行，该方法在调用时会阻塞调用方直到当前垃圾收集循环完成，在垃圾收集期间也可能会通过STW暂停整个程序</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">GC</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">n</span> <span class="o">:=</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">cycles</span><span class="p">)</span>
+    <span class="nf">gcWaitOnMark</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span>
+    <span class="nf">gcStart</span><span class="p">(</span><span class="nx">gcTrigger</span><span class="p">{</span>
+        <span class="nx">kind</span><span class="p">:</span>   <span class="nx">gcTriggerCycle</span><span class="p">,</span>
+        <span class="nx">n</span><span class="p">:</span>      <span class="nx">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="nf">gcWaitOnMark</span><span class="p">(</span><span class="nx">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">cycles</span><span class="p">)</span> <span class="o">==</span> <span class="nx">n</span><span class="o">+</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nf">sweepone</span><span class="p">()</span> <span class="o">!=</span> <span class="p">^</span><span class="nb">uintptr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">sweep</span><span class="p">.</span><span class="nx">nbgsweep</span><span class="o">++</span>
+        <span class="nf">Gosched</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">cycles</span><span class="p">)</span> <span class="o">==</span> <span class="nx">n</span><span class="o">+</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">mheap_</span><span class="p">.</span><span class="nx">sweepers</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+        <span class="nf">Gosched</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="nx">mp</span> <span class="o">:=</span> <span class="nf">acquirem</span><span class="p">()</span>
+    <span class="nx">cycle</span> <span class="o">:=</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">cycles</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">cycle</span> <span class="o">==</span> <span class="nx">n</span><span class="o">+</span><span class="mi">1</span> <span class="o">||</span> <span class="p">(</span><span class="nx">gcphase</span> <span class="o">==</span> <span class="nx">_GCmark</span> <span class="o">&amp;&amp;</span> <span class="nx">cycle</span> <span class="o">==</span> <span class="nx">n</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">mProf_PostSweep</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="nf">releasem</span><span class="p">(</span><span class="nx">mp</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>在正式开始垃圾收集前，运行时需要通过<code>runtime.gcWaitOnMark</code>等待上一个循环的标记终止、标记和清除终止阶段完成</li>
+<li>调用<code>runtime.gcStart</code>触发新一轮的垃圾收集并通过<code>runtime.gcWaitOnMark</code>等待该轮垃圾收集的标记终止阶段正常结束</li>
+<li>持续调用<code>runtime.sweepone</code>清理全部待处理的内存管理单元并等待所有的清理工作完成，等待期间会调用<code>runtime.Gosched</code>让出处理器</li>
+<li>完成本轮垃圾收集的清理工作后，通过<code>runtime.mProf_PostSweep</code>将该阶段的堆内存状态快照发布出来，我们可以获取这时的内存状态</li>
+</ol>
+<p>手动触发垃圾收集的过程并不是特别常见，一般只会在运行时的测试代码中才会出现，不过如果我们认为触发主动垃圾收集是有必要的，也可以直接调用该方法，但是作者不认为这是一种推荐的做法</p>
+<p><strong>申请内存</strong></p>
+<p>最后一个可能会触发垃圾收集的就是<code>runtime.mallocgc</code>，Go运行时会将堆上的对象按大小分成微对象、小对象和大对象三类，这三类对象的创建都可能会触发细心地垃圾收集循环</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">mallocgc</span><span class="p">(</span><span class="nx">size</span> <span class="kt">uintptr</span><span class="p">,</span> <span class="kd">type</span> <span class="o">*</span><span class="nx">_type</span><span class="p">,</span> <span class="nx">needzero</span> <span class="kt">bool</span><span class="p">)</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span> <span class="p">{</span>
+    <span class="nx">shouldhelpgc</span> <span class="o">:=</span> <span class="kc">false</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="nx">size</span> <span class="o">&lt;=</span> <span class="nx">maxSmallSize</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="nx">noscan</span> <span class="o">&amp;&amp;</span> <span class="nx">size</span> <span class="p">&lt;</span> <span class="nx">maxTinySize</span> <span class="p">{</span>
+            <span class="o">...</span>
+            <span class="nx">v</span> <span class="o">:=</span> <span class="nf">nextFreeFast</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nx">v</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+                <span class="nx">v</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">shouldhelpgc</span> <span class="p">=</span> <span class="nx">c</span><span class="p">.</span><span class="nf">nextFree</span><span class="p">(</span><span class="nx">tinySpanClass</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="o">...</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="o">...</span>
+            <span class="nx">v</span> <span class="o">:=</span> <span class="nf">nextFreeFast</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nx">v</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+                <span class="nx">v</span><span class="p">,</span> <span class="nx">span</span><span class="p">,</span> <span class="nx">shouldhelpgc</span> <span class="p">=</span> <span class="nx">c</span><span class="p">.</span><span class="nf">nextFree</span><span class="p">(</span><span class="nx">spc</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="o">...</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">shouldhelpgc</span> <span class="p">=</span> <span class="kc">true</span>
+        <span class="o">...</span>
+    <span class="p">}</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="nx">shouldhelpgc</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="nx">t</span> <span class="o">:=</span> <span class="p">(</span><span class="nx">gcTrigger</span><span class="p">{</span>
+            <span class="nx">kind</span><span class="p">:</span>   <span class="nx">gcTriggerHeap</span>
+        <span class="p">});</span> <span class="nx">t</span><span class="p">.</span><span class="nf">test</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nf">gcStart</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">x</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>当前线程的内存管理单元中不存在空闲空间时，创建微对象和小对象需要调用<code>runtime.mcache.nextFree</code>从中心缓存或者页堆中获取新的管理单元，在这时就可能触发垃圾收集</li>
+<li>当用户程序申请分配32KB以上的大对象时，一定会构建<code>runtime.gcTrigger</code>结构体尝试触发垃圾收集</li>
+</ol>
+<p>通过堆内存触发垃圾收集需要比较<code>runtime.mstats</code>中的两个字段：表示垃圾收集中存活对象字节数的<code>heap_live</code>和表示触发标记的堆内存大小的<code>gc_trigger</code>；当内存中存活的对象字节数大于触发垃圾收集的堆大小时，新一轮的垃圾收集就会开始。这里将分别介绍这两个值的计算过程：</p>
+<ol>
+<li><code>heap_live</code>: 为了减少锁竞争，运行时只会在中心缓存分配或者释放内存管理单元以及在堆上分配大对象时才会更新</li>
+<li><code>gc_trigger</code>：在标记终止阶段调用<code>runtime.gcSetTriggerRatio</code>更新触发下一次垃圾收集的堆大小</li>
+</ol>
+<p><code>runtime.gcController</code>会在每个循环结束后计算触发比例并通过<code>runtime.gcSetTriggerRatio</code>设置<code>gc_trigger</code>，它能够决定触发垃圾收集的时间以及用户程序和后台处理的标记任务的多少，利用反馈控制的算法根据堆的增长情况和垃圾收集CPU利用率确定触发垃圾收集的时机</p>
+<p>可以在<code>runtime.gcControllerState.endCycle</code>中找到v1.5提出的垃圾收集调步算法，并在<code>runtime.gcControllerState.revise</code>中找到v1.10引入的软硬堆目标分离算法</p>
+<h3 id="垃圾收集启动">垃圾收集启动</h3>
+<p>垃圾收集在启动过程一定会调用<code>runtime.gcStart</code>，虽然该函数的实现比较复杂，但是它的主要职责是修改全局的垃圾收集状态到<code>_GCmark</code>并做一些准备工作，下面会分几个阶段介绍该函数的实现</p>
+<ol>
+<li>两次调用<code>runtime.gcTrigger.test</code>检查是否满足垃圾收集条件</li>
+<li>暂停程序、在后台启动用于处理标记任务的工作Goroutine、确定所有内存管理单元都被清理以及其他标记阶段开始前的准备工作</li>
+<li>进入标记阶段、准备后台的标记工作、根对象的标记工作以及微对象、恢复用户程序，进入并发扫描和标记阶段</li>
+</ol>
+<p>验证垃圾收集条件的同时，该方法还会在循环中不断调用<code>runtime.sweepone</code>清理已经被标记的内存单元，完成上一个垃圾收集循环的收尾工作</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcStart</span><span class="p">(</span><span class="nx">trigger</span> <span class="nx">gcTrigger</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="nx">trigger</span><span class="p">.</span><span class="nf">test</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="nf">sweepone</span><span class="p">()</span> <span class="o">!=</span> <span class="p">^</span><span class="nb">uintptr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">sweep</span><span class="p">.</span><span class="nx">nbgsweep</span><span class="o">++</span>
+    <span class="p">}</span>
+
+    <span class="nf">semacquire</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">startSema</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">!</span><span class="nx">trigger</span><span class="p">.</span><span class="nf">test</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">semrelease</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">startSema</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在验证了垃圾收集的条件并完成了收尾工作后，该方法会通过<code>semacquire</code>获取全局的<code>worldsema</code>信号量、调用<code>runtime.gcBgMarkStartWorkers</code>启动后台标记任务、在系统栈中调用<code>runtime.stopTheWorldWithSema</code>暂停程序并调用<code>runtime.finishsweep_m</code>保证上一个内存单元的正常回收：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcStart</span><span class="p">(</span><span class="nx">trigger</span> <span class="nx">gcTrigger</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="nf">semacquire</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">worldsema</span><span class="p">)</span>
+    <span class="nf">gcBgMarkStartWorkers</span><span class="p">()</span>
+    <span class="nx">work</span><span class="p">.</span><span class="nx">stwprocs</span><span class="p">,</span> <span class="nx">work</span><span class="p">.</span><span class="nx">maxprocs</span> <span class="p">=</span> <span class="nx">gomaxprocs</span><span class="p">,</span> <span class="nx">gomaxprocs</span>
+    <span class="o">...</span>
+    
+    <span class="nf">systemstack</span><span class="p">(</span><span class="nx">stopTheWorldWithSema</span><span class="p">)</span>
+    <span class="nf">systemstack</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">finishsweep_m</span><span class="p">()</span>
+    <span class="p">})</span>
+
+    <span class="nx">work</span><span class="p">.</span><span class="nx">cycles</span><span class="o">++</span>
+    <span class="nx">gcController</span><span class="p">.</span><span class="nf">startCycle</span><span class="p">()</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>除此之外，上述过程还会修改全局变量<code>runtime.work</code>持有的状态，包括垃圾收集需要的Goroutine数量以及已完成的循环数</p>
+<p>在完成全部的准备工作后，该方法就进入了执行的最后阶段。在该阶段中，我们会修改全局的垃圾收集状态到<code>_GCmark</code>并依次执行下面的步骤</p>
+<ol>
+<li>调用<code>runtime.gcBgMarkPrepare</code>初始化后台扫描需要的状态</li>
+<li>调用<code>runtime.gcMarkRootPrepare</code>扫描栈上、全局变量等根对象并将它们加入队列</li>
+<li>设置全局变量<code>runtime.gcBlackenEnabled</code>，用户程序和标记任务可以将对象涂黑</li>
+<li>调用<code>runtime.startTheWorldWithSema</code>启动程序，后台任务也会开始标记堆中的对象</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcStart</span><span class="p">(</span><span class="nx">trigger</span> <span class="nx">gcTrigger</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="nf">setGCPhase</span><span class="p">(</span><span class="nx">_GCmark</span><span class="p">)</span>
+
+    <span class="nf">gcBgMarkPrepare</span><span class="p">()</span>
+    <span class="nf">gcMarkRootPrepare</span><span class="p">()</span>
+
+    <span class="nx">atomic</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcBlackenEnabled</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="nf">systemstack</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">now</span> <span class="p">=</span> <span class="nf">startTheWorldWithSema</span><span class="p">(</span><span class="nx">trace</span><span class="p">.</span><span class="nx">enabled</span><span class="p">)</span>
+        <span class="nx">work</span><span class="p">.</span><span class="nx">pauseNS</span> <span class="o">+=</span> <span class="nx">now</span> <span class="o">-</span> <span class="nx">work</span><span class="p">.</span><span class="nx">pauseStart</span>
+        <span class="nx">work</span><span class="p">.</span><span class="nx">tMark</span> <span class="p">=</span> <span class="nx">now</span>
+    <span class="p">})</span>
+    <span class="nf">semrelease</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">startSema</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在分析垃圾收集的启动过程中，我们省略了几个关键的过程，其中包括暂停和恢复应用程序和后台任务的启动，下面将详细分析这几个过程的实现原理</p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
