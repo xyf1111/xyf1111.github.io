@@ -551,3 +551,737 @@ func gcStart(trigger gcTrigger) {
 ```
 
 在分析垃圾收集的启动过程中，我们省略了几个关键的过程，其中包括暂停和恢复应用程序和后台任务的启动，下面将详细分析这几个过程的实现原理
+
+**暂停与恢复程序**
+
+`runtime.stopTheWorldWithSema`和`runtime.startTheWorldWithSema`是一对用于暂停和恢复程序的核心函数，它们有着完全相反的功能，但是程序的暂停会比恢复要复杂一些，看下前者的实现原理
+
+```go
+func stopTheWorldWithSema() {
+    _g_ := getg()
+    sched.stopwait = gomaxprocs
+    atomic.Store(&sched.gcwaiting, 1)
+	preemptall()
+	_g_.m.p.ptr().status = _Pgcstop
+	sched.stopwait--
+	for _, p := range allp {
+		s := p.status
+		if s == _Psyscall && atomic.Cas(&p.status, s, _Pgcstop) {
+			p.syscalltick++
+			sched.stopwait--
+		}
+	}
+	for {
+		p := pidleget()
+		if p == nil {
+			break
+		}
+		p.status = _Pgcstop
+		sched.stopwait--
+	}
+	wait := sched.stopwait > 0
+	if wait {
+		for {
+			if notetsleep(&sched.stopnote, 100*1000) {
+				noteclear(&sched.stopnote)
+				break
+			}
+			preemptall()
+		}
+	}
+}
+```
+
+暂停程序主要使用了`runtime.preemptall`，该函数会调用前面介绍的`runtime.preemtone`，因为程序中活跃的最大处理数为`gomaxprocs`，所以`runtime.stopTheWorldWithSema`在每次发现停止的处理器时都会对该变量减一，知道所有的处理器都停止运行。该函数会依次停止当前处理器、等待处于系统调用的处理器以及获取并抢占空闲的处理器，处理器的状态在该函数返回时都会被更新至`_Pgcstop`，等待垃圾收集器的重新唤醒
+
+程序恢复过程会使用`runtime.startTheWorldWithSema`，该函数的实现也相对比较简单
+
+1. 调用`runtime.netpoll`从网络轮询器中获取待处理的任务并加入全局队列
+2. 调用`runtime.procresize`扩容或者缩容全局的处理器
+3. 调用`runtime.notewakeup`或者`runtime.newm`依次唤醒处理器或者为处理器创建新的线程
+4. 如果当前待处理的Goroutine数量过多，创建额外的处理器完成任务
+
+```go
+func startTheWorldWithSema(emitTraceEvent bool) int64 {
+	mp := acquirem()
+	if netpollinited() {
+		list := netpoll(0)
+		injectglist(&list)
+	}
+
+	procs := gomaxprocs
+	p1 := procresize(procs)
+	sched.gcwaiting = 0
+	...
+	for p1 != nil {
+		p := p1
+		p1 = p1.link.ptr()
+		if p.m != 0 {
+			mp := p.m.ptr()
+			p.m = 0
+			mp.nextp.set(p)
+			notewakeup(&mp.park)
+		} else {
+			newm(nil, p)
+		}
+	}
+
+	if atomic.Load(&sched.npidle) != 0 && atomic.Load(&sched.nmspinning) == 0 {
+		wakep()
+	}
+	...
+}
+```
+
+程序的暂停和启动过程都比较简单，暂停程序会使用`runtime.preemptall`抢占所有的处理器，恢复程序会使用`runtime.notewakeup`或者`runtime.newm`唤醒程序中的处理器
+
+**后台标记模式**
+
+在垃圾收集启动期间，运行时会调用`runtime.gcBgMarkStartWorkers`为全局每个处理器创建用于执行后台标记任务的Goroutine，每一个Goroutine都会运行`runtime.gcBgMarkWorker`，所有运行`runtime.gcBgMarkWorker`的Goroutine在启动后都会陷入休眠等待调度器的唤醒：
+
+```go
+func gcBgMarkStartWorkers() {
+	for gcBgMarkWorkerCount < gomaxprocs {
+		go gcBgMarkWorker()
+
+		notetsleepg(&work.bgMarkReady, -1)
+		noteclear(&work.bgMarkReady)
+
+		gcBgMarkWorkerCount++
+	}
+}
+```
+
+这些Goroutine与处理器也是一一对应的关系，当垃圾收集处于标记阶段并且当前处理器不需要做任何任务时，`runtime.findrunnable`会在当前处理器上执行该Goroutine辅助并发的对象标记
+
+!["处理器与后台标记任务"](/images/p-and-bg-mark-worker.png "处理器与后台标记任务")
+
+调度器在调度循环`runtime.schedule`中还可以通过垃圾收集控制器的`runtime.gcControllerState.findRunnabledGCWorker`获取并执行用于后台标记的任务。
+
+用于并发扫描对象的工作协程Goroutine总共有三种不同的模式`runtime.gcMarkWorkerMode`，这三种模式的Goroutine在标记对象时使用完全不同的策略，垃圾收集控制器会按照需要执行不同类型的工作协程
+
+- `gcMarkWorkerDedicateMode` 处理器专门负责标记对象，不会被调度器抢占
+- `gcMarkWorkerFractionalMode` 当垃圾收集的后台CPU使用率达不到预期时(默认为25%)，启动该类型的工作协程帮助垃圾收集达到理由率的目标，因为它只占用同一个CPU的部分资源，所以可以被调度
+- `gcMarkWorkerIdleMode` 当处理器没有可以执行的Goroutine时，它会运行垃圾收集的标记任务直到被抢占
+
+`runtime.gcControllerState.startCycle` 会根据全局处理器的个数以及垃圾收集的CPU利用率计算出上述的`dedicatedMarkWorkersNeeded`和`fractionalUtilizationGoal`以决定不同模式的工作协程的数量
+
+因为后台标记任务的CPU利用率为25%，如果主机是四核或者八核，那么垃圾收集需要一个或者两个专门处理相关任务的Goroutine，不过如果主机是三核或者六核，因为无法被四整除，所以这时需要零个或者一个专门处理垃圾收集的Goroutine，运行时需要占用某个CPU的部分时间，使用`gcMarkWorkerFractionalMode`模式的协程保证CPU的利用率
+
+!["主机核数与垃圾收集任务模式"](/images/cpu-number-and-gc-mark-worker-mode.png "主机核数与垃圾收集任务模式")
+
+垃圾收集控制器会在`runtime.gcControllerState.findRunnabledGCWorker` 方法中设置处理器的`gcMarkWorkerMode`
+
+```go
+func (c *gcControllerState) findRunnableGCWorker(_p_ *p) *g {
+	...
+	if decIfPositive(&c.dedicatedMarkWorkersNeeded) {
+		_p_.gcMarkWorkerMode = gcMarkWorkerDedicatedMode
+	} else if c.fractionalUtilizationGoal == 0 {
+		return nil
+	} else {
+		delta := nanotime() - gcController.markStartTime
+		if delta > 0 && float64(_p_.gcFractionalMarkTime)/float64(delta) > c.fractionalUtilizationGoal {
+			return nil
+		}
+		_p_.gcMarkWorkerMode = gcMarkWorkerFractionalMode
+	}
+
+	gp := _p_.gcBgMarkWorker.ptr()
+	casgstatus(gp, _Gwaiting, _Grunnable)
+	return gp
+}
+```
+
+上述方法的实现比较清晰，控制器通过`dedicatedMarkWorkersNeeded`决定专门执行标记任务的Goroutine数量并根据执行标记任务的时间和总时间决定是否启动
+
+`gcMarkWorkerFractionalMode`模式的Goroutine；除了这两种控制器要求的工作协程之外，调度器还会在`runtime.findrunnable`中利用空闲的处理器执行垃圾收集以加速该过程
+
+```go
+func findrunnable() (gp *g, inheritTime bool) {
+	...
+stop:
+	if gcBlackenEnabled != 0 && _p_.gcBgMarkWorker != 0 && gcMarkWorkAvailable(_p_) {
+		_p_.gcMarkWorkerMode = gcMarkWorkerIdleMode
+		gp := _p_.gcBgMarkWorker.ptr()
+		casgstatus(gp, _Gwaiting, _Grunnable)
+		return gp, false
+	}
+	...
+}
+```
+
+三种不同模式的工作协程会互相协同保证垃圾收集的CPU利用率达到期望的阈值，在到达目标堆大小前完成标记任务
+
+### 并发扫描与标记辅助
+
+`runtime.gcBgMarkWorker`是后台的标记任务执行的函数，该函数的循环中执行了对内存中对象图的扫描和标记，我们分三个部分介绍该函数的实现原理
+
+1. 获取当前处理器以及Goroutine打包成`runtime.gcBgMarkWorkerNode` 类型的结构并主动陷入休眠等待唤醒
+2. 根据处理器上的`gcMarkWorkerMode`模式决定扫描任务的策略
+3. 所有标记任务都完成后，调用`runtime.gcMarkDone`方法完成标记阶段
+
+首先我们来看后台标记工作的准备工作，运行时在这里创建了`runtime.gcBgMarkWorkerNode`，该结构会预先存储处理器和当前Goroutine，当我们调用`runtime.gopark`触发休眠时，运行时会在系统栈中安全的建立处理器和后台标记任务的绑定关系
+
+```go
+func gcBgMarkWorker() {
+	gp := getg()
+
+	gp.m.preemptoff = "GC worker init"
+	node := new(gcBgMarkWorkerNode)
+	gp.m.preemptoff = ""
+
+	node.gp.set(gp)
+
+	node.m.set(acquirem())
+	notewakeup(&work.bgMarkReady)
+
+	for {
+		gopark(func(g *g, parkp unsafe.Pointer) bool {
+			node := (*gcBgMarkWorkerNode)(nodep)
+			if mp := node.m.ptr(); mp != nil {
+				releasem(mp)
+			}
+
+			gcBgMarkWorkerPool.push(&node.node)
+			return true
+		}, unsafe.Pointer(node), waitReasonGCWorkerIdle, traceEvGoBlock, 0)
+	...
+}
+```
+
+通过`runtime.gopark`陷入休眠的Goroutine不会进入运行队列，它只会等待垃圾收集控制器或者调度器的直接唤醒；在唤醒后，我们会根据处理器`gcMarkWorkerMode`选择不同的标记执行策略，不同的执行策略都会调用`runtime.gcDrain`扫描工作缓冲区`runtime.gcWork`
+
+```go
+node.m.set(acquirem())
+
+		atomic.Xadd(&work.nwait, -1)
+		systemstack(func() {
+			casgstatus(gp, _Grunning, _Gwaiting)
+			switch pp.gcMarkWorkerMode {
+			case gcMarkWorkerDedicatedMode:
+				gcDrain(&_p_.gcw, gcDrainUntilPreempt|gcDrainFlushBgCredit)
+				if gp.preempt {
+					lock(&sched.lock)
+					for {
+						gp, _ := runqget(_p_)
+						if gp == nil {
+							break
+						}
+						globrunqput(gp)
+					}
+					unlock(&sched.lock)
+				}
+				gcDrain(&_p_.gcw, gcDrainFlushBgCredit)
+			case gcMarkWorkerFractionalMode:
+				gcDrain(&_p_.gcw, gcDrainFractional|gcDrainUntilPreempt|gcDrainFlushBgCredit)
+			case gcMarkWorkerIdleMode:
+				gcDrain(&_p_.gcw, gcDrainIdle|gcDrainUntilPreempt|gcDrainFlushBgCredit)
+			}
+			casgstatus(gp, _Gwaiting, _Grunning)
+		})
+```
+
+需要注意的是，`gcMarkWorkerDedicatedMode`模式的任务是不能被抢占的，为了减少额外开销，第一次调用`runtime.gcDrain`时是允许抢占的，但是 一旦处理器被抢占，当前Goroutine会将处理器上的所有可运行的Goroutine转移至全局队列中，保证垃圾收集占用的CPU资源
+
+当所有的后台工作任务都陷入等待并且名优剩余工作时，我们就任务该轮垃圾收集的标记阶段结束了，这时我们会调用`runtime.gcMarkDone`
+
+```go
+incnwait := atomic.Xadd(&work.nwait, +1)
+		if incnwait == work.nproc && !gcMarkWorkAvailable(nil) {
+			releasem(node.m.ptr())
+			node.m.set(nil)
+
+			gcMarkDone()
+		}
+```
+
+`runtime.gcDrain`是用于扫描和标记堆内存中对象的核心方法，除了该方法之外，我们还会介绍工作池、写屏障以及辅助标记的实现原理
+
+**工作池**
+
+在调用`runtime.gcDrain`时，运行时会传入处理器上的`runtime.gcWorker`，这个结构体是垃圾收集器中工作池的抽象，它实现了一个生产者和消费者的模型，我们可以以该结构为起点从整体理解标记工作
+
+!["垃圾收集器工作池"](/images/gc-work-pool.png "垃圾收集器工作池")
+
+写屏障、根对象扫描和栈扫描都会向工作池中添加额外的灰色对象等待处理，而对象的扫描过程会将灰色对象标记成黑色，同时也可能发现新的灰色对象，当工作对垒中不包含灰色对象时，整个扫描过程就会结束
+
+为了减少锁竞争，运行时在每个处理器上会保存独立的带扫描工作，然而这回遇到和调度器一样的问题(不同处理器的资源不平均，导致部分处理器无事可做，调度器引入了工作窃取来解决这个问题，垃圾收集器也使用了差不多的机制平衡不同处理器上的待处理任务)
+
+!["全局任务与本地任务"](/images/global-work-and-local-work.png "全局任务与本地任务")
+
+`runtime.gcWork`为垃圾收集器提供了生产和消费任务的抽象，该结构体持有了两个重要的工作缓冲区`wbug1`和`wbuf2`，这两个缓冲区分别是主缓冲区和备缓冲区
+
+```go
+type gcWork struct {
+	wbuf1, wbuf2 *workbuf
+	...
+}
+
+type workbufhdr struct {
+	node lfnode // must be first
+	nobj int
+}
+
+type workbuf struct {
+	workbufhdr
+	obj [(_WorkbufSize - unsafe.Sizeof(workbufhdr{})) / sys.PtrSize]uintptr
+}
+```
+
+当我们向该结构体中增加或者删除对象时，它总会先操作主缓冲区，一旦主缓冲区空间不足或者没有对象，会触发主备缓冲区的切换；而当两个缓冲区空间都不足或者都为空时，会从全局的工作缓冲区中插入或者获取对象，该结构体相关方法的实现都非常简单
+
+**扫描对象**
+
+运行时会使用`runtime.gcDrain`扫描工作缓冲区中的灰色对象，它会根据传入`gcDrainFlags`的不同选择不同的策略
+
+```go
+func gcDrain(gcw *gcWork, flags gcDrainFlags) {
+	gp := getg().m.curg
+	preemptible := flags&gcDrainUntilPreempt != 0
+	flushBgCredit := flags&gcDrainFlushBgCredit != 0
+	idle := flags&gcDrainIdle != 0
+
+	initScanWork := gcw.scanWork
+	checkWork := int64(1<<63 - 1)
+	var check func() bool
+	if flags&(gcDrainIdle|gcDrainFractional) != 0 {
+		checkWork = initScanWork + drainCheckThreshold
+		if idle {
+			check = pollWork
+		} else if flags&gcDrainFractional != 0 {
+			check = pollFractionalWorkerExit
+		}
+	}
+	...
+}
+```
+
+- `gcDrainUntilPreemt` 当Goroutine的preempt字段被设置成true时返回
+- `gcDrainIdle` 调用`runtime.pollWork`，当处理器上包含 其他待执行Goroutine时返回
+- `gcDrainFractional` 调用`runtime.pollFractionalWorkerExit`，当CPU的占用率超过`fractionalUtilizationGoal`的20%时返回
+- `gcDrainFlushBgCredit` 调用`runtime.gcFlushBgCredit`计算后台完成的标记任务量以减少并发标记期间的辅助垃圾收集的用户程序的工作量
+
+运行时会使用本地变量中的check检查当前是否应该退出标记任务并让出该处理器。当我们做完准备工作后，就可以开始扫描变量中的根对象，这也是标记阶段中需要先被执行的任务
+
+```go
+func gcDrain(gcw *gcWork, flags gcDrainFlags) {
+	...
+	if work.markrootNext < work.markrootJobs {
+		for !(preemptible && gp.preempt) {
+			job := atomic.Xadd(&work.markrootNext, +1) - 1
+			if job >= work.markrootJobs {
+				break
+			}
+			markroot(gcw, job)
+			if check != nil && check() {
+				goto done
+			}
+		}
+	}
+	...
+}
+```
+
+扫描根对象需要使用`runtime.markroot`，该函数会扫描缓存、数据段、存放全局变量和静态变量的BSS段以及Goroutine的栈内存；一旦完成了根对象的扫描，当前Goroutine会开始从本地和全局工作缓存池中获取待执行的任务
+
+```go
+func gcDrain(gcw *gcWork, flags gcDrainFlags) {
+	...
+	for !(preemptible && gp.preempt) {
+		if work.full == 0 {
+			gcw.balance()
+		}
+
+		b := gcw.tryGetFast()
+		if b == 0 {
+			b = gcw.tryGet()
+			if b == 0 {
+				wbBufFlush(nil, 0)
+				b = gcw.tryGet()
+			}
+		}
+		if b == 0 {
+			break
+		}
+		scanobject(b, gcw)
+
+		if gcw.scanWork >= gcCreditSlack {
+			atomic.Xaddint64(&gcController.scanWork, gcw.scanWork)
+			if flushBgCredit {
+				gcFlushBgCredit(gcw.scanWork - initScanWork)
+				initScanWork = 0
+			}
+			checkWork -= gcw.scanWork
+			gcw.scanWork = 0
+
+			if checkWork <= 0 {
+				checkWork += drainCheckThreshold
+				if check != nil && check() {
+					break
+				}
+			}
+		}
+	}
+	...
+}
+```
+
+扫描对象会使用`runtime.scanobject`，该函数会从传入的位置开始扫描，扫描期间会调用`runtime.greyobject`为找到的活跃对象上色。
+
+```go
+func gcDrain(gcw *gcWork, flags gcDrainFlags) {
+	...
+done:
+	if gcw.scanWork > 0 {
+		atomic.Xaddint64(&gcController.scanWork, gcw.scanWork)
+		if flushBgCredit {
+			gcFlushBgCredit(gcw.scanWork - initScanWork)
+		}
+		gcw.scanWork = 0
+	}
+}
+```
+
+当本轮的扫描因为外部条件变化而中断时，该函数会通过`runtime.gcFlushBgCredit`记录这次扫描的内存字节数用于减少辅助标记的工作量。
+
+内存中对象的扫描和标记过程涉及很多位操作和指针操作，相关代码实现比较复杂，我们在这里就不展开介绍相关的内容了，感兴趣的读者可以将`runtime.gcDrain`作为入口研究三色标记的具体过程。
+
+**写屏障**
+
+写屏障是保证 Go 语言并发标记安全不可或缺的技术，我们需要使用混合写屏障维护对象图的弱三色不变性，然而写屏障的实现需要编译器和运行时的共同协作。在 SSA 中间代码生成阶段，编译器会使用`cmd/compile/internal/ssa.writebarrier`在`Store`、`Move`和`Zero`操作中加入写屏障，生成如下所示的代码：
+
+```go
+if writeBarrier.enabled {
+  gcWriteBarrier(ptr, val)
+} else {
+  *ptr = val
+}
+```
+
+当 Go 语言进入垃圾收集阶段时，全局变量`runtime.writeBarrier`中的`enabled`字段会被置成开启，所有的写操作都会调用 `runtime.gcWriteBarrier`：
+
+```bash
+TEXT runtime·gcWriteBarrier(SB),NOSPLIT,$28
+	...
+	get_tls(BX)
+	MOVL	g(BX), BX
+	MOVL	g_m(BX), BX
+	MOVL	m_p(BX), BX
+	MOVL	(p_wbBuf+wbBuf_next)(BX), CX
+	LEAL	8(CX), CX
+	MOVL	CX, (p_wbBuf+wbBuf_next)(BX)
+	CMPL	CX, (p_wbBuf+wbBuf_end)(BX)
+	MOVL	AX, -8(CX)	// 记录值
+	MOVL	(DI), BX
+	MOVL	BX, -4(CX)	// 记录 *slot
+	JEQ	flush
+ret:
+	MOVL	20(SP), CX
+	MOVL	24(SP), BX
+	MOVL	AX, (DI) // 触发写操作
+	RET
+
+flush:
+  ...
+	CALL	runtime·wbBufFlush(SB)
+  ...
+	JMP	ret
+```
+
+在上述汇编函数中，DI 寄存器是写操作的目的地址，AX 寄存器中存储了被覆盖的值，该函数会覆盖原来的值并通过`runtime.wbBufFlush`通知垃圾收集器将原值和新值加入当前处理器的工作队列，因为该写屏障的实现比较复杂，所以写屏障对程序的性能还是有比较大的影响，之前只需要一条指令完成的工作，现在需要几十条指令。
+
+我们在上面提到过 Dijkstra 和 Yuasa 写屏障组成的混合写屏障在开启后，所有新创建的对象都需要被直接涂成黑色，这里的标记过程是由`runtime.gcmarknewobject`完成的：
+
+```go
+func mallocgc(size uintptr, typ *_type, needzero bool) unsafe.Pointer {
+	...
+	if gcphase != _GCoff {
+		gcmarknewobject(span, uintptr(x), size, scanSize)
+	}
+	...
+}
+
+func gcmarknewobject(span *mspan, obj, size, scanSize uintptr) {
+	objIndex := span.objIndex(obj)
+	span.markBitsForIndex(objIndex).setMarked()
+
+	arena, pageIdx, pageMask := pageIndexOf(span.base())
+	if arena.pageMarks[pageIdx]&pageMask == 0 {
+		atomic.Or8(&arena.pageMarks[pageIdx], pageMask)
+	}
+
+	gcw := &getg().m.p.ptr().gcw
+	gcw.bytesMarked += uint64(size)
+	gcw.scanWork += int64(scanSize)
+}
+```
+
+`runtime.mallocgc`会在垃圾收集开始后调用该函数，获取对象对应的内存单元以及标记位`runtime.markBits`并调用`runtime.markBits.setMarked`直接将新的对象涂成黑色。
+
+**标记辅助**
+
+为了保证用户程序分配内存的速度不会超出后台任务的标记速度，运行时还引入了标记辅助技术，它遵循一条非常简单并且朴实的原则，`分配多少内存就需要完成多少标记任务`。每一个 Goroutine 都持有`gcAssistBytes`字段，这个字段存储了当前 Goroutine 辅助标记的对象字节数。在并发标记阶段期间，当 Goroutine 调用`runtime.mallocgc`分配新对象时，该函数会检查申请内存的 Goroutine 是否处于入不敷出的状态：
+
+```go
+func mallocgc(size uintptr, typ *_type, needzero bool) unsafe.Pointer {
+	...
+	var assistG *g
+	if gcBlackenEnabled != 0 {
+		assistG = getg()
+		if assistG.m.curg != nil {
+			assistG = assistG.m.curg
+		}
+		assistG.gcAssistBytes -= int64(size)
+
+		if assistG.gcAssistBytes < 0 {
+			gcAssistAlloc(assistG)
+		}
+	}
+	...
+	return x
+}
+```
+
+申请内存时调用的`runtime.gcAssistAlloc`和扫描内存时调用的`runtime.gcFlushBgCredit`分别负责借债和还债，通过这套债务管理系统，我们能够保证 Goroutine 在正常运行的同时不会为垃圾收集造成太多的压力，保证在达到堆大小目标时完成标记阶段。
+
+!["辅助标记的动态平衡"](/images/gc-mutator-assist.png "辅助标记的动态平衡")
+
+每个 Goroutine 持有的`gcAssistBytes`表示当前协程辅助标记的字节数，全局垃圾收集控制器持有的`bgScanCredit`表示后台协程辅助标记的字节数，当本地 Goroutine 分配了较多对象时，可以使用公用的信用`bgScanCredit`偿还。我们先来分析`runtime.gcAssistAlloc`的实现：
+
+```go
+func gcAssistAlloc(gp *g) {
+	...
+retry:
+	debtBytes := -gp.gcAssistBytes
+	scanWork := int64(gcController.assistWorkPerByte * float64(debtBytes))
+	if scanWork < gcOverAssistWork {
+		scanWork = gcOverAssistWork
+		debtBytes = int64(gcController.assistBytesPerWork * float64(scanWork))
+	}
+
+	bgScanCredit := atomic.Loadint64(&gcController.bgScanCredit)
+	stolen := int64(0)
+	if bgScanCredit > 0 {
+		if bgScanCredit < scanWork {
+			stolen = bgScanCredit
+			gp.gcAssistBytes += 1 + int64(gcController.assistBytesPerWork*float64(stolen))
+		} else {
+			stolen = scanWork
+			gp.gcAssistBytes += debtBytes
+		}
+		atomic.Xaddint64(&gcController.bgScanCredit, -stolen)
+		scanWork -= stolen
+
+		if scanWork == 0 {
+			return
+		}
+	}
+	...
+}
+```
+
+该函数会先根据 Goroutine 的`gcAssistBytes`和垃圾收集控制器的配置计算需要完成的标记任务数量，如果全局信用`bgScanCredit`中有可用的点数，那么会减去该点数，因为并发执行没有加锁，所以全局信用可能会被更新成负值，然而在长期来看这不是一个比较重要的问题。
+
+如果全局信用不足以覆盖本地的债务，运行时会在系统栈中调用`runtime.gcAssistAlloc1`执行标记任务，它会直接调用`runtime.gcDrainN`完成指定数量的标记任务并返回：
+
+```go
+func gcAssistAlloc(gp *g) {
+	...
+	systemstack(func() {
+		gcAssistAlloc1(gp, scanWork)
+	})
+	...
+	if gp.gcAssistBytes < 0 {
+		if gp.preempt {
+			Gosched()
+			goto retry
+		}
+		if !gcParkAssist() {
+			goto retry
+		}
+	}
+}
+```
+
+如果在完成标记辅助任务后，当前 Goroutine 仍然入不敷出并且 Goroutine 没有被抢占，那么运行时会执行`runtime.gcParkAssist`；如果全局信用仍然不足，运行时会通过 runtime.gcParkAssist 将当前 Goroutine 陷入休眠、加入全局的辅助标记队列并等待后台标记任务的唤醒。
+
+用于还债的 runtime.gcFlushBgCredit 的实现比较简单，如果辅助队列中不存在等待的 Goroutine，那么当前的信用会直接加到全局信用 bgScanCredit 中：
+
+```go
+func gcFlushBgCredit(scanWork int64) {
+	if work.assistQueue.q.empty() {
+		atomic.Xaddint64(&gcController.bgScanCredit, scanWork)
+		return
+	}
+
+	scanBytes := int64(float64(scanWork) * gcController.assistBytesPerWork)
+	for !work.assistQueue.q.empty() && scanBytes > 0 {
+		gp := work.assistQueue.q.pop()
+		if scanBytes+gp.gcAssistBytes >= 0 {
+			scanBytes += gp.gcAssistBytes
+			gp.gcAssistBytes = 0
+			ready(gp, 0, false)
+		} else {
+			gp.gcAssistBytes += scanBytes
+			scanBytes = 0
+			work.assistQueue.q.pushBack(gp)
+			break
+		}
+	}
+
+	if scanBytes > 0 {
+		scanWork = int64(float64(scanBytes) * gcController.assistWorkPerByte)
+		atomic.Xaddint64(&gcController.bgScanCredit, scanWork)
+	}
+}
+```
+
+如果辅助队列不为空，上述函数会根据每个 Goroutine 的债务数量和已完成的工作决定是否唤醒这些陷入休眠的 Goroutine；如果唤醒所有的 Goroutine 后，标记任务量仍然有剩余，这些标记任务都会加入全局信用中。
+
+!["全局信用与本地信用"](/images/global-credit-and-assist-bytes.png "全局信用与本地信用")
+
+用户程序辅助标记的核心目的是避免用户程序分配内存影响垃圾收集器完成标记工作的期望时间，它通过维护账户体系保证用户程序不会对垃圾收集造成过多的负担，一旦用户程序分配了大量的内存，该用户程序就会通过辅助标记的方式平衡账本，这个过程会在最后达到相对平衡，保证标记任务在到达期望堆大小时完成。
+
+### 标记终止
+
+当所有处理器的本地任务都完成并且不存在剩余的工作 Goroutine 时，后台并发任务或者辅助标记的用户程序会调用`runtime.gcMarkDone`通知垃圾收集器。当所有可达对象都被标记后，该函数会将垃圾收集的状态切换至`_GCmarktermination`；如果本地队列中仍然存在待处理的任务，当前方法会将所有的任务加入全局队列并等待其他 Goroutine 完成处理：
+
+```go
+func gcMarkDone() {
+	...
+top:
+	if !(gcphase == _GCmark && work.nwait == work.nproc && !gcMarkWorkAvailable(nil)) {
+		return
+	}
+
+	gcMarkDoneFlushed = 0
+	systemstack(func() {
+		gp := getg().m.curg
+		casgstatus(gp, _Grunning, _Gwaiting)
+		forEachP(func(_p_ *p) {
+			wbBufFlush1(_p_)
+			_p_.gcw.dispose()
+			if _p_.gcw.flushedWork {
+				atomic.Xadd(&gcMarkDoneFlushed, 1)
+				_p_.gcw.flushedWork = false
+			}
+		})
+		casgstatus(gp, _Gwaiting, _Grunning)
+	})
+
+	if gcMarkDoneFlushed != 0 {
+		goto top
+	}
+	...
+}
+```
+
+如果运行时中不包含全局任务、处理器中也不存在本地任务，那么当前垃圾收集循环中的灰色对象也都标记成了黑色，我们就可以开始触发垃圾收集的阶段迁移了：
+
+```go
+func gcMarkDone() {
+	...
+	getg().m.preemptoff = "gcing"
+	systemstack(stopTheWorldWithSema)
+
+	...
+
+	atomic.Store(&gcBlackenEnabled, 0)
+	gcWakeAllAssists()
+	schedEnableUser(true)
+	nextTriggerRatio := gcController.endCycle()
+	gcMarkTermination(nextTriggerRatio)
+}
+```
+
+上述函数在最后会关闭混合写屏障、唤醒所有协助垃圾收集的用户程序、恢复用户 Goroutine 的调度并调用`runtime.gcMarkTermination`进入标记终止阶段：
+
+```go
+func gcMarkTermination(nextTriggerRatio float64) {
+	atomic.Store(&gcBlackenEnabled, 0)
+	setGCPhase(_GCmarktermination)
+
+	_g_ := getg()
+	gp := _g_.m.curg
+	casgstatus(gp, _Grunning, _Gwaiting)
+
+	systemstack(func() {
+		gcMark(startTime)
+	})
+	systemstack(func() {
+		setGCPhase(_GCoff)
+		gcSweep(work.mode)
+	})
+	casgstatus(gp, _Gwaiting, _Grunning)
+	gcSetTriggerRatio(nextTriggerRatio)
+	wakeScavenger()
+
+	...
+
+	injectglist(&work.sweepWaiters.list)
+	systemstack(func() { startTheWorldWithSema(true) })
+	prepareFreeWorkbufs()
+	systemstack(freeStackSpans)
+	systemstack(func() {
+		forEachP(func(_p_ *p) {
+			_p_.mcache.prepareForSweep()
+		})
+	})
+	...
+}
+```
+
+我们省略了该函数中很多数据统计的代码，包括正在使用的内存大小、本轮垃圾收集的暂停时间、CPU 的利用率等数据，这些数据能够帮助控制器决定下一轮触发垃圾收集的堆大小，除了数据统计之外，该函数还会调用`runtime.gcSweep`重置清理阶段的相关状态并在需要时阻塞清理所有的内存管理单元；`_GCmarktermination`状态在垃圾收集中并不会持续太久，它会迅速转换至`_GCoff`并恢复应用程序，到这里垃圾收集的全过程基本上就结束了，用户程序在申请内存时才会惰性回收内存。
+
+### 内存清理
+
+垃圾收集的清理中包含对象回收器（Reclaimer）和内存单元回收器，这两种回收器使用不同的算法清理堆内存：
+
+- 对象回收器在内存管理单元中查找并释放未被标记的对象，但是如果`runtime.mspan`中的所有对象都没有被标记，整个单元就会被直接回收，该过程会被`runtime.mcentral.cacheSpan`或者`runtime.sweepone`异步触发；
+- 内存单元回收器会在内存中查找所有的对象都未被标记的`runtime.mspan`，该过程会被`runtime.mheap.reclaim`触发；
+
+`runtime.sweepone`是我们在垃圾收集过程中经常会见到的函数，它会在堆内存中查找待清理的内存管理单元：
+
+```go
+func sweepone() uintptr {
+	...
+	var s *mspan
+	sg := mheap_.sweepgen
+	for {
+		s = mheap_.nextSpanForSweep()
+		if s == nil {
+			break
+		}
+		if state := s.state.get(); state != mSpanInUse {
+			continue
+		}
+		if s.sweepgen == sg-2 && atomic.Cas(&s.sweepgen, sg-2, sg-1) {
+			break
+		}
+	}
+
+	npages := ^uintptr(0)
+	if s != nil {
+		npages = s.npages
+		if s.sweep(false) {
+			atomic.Xadduintptr(&mheap_.reclaimCredit, npages)
+		} else {
+			npages = 0
+		}
+	}
+
+	_g_.m.locks--
+	return npages
+}
+```
+
+查找内存管理单元时会通过`state`和`sweepgen`两个字段判断当前单元是否需要处理。如果内存单元的`sweepgen`等于`mheap.sweepgen - 2`那么意味着当前单元需要清理，如果等于`mheap.sweepgen - 1，`那么当前管理单元就正在清理。
+
+所有的回收工作最终都是靠`runtime.mspan.sweep`完成的，它会根据并发标记阶段回收内存单元中的垃圾并清除标记以免影响下一轮垃圾收集。
+
+## 小结
+
+Go 语言垃圾收集器的实现非常复杂，作者认为这是编程语言中最复杂的模块，调度器的复杂度与垃圾收集器完全不是一个级别，我们在分析垃圾收集器的过程中不得不省略很多的实现细节，其中包括并发标记对象的过程、清扫垃圾的具体实现，这些过程设计大量底层的位操作和指针操作，本节中包含所有的相关代码的链接，感兴趣的读者可以自行探索。
+
+垃圾收集是一门非常古老的技术，它的执行速度和利用率很大程度上决定了程序的运行速度，Go 语言为了实现高性能的并发垃圾收集器，使用三色抽象、并发增量回收、混合写屏障、调步算法以及用户程序协助等机制将垃圾收集的暂停时间优化至毫秒级以下，从早期的版本看到今天，我们能体会到其中的工程设计和演进，作者觉得研究垃圾收集的是实现原理还是非常值得的。

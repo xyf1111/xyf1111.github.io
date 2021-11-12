@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/go-garbage-collector\/"
-        },"genre": "posts","keywords": "mysql","wordcount":  12914 ,
+        },"genre": "posts","keywords": "mysql","wordcount":  21950 ,
         "url": "http:\/\/example.org\/go-garbage-collector\/","datePublished": "2021-11-09T17:25:06+08:00","dateModified": "2021-11-09T17:25:06+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,8 +106,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Go垃圾收集器</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-09">2021-11-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 12914 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 26 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-09">2021-11-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 21950 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 44 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -135,8 +135,12 @@
         <li><a href="#全局变量">全局变量</a></li>
         <li><a href="#触发时机">触发时机</a></li>
         <li><a href="#垃圾收集启动">垃圾收集启动</a></li>
+        <li><a href="#并发扫描与标记辅助">并发扫描与标记辅助</a></li>
+        <li><a href="#标记终止">标记终止</a></li>
+        <li><a href="#内存清理">内存清理</a></li>
       </ul>
     </li>
+    <li><a href="#小结">小结</a></li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="设计原理">设计原理</h2>
@@ -1006,6 +1010,1299 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>在分析垃圾收集的启动过程中，我们省略了几个关键的过程，其中包括暂停和恢复应用程序和后台任务的启动，下面将详细分析这几个过程的实现原理</p>
+<p><strong>暂停与恢复程序</strong></p>
+<p><code>runtime.stopTheWorldWithSema</code>和<code>runtime.startTheWorldWithSema</code>是一对用于暂停和恢复程序的核心函数，它们有着完全相反的功能，但是程序的暂停会比恢复要复杂一些，看下前者的实现原理</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">stopTheWorldWithSema</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">_g_</span> <span class="o">:=</span> <span class="nf">getg</span><span class="p">()</span>
+    <span class="nx">sched</span><span class="p">.</span><span class="nx">stopwait</span> <span class="p">=</span> <span class="nx">gomaxprocs</span>
+    <span class="nx">atomic</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">sched</span><span class="p">.</span><span class="nx">gcwaiting</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="nf">preemptall</span><span class="p">()</span>
+	<span class="nx">_g_</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nx">p</span><span class="p">.</span><span class="nf">ptr</span><span class="p">().</span><span class="nx">status</span> <span class="p">=</span> <span class="nx">_Pgcstop</span>
+	<span class="nx">sched</span><span class="p">.</span><span class="nx">stopwait</span><span class="o">--</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">p</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">allp</span> <span class="p">{</span>
+		<span class="nx">s</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">status</span>
+		<span class="k">if</span> <span class="nx">s</span> <span class="o">==</span> <span class="nx">_Psyscall</span> <span class="o">&amp;&amp;</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Cas</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">p</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">_Pgcstop</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">p</span><span class="p">.</span><span class="nx">syscalltick</span><span class="o">++</span>
+			<span class="nx">sched</span><span class="p">.</span><span class="nx">stopwait</span><span class="o">--</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="nx">p</span> <span class="o">:=</span> <span class="nf">pidleget</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">p</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nx">status</span> <span class="p">=</span> <span class="nx">_Pgcstop</span>
+		<span class="nx">sched</span><span class="p">.</span><span class="nx">stopwait</span><span class="o">--</span>
+	<span class="p">}</span>
+	<span class="nx">wait</span> <span class="o">:=</span> <span class="nx">sched</span><span class="p">.</span><span class="nx">stopwait</span> <span class="p">&gt;</span> <span class="mi">0</span>
+	<span class="k">if</span> <span class="nx">wait</span> <span class="p">{</span>
+		<span class="k">for</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="nf">notetsleep</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">sched</span><span class="p">.</span><span class="nx">stopnote</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nf">noteclear</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">sched</span><span class="p">.</span><span class="nx">stopnote</span><span class="p">)</span>
+				<span class="k">break</span>
+			<span class="p">}</span>
+			<span class="nf">preemptall</span><span class="p">()</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>暂停程序主要使用了<code>runtime.preemptall</code>，该函数会调用前面介绍的<code>runtime.preemtone</code>，因为程序中活跃的最大处理数为<code>gomaxprocs</code>，所以<code>runtime.stopTheWorldWithSema</code>在每次发现停止的处理器时都会对该变量减一，知道所有的处理器都停止运行。该函数会依次停止当前处理器、等待处于系统调用的处理器以及获取并抢占空闲的处理器，处理器的状态在该函数返回时都会被更新至<code>_Pgcstop</code>，等待垃圾收集器的重新唤醒</p>
+<p>程序恢复过程会使用<code>runtime.startTheWorldWithSema</code>，该函数的实现也相对比较简单</p>
+<ol>
+<li>调用<code>runtime.netpoll</code>从网络轮询器中获取待处理的任务并加入全局队列</li>
+<li>调用<code>runtime.procresize</code>扩容或者缩容全局的处理器</li>
+<li>调用<code>runtime.notewakeup</code>或者<code>runtime.newm</code>依次唤醒处理器或者为处理器创建新的线程</li>
+<li>如果当前待处理的Goroutine数量过多，创建额外的处理器完成任务</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">startTheWorldWithSema</span><span class="p">(</span><span class="nx">emitTraceEvent</span> <span class="kt">bool</span><span class="p">)</span> <span class="kt">int64</span> <span class="p">{</span>
+	<span class="nx">mp</span> <span class="o">:=</span> <span class="nf">acquirem</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nf">netpollinited</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">list</span> <span class="o">:=</span> <span class="nf">netpoll</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="nf">injectglist</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">list</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="nx">procs</span> <span class="o">:=</span> <span class="nx">gomaxprocs</span>
+	<span class="nx">p1</span> <span class="o">:=</span> <span class="nf">procresize</span><span class="p">(</span><span class="nx">procs</span><span class="p">)</span>
+	<span class="nx">sched</span><span class="p">.</span><span class="nx">gcwaiting</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="o">...</span>
+	<span class="k">for</span> <span class="nx">p1</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">p</span> <span class="o">:=</span> <span class="nx">p1</span>
+		<span class="nx">p1</span> <span class="p">=</span> <span class="nx">p1</span><span class="p">.</span><span class="nx">link</span><span class="p">.</span><span class="nf">ptr</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">m</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="nx">mp</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">ptr</span><span class="p">()</span>
+			<span class="nx">p</span><span class="p">.</span><span class="nx">m</span> <span class="p">=</span> <span class="mi">0</span>
+			<span class="nx">mp</span><span class="p">.</span><span class="nx">nextp</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
+			<span class="nf">notewakeup</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">mp</span><span class="p">.</span><span class="nx">park</span><span class="p">)</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="nf">newm</span><span class="p">(</span><span class="kc">nil</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">sched</span><span class="p">.</span><span class="nx">npidle</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">sched</span><span class="p">.</span><span class="nx">nmspinning</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nf">wakep</span><span class="p">()</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>程序的暂停和启动过程都比较简单，暂停程序会使用<code>runtime.preemptall</code>抢占所有的处理器，恢复程序会使用<code>runtime.notewakeup</code>或者<code>runtime.newm</code>唤醒程序中的处理器</p>
+<p><strong>后台标记模式</strong></p>
+<p>在垃圾收集启动期间，运行时会调用<code>runtime.gcBgMarkStartWorkers</code>为全局每个处理器创建用于执行后台标记任务的Goroutine，每一个Goroutine都会运行<code>runtime.gcBgMarkWorker</code>，所有运行<code>runtime.gcBgMarkWorker</code>的Goroutine在启动后都会陷入休眠等待调度器的唤醒：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcBgMarkStartWorkers</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">gcBgMarkWorkerCount</span> <span class="p">&lt;</span> <span class="nx">gomaxprocs</span> <span class="p">{</span>
+		<span class="k">go</span> <span class="nf">gcBgMarkWorker</span><span class="p">()</span>
+
+		<span class="nf">notetsleepg</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">bgMarkReady</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+		<span class="nf">noteclear</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">bgMarkReady</span><span class="p">)</span>
+
+		<span class="nx">gcBgMarkWorkerCount</span><span class="o">++</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这些Goroutine与处理器也是一一对应的关系，当垃圾收集处于标记阶段并且当前处理器不需要做任何任务时，<code>runtime.findrunnable</code>会在当前处理器上执行该Goroutine辅助并发的对象标记</p>
+<p><figure><a class="lightgallery" href="/images/p-and-bg-mark-worker.png" title="&amp;ldquo;处理器与后台标记任务&amp;rdquo;" data-thumbnail="/images/p-and-bg-mark-worker.png" data-sub-html="<h2>处理器与后台标记任务</h2><p>&amp;ldquo;处理器与后台标记任务&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/p-and-bg-mark-worker.png"
+            data-srcset="/images/p-and-bg-mark-worker.png, /images/p-and-bg-mark-worker.png 1.5x, /images/p-and-bg-mark-worker.png 2x"
+            data-sizes="auto"
+            alt="/images/p-and-bg-mark-worker.png" />
+    </a><figcaption class="image-caption">处理器与后台标记任务</figcaption>
+    </figure></p>
+<p>调度器在调度循环<code>runtime.schedule</code>中还可以通过垃圾收集控制器的<code>runtime.gcControllerState.findRunnabledGCWorker</code>获取并执行用于后台标记的任务。</p>
+<p>用于并发扫描对象的工作协程Goroutine总共有三种不同的模式<code>runtime.gcMarkWorkerMode</code>，这三种模式的Goroutine在标记对象时使用完全不同的策略，垃圾收集控制器会按照需要执行不同类型的工作协程</p>
+<ul>
+<li><code>gcMarkWorkerDedicateMode</code> 处理器专门负责标记对象，不会被调度器抢占</li>
+<li><code>gcMarkWorkerFractionalMode</code> 当垃圾收集的后台CPU使用率达不到预期时(默认为25%)，启动该类型的工作协程帮助垃圾收集达到理由率的目标，因为它只占用同一个CPU的部分资源，所以可以被调度</li>
+<li><code>gcMarkWorkerIdleMode</code> 当处理器没有可以执行的Goroutine时，它会运行垃圾收集的标记任务直到被抢占</li>
+</ul>
+<p><code>runtime.gcControllerState.startCycle</code> 会根据全局处理器的个数以及垃圾收集的CPU利用率计算出上述的<code>dedicatedMarkWorkersNeeded</code>和<code>fractionalUtilizationGoal</code>以决定不同模式的工作协程的数量</p>
+<p>因为后台标记任务的CPU利用率为25%，如果主机是四核或者八核，那么垃圾收集需要一个或者两个专门处理相关任务的Goroutine，不过如果主机是三核或者六核，因为无法被四整除，所以这时需要零个或者一个专门处理垃圾收集的Goroutine，运行时需要占用某个CPU的部分时间，使用<code>gcMarkWorkerFractionalMode</code>模式的协程保证CPU的利用率</p>
+<p><figure><a class="lightgallery" href="/images/cpu-number-and-gc-mark-worker-mode.png" title="&amp;ldquo;主机核数与垃圾收集任务模式&amp;rdquo;" data-thumbnail="/images/cpu-number-and-gc-mark-worker-mode.png" data-sub-html="<h2>主机核数与垃圾收集任务模式</h2><p>&amp;ldquo;主机核数与垃圾收集任务模式&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/cpu-number-and-gc-mark-worker-mode.png"
+            data-srcset="/images/cpu-number-and-gc-mark-worker-mode.png, /images/cpu-number-and-gc-mark-worker-mode.png 1.5x, /images/cpu-number-and-gc-mark-worker-mode.png 2x"
+            data-sizes="auto"
+            alt="/images/cpu-number-and-gc-mark-worker-mode.png" />
+    </a><figcaption class="image-caption">主机核数与垃圾收集任务模式</figcaption>
+    </figure></p>
+<p>垃圾收集控制器会在<code>runtime.gcControllerState.findRunnabledGCWorker</code> 方法中设置处理器的<code>gcMarkWorkerMode</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">gcControllerState</span><span class="p">)</span> <span class="nf">findRunnableGCWorker</span><span class="p">(</span><span class="nx">_p_</span> <span class="o">*</span><span class="nx">p</span><span class="p">)</span> <span class="o">*</span><span class="nx">g</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="k">if</span> <span class="nf">decIfPositive</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">c</span><span class="p">.</span><span class="nx">dedicatedMarkWorkersNeeded</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">_p_</span><span class="p">.</span><span class="nx">gcMarkWorkerMode</span> <span class="p">=</span> <span class="nx">gcMarkWorkerDedicatedMode</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">c</span><span class="p">.</span><span class="nx">fractionalUtilizationGoal</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="nx">delta</span> <span class="o">:=</span> <span class="nf">nanotime</span><span class="p">()</span> <span class="o">-</span> <span class="nx">gcController</span><span class="p">.</span><span class="nx">markStartTime</span>
+		<span class="k">if</span> <span class="nx">delta</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nb">float64</span><span class="p">(</span><span class="nx">_p_</span><span class="p">.</span><span class="nx">gcFractionalMarkTime</span><span class="p">)</span><span class="o">/</span><span class="nb">float64</span><span class="p">(</span><span class="nx">delta</span><span class="p">)</span> <span class="p">&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">fractionalUtilizationGoal</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span>
+		<span class="p">}</span>
+		<span class="nx">_p_</span><span class="p">.</span><span class="nx">gcMarkWorkerMode</span> <span class="p">=</span> <span class="nx">gcMarkWorkerFractionalMode</span>
+	<span class="p">}</span>
+
+	<span class="nx">gp</span> <span class="o">:=</span> <span class="nx">_p_</span><span class="p">.</span><span class="nx">gcBgMarkWorker</span><span class="p">.</span><span class="nf">ptr</span><span class="p">()</span>
+	<span class="nf">casgstatus</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="nx">_Gwaiting</span><span class="p">,</span> <span class="nx">_Grunnable</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">gp</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述方法的实现比较清晰，控制器通过<code>dedicatedMarkWorkersNeeded</code>决定专门执行标记任务的Goroutine数量并根据执行标记任务的时间和总时间决定是否启动</p>
+<p><code>gcMarkWorkerFractionalMode</code>模式的Goroutine；除了这两种控制器要求的工作协程之外，调度器还会在<code>runtime.findrunnable</code>中利用空闲的处理器执行垃圾收集以加速该过程</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">findrunnable</span><span class="p">()</span> <span class="p">(</span><span class="nx">gp</span> <span class="o">*</span><span class="nx">g</span><span class="p">,</span> <span class="nx">inheritTime</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+	<span class="o">...</span>
+<span class="nx">stop</span><span class="p">:</span>
+	<span class="k">if</span> <span class="nx">gcBlackenEnabled</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">_p_</span><span class="p">.</span><span class="nx">gcBgMarkWorker</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nf">gcMarkWorkAvailable</span><span class="p">(</span><span class="nx">_p_</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">_p_</span><span class="p">.</span><span class="nx">gcMarkWorkerMode</span> <span class="p">=</span> <span class="nx">gcMarkWorkerIdleMode</span>
+		<span class="nx">gp</span> <span class="o">:=</span> <span class="nx">_p_</span><span class="p">.</span><span class="nx">gcBgMarkWorker</span><span class="p">.</span><span class="nf">ptr</span><span class="p">()</span>
+		<span class="nf">casgstatus</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="nx">_Gwaiting</span><span class="p">,</span> <span class="nx">_Grunnable</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nx">gp</span><span class="p">,</span> <span class="kc">false</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>三种不同模式的工作协程会互相协同保证垃圾收集的CPU利用率达到期望的阈值，在到达目标堆大小前完成标记任务</p>
+<h3 id="并发扫描与标记辅助">并发扫描与标记辅助</h3>
+<p><code>runtime.gcBgMarkWorker</code>是后台的标记任务执行的函数，该函数的循环中执行了对内存中对象图的扫描和标记，我们分三个部分介绍该函数的实现原理</p>
+<ol>
+<li>获取当前处理器以及Goroutine打包成<code>runtime.gcBgMarkWorkerNode</code> 类型的结构并主动陷入休眠等待唤醒</li>
+<li>根据处理器上的<code>gcMarkWorkerMode</code>模式决定扫描任务的策略</li>
+<li>所有标记任务都完成后，调用<code>runtime.gcMarkDone</code>方法完成标记阶段</li>
+</ol>
+<p>首先我们来看后台标记工作的准备工作，运行时在这里创建了<code>runtime.gcBgMarkWorkerNode</code>，该结构会预先存储处理器和当前Goroutine，当我们调用<code>runtime.gopark</code>触发休眠时，运行时会在系统栈中安全的建立处理器和后台标记任务的绑定关系</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcBgMarkWorker</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">gp</span> <span class="o">:=</span> <span class="nf">getg</span><span class="p">()</span>
+
+	<span class="nx">gp</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nx">preemptoff</span> <span class="p">=</span> <span class="s">&#34;GC worker init&#34;</span>
+	<span class="nx">node</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">gcBgMarkWorkerNode</span><span class="p">)</span>
+	<span class="nx">gp</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nx">preemptoff</span> <span class="p">=</span> <span class="s">&#34;&#34;</span>
+
+	<span class="nx">node</span><span class="p">.</span><span class="nx">gp</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="nx">gp</span><span class="p">)</span>
+
+	<span class="nx">node</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="nf">acquirem</span><span class="p">())</span>
+	<span class="nf">notewakeup</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">bgMarkReady</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="nf">gopark</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">g</span> <span class="o">*</span><span class="nx">g</span><span class="p">,</span> <span class="nx">parkp</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+			<span class="nx">node</span> <span class="o">:=</span> <span class="p">(</span><span class="o">*</span><span class="nx">gcBgMarkWorkerNode</span><span class="p">)(</span><span class="nx">nodep</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">mp</span> <span class="o">:=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">ptr</span><span class="p">();</span> <span class="nx">mp</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="nf">releasem</span><span class="p">(</span><span class="nx">mp</span><span class="p">)</span>
+			<span class="p">}</span>
+
+			<span class="nx">gcBgMarkWorkerPool</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">node</span><span class="p">.</span><span class="nx">node</span><span class="p">)</span>
+			<span class="k">return</span> <span class="kc">true</span>
+		<span class="p">},</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nf">Pointer</span><span class="p">(</span><span class="nx">node</span><span class="p">),</span> <span class="nx">waitReasonGCWorkerIdle</span><span class="p">,</span> <span class="nx">traceEvGoBlock</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>通过<code>runtime.gopark</code>陷入休眠的Goroutine不会进入运行队列，它只会等待垃圾收集控制器或者调度器的直接唤醒；在唤醒后，我们会根据处理器<code>gcMarkWorkerMode</code>选择不同的标记执行策略，不同的执行策略都会调用<code>runtime.gcDrain</code>扫描工作缓冲区<code>runtime.gcWork</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">node</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="nf">acquirem</span><span class="p">())</span>
+
+		<span class="nx">atomic</span><span class="p">.</span><span class="nf">Xadd</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">nwait</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+		<span class="nf">systemstack</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+			<span class="nf">casgstatus</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="nx">_Grunning</span><span class="p">,</span> <span class="nx">_Gwaiting</span><span class="p">)</span>
+			<span class="k">switch</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">gcMarkWorkerMode</span> <span class="p">{</span>
+			<span class="k">case</span> <span class="nx">gcMarkWorkerDedicatedMode</span><span class="p">:</span>
+				<span class="nf">gcDrain</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">_p_</span><span class="p">.</span><span class="nx">gcw</span><span class="p">,</span> <span class="nx">gcDrainUntilPreempt</span><span class="p">|</span><span class="nx">gcDrainFlushBgCredit</span><span class="p">)</span>
+				<span class="k">if</span> <span class="nx">gp</span><span class="p">.</span><span class="nx">preempt</span> <span class="p">{</span>
+					<span class="nf">lock</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">sched</span><span class="p">.</span><span class="nx">lock</span><span class="p">)</span>
+					<span class="k">for</span> <span class="p">{</span>
+						<span class="nx">gp</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nf">runqget</span><span class="p">(</span><span class="nx">_p_</span><span class="p">)</span>
+						<span class="k">if</span> <span class="nx">gp</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+							<span class="k">break</span>
+						<span class="p">}</span>
+						<span class="nf">globrunqput</span><span class="p">(</span><span class="nx">gp</span><span class="p">)</span>
+					<span class="p">}</span>
+					<span class="nf">unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">sched</span><span class="p">.</span><span class="nx">lock</span><span class="p">)</span>
+				<span class="p">}</span>
+				<span class="nf">gcDrain</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">_p_</span><span class="p">.</span><span class="nx">gcw</span><span class="p">,</span> <span class="nx">gcDrainFlushBgCredit</span><span class="p">)</span>
+			<span class="k">case</span> <span class="nx">gcMarkWorkerFractionalMode</span><span class="p">:</span>
+				<span class="nf">gcDrain</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">_p_</span><span class="p">.</span><span class="nx">gcw</span><span class="p">,</span> <span class="nx">gcDrainFractional</span><span class="p">|</span><span class="nx">gcDrainUntilPreempt</span><span class="p">|</span><span class="nx">gcDrainFlushBgCredit</span><span class="p">)</span>
+			<span class="k">case</span> <span class="nx">gcMarkWorkerIdleMode</span><span class="p">:</span>
+				<span class="nf">gcDrain</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">_p_</span><span class="p">.</span><span class="nx">gcw</span><span class="p">,</span> <span class="nx">gcDrainIdle</span><span class="p">|</span><span class="nx">gcDrainUntilPreempt</span><span class="p">|</span><span class="nx">gcDrainFlushBgCredit</span><span class="p">)</span>
+			<span class="p">}</span>
+			<span class="nf">casgstatus</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="nx">_Gwaiting</span><span class="p">,</span> <span class="nx">_Grunning</span><span class="p">)</span>
+		<span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>需要注意的是，<code>gcMarkWorkerDedicatedMode</code>模式的任务是不能被抢占的，为了减少额外开销，第一次调用<code>runtime.gcDrain</code>时是允许抢占的，但是 一旦处理器被抢占，当前Goroutine会将处理器上的所有可运行的Goroutine转移至全局队列中，保证垃圾收集占用的CPU资源</p>
+<p>当所有的后台工作任务都陷入等待并且名优剩余工作时，我们就任务该轮垃圾收集的标记阶段结束了，这时我们会调用<code>runtime.gcMarkDone</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">incnwait</span> <span class="o">:=</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Xadd</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">nwait</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">incnwait</span> <span class="o">==</span> <span class="nx">work</span><span class="p">.</span><span class="nx">nproc</span> <span class="o">&amp;&amp;</span> <span class="p">!</span><span class="nf">gcMarkWorkAvailable</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nf">releasem</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">ptr</span><span class="p">())</span>
+			<span class="nx">node</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+
+			<span class="nf">gcMarkDone</span><span class="p">()</span>
+		<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>runtime.gcDrain</code>是用于扫描和标记堆内存中对象的核心方法，除了该方法之外，我们还会介绍工作池、写屏障以及辅助标记的实现原理</p>
+<p><strong>工作池</strong></p>
+<p>在调用<code>runtime.gcDrain</code>时，运行时会传入处理器上的<code>runtime.gcWorker</code>，这个结构体是垃圾收集器中工作池的抽象，它实现了一个生产者和消费者的模型，我们可以以该结构为起点从整体理解标记工作</p>
+<p><figure><a class="lightgallery" href="/images/gc-work-pool.png" title="&amp;ldquo;垃圾收集器工作池&amp;rdquo;" data-thumbnail="/images/gc-work-pool.png" data-sub-html="<h2>垃圾收集器工作池</h2><p>&amp;ldquo;垃圾收集器工作池&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/gc-work-pool.png"
+            data-srcset="/images/gc-work-pool.png, /images/gc-work-pool.png 1.5x, /images/gc-work-pool.png 2x"
+            data-sizes="auto"
+            alt="/images/gc-work-pool.png" />
+    </a><figcaption class="image-caption">垃圾收集器工作池</figcaption>
+    </figure></p>
+<p>写屏障、根对象扫描和栈扫描都会向工作池中添加额外的灰色对象等待处理，而对象的扫描过程会将灰色对象标记成黑色，同时也可能发现新的灰色对象，当工作对垒中不包含灰色对象时，整个扫描过程就会结束</p>
+<p>为了减少锁竞争，运行时在每个处理器上会保存独立的带扫描工作，然而这回遇到和调度器一样的问题(不同处理器的资源不平均，导致部分处理器无事可做，调度器引入了工作窃取来解决这个问题，垃圾收集器也使用了差不多的机制平衡不同处理器上的待处理任务)</p>
+<p><figure><a class="lightgallery" href="/images/global-work-and-local-work.png" title="&amp;ldquo;全局任务与本地任务&amp;rdquo;" data-thumbnail="/images/global-work-and-local-work.png" data-sub-html="<h2>全局任务与本地任务</h2><p>&amp;ldquo;全局任务与本地任务&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/global-work-and-local-work.png"
+            data-srcset="/images/global-work-and-local-work.png, /images/global-work-and-local-work.png 1.5x, /images/global-work-and-local-work.png 2x"
+            data-sizes="auto"
+            alt="/images/global-work-and-local-work.png" />
+    </a><figcaption class="image-caption">全局任务与本地任务</figcaption>
+    </figure></p>
+<p><code>runtime.gcWork</code>为垃圾收集器提供了生产和消费任务的抽象，该结构体持有了两个重要的工作缓冲区<code>wbug1</code>和<code>wbuf2</code>，这两个缓冲区分别是主缓冲区和备缓冲区</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">gcWork</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">wbuf1</span><span class="p">,</span> <span class="nx">wbuf2</span> <span class="o">*</span><span class="nx">workbuf</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">workbufhdr</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">node</span> <span class="nx">lfnode</span> <span class="c1">// must be first
+</span><span class="c1"></span>	<span class="nx">nobj</span> <span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">workbuf</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">workbufhdr</span>
+	<span class="nx">obj</span> <span class="p">[(</span><span class="nx">_WorkbufSize</span> <span class="o">-</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nf">Sizeof</span><span class="p">(</span><span class="nx">workbufhdr</span><span class="p">{}))</span> <span class="o">/</span> <span class="nx">sys</span><span class="p">.</span><span class="nx">PtrSize</span><span class="p">]</span><span class="kt">uintptr</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当我们向该结构体中增加或者删除对象时，它总会先操作主缓冲区，一旦主缓冲区空间不足或者没有对象，会触发主备缓冲区的切换；而当两个缓冲区空间都不足或者都为空时，会从全局的工作缓冲区中插入或者获取对象，该结构体相关方法的实现都非常简单</p>
+<p><strong>扫描对象</strong></p>
+<p>运行时会使用<code>runtime.gcDrain</code>扫描工作缓冲区中的灰色对象，它会根据传入<code>gcDrainFlags</code>的不同选择不同的策略</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcDrain</span><span class="p">(</span><span class="nx">gcw</span> <span class="o">*</span><span class="nx">gcWork</span><span class="p">,</span> <span class="nx">flags</span> <span class="nx">gcDrainFlags</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">gp</span> <span class="o">:=</span> <span class="nf">getg</span><span class="p">().</span><span class="nx">m</span><span class="p">.</span><span class="nx">curg</span>
+	<span class="nx">preemptible</span> <span class="o">:=</span> <span class="nx">flags</span><span class="o">&amp;</span><span class="nx">gcDrainUntilPreempt</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">flushBgCredit</span> <span class="o">:=</span> <span class="nx">flags</span><span class="o">&amp;</span><span class="nx">gcDrainFlushBgCredit</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">idle</span> <span class="o">:=</span> <span class="nx">flags</span><span class="o">&amp;</span><span class="nx">gcDrainIdle</span> <span class="o">!=</span> <span class="mi">0</span>
+
+	<span class="nx">initScanWork</span> <span class="o">:=</span> <span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span>
+	<span class="nx">checkWork</span> <span class="o">:=</span> <span class="nb">int64</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">63</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="kd">var</span> <span class="nx">check</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">bool</span>
+	<span class="k">if</span> <span class="nx">flags</span><span class="o">&amp;</span><span class="p">(</span><span class="nx">gcDrainIdle</span><span class="p">|</span><span class="nx">gcDrainFractional</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">checkWork</span> <span class="p">=</span> <span class="nx">initScanWork</span> <span class="o">+</span> <span class="nx">drainCheckThreshold</span>
+		<span class="k">if</span> <span class="nx">idle</span> <span class="p">{</span>
+			<span class="nx">check</span> <span class="p">=</span> <span class="nx">pollWork</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">flags</span><span class="o">&amp;</span><span class="nx">gcDrainFractional</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="nx">check</span> <span class="p">=</span> <span class="nx">pollFractionalWorkerExit</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>gcDrainUntilPreemt</code> 当Goroutine的preempt字段被设置成true时返回</li>
+<li><code>gcDrainIdle</code> 调用<code>runtime.pollWork</code>，当处理器上包含 其他待执行Goroutine时返回</li>
+<li><code>gcDrainFractional</code> 调用<code>runtime.pollFractionalWorkerExit</code>，当CPU的占用率超过<code>fractionalUtilizationGoal</code>的20%时返回</li>
+<li><code>gcDrainFlushBgCredit</code> 调用<code>runtime.gcFlushBgCredit</code>计算后台完成的标记任务量以减少并发标记期间的辅助垃圾收集的用户程序的工作量</li>
+</ul>
+<p>运行时会使用本地变量中的check检查当前是否应该退出标记任务并让出该处理器。当我们做完准备工作后，就可以开始扫描变量中的根对象，这也是标记阶段中需要先被执行的任务</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcDrain</span><span class="p">(</span><span class="nx">gcw</span> <span class="o">*</span><span class="nx">gcWork</span><span class="p">,</span> <span class="nx">flags</span> <span class="nx">gcDrainFlags</span><span class="p">)</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="k">if</span> <span class="nx">work</span><span class="p">.</span><span class="nx">markrootNext</span> <span class="p">&lt;</span> <span class="nx">work</span><span class="p">.</span><span class="nx">markrootJobs</span> <span class="p">{</span>
+		<span class="k">for</span> <span class="p">!(</span><span class="nx">preemptible</span> <span class="o">&amp;&amp;</span> <span class="nx">gp</span><span class="p">.</span><span class="nx">preempt</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">job</span> <span class="o">:=</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Xadd</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">markrootNext</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+			<span class="k">if</span> <span class="nx">job</span> <span class="o">&gt;=</span> <span class="nx">work</span><span class="p">.</span><span class="nx">markrootJobs</span> <span class="p">{</span>
+				<span class="k">break</span>
+			<span class="p">}</span>
+			<span class="nf">markroot</span><span class="p">(</span><span class="nx">gcw</span><span class="p">,</span> <span class="nx">job</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">check</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="nf">check</span><span class="p">()</span> <span class="p">{</span>
+				<span class="k">goto</span> <span class="nx">done</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>扫描根对象需要使用<code>runtime.markroot</code>，该函数会扫描缓存、数据段、存放全局变量和静态变量的BSS段以及Goroutine的栈内存；一旦完成了根对象的扫描，当前Goroutine会开始从本地和全局工作缓存池中获取待执行的任务</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcDrain</span><span class="p">(</span><span class="nx">gcw</span> <span class="o">*</span><span class="nx">gcWork</span><span class="p">,</span> <span class="nx">flags</span> <span class="nx">gcDrainFlags</span><span class="p">)</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="k">for</span> <span class="p">!(</span><span class="nx">preemptible</span> <span class="o">&amp;&amp;</span> <span class="nx">gp</span><span class="p">.</span><span class="nx">preempt</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">work</span><span class="p">.</span><span class="nx">full</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="nx">gcw</span><span class="p">.</span><span class="nf">balance</span><span class="p">()</span>
+		<span class="p">}</span>
+
+		<span class="nx">b</span> <span class="o">:=</span> <span class="nx">gcw</span><span class="p">.</span><span class="nf">tryGetFast</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">b</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="nx">b</span> <span class="p">=</span> <span class="nx">gcw</span><span class="p">.</span><span class="nf">tryGet</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">b</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+				<span class="nf">wbBufFlush</span><span class="p">(</span><span class="kc">nil</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+				<span class="nx">b</span> <span class="p">=</span> <span class="nx">gcw</span><span class="p">.</span><span class="nf">tryGet</span><span class="p">()</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">b</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+		<span class="nf">scanobject</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">gcw</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span> <span class="o">&gt;=</span> <span class="nx">gcCreditSlack</span> <span class="p">{</span>
+			<span class="nx">atomic</span><span class="p">.</span><span class="nf">Xaddint64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcController</span><span class="p">.</span><span class="nx">scanWork</span><span class="p">,</span> <span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">flushBgCredit</span> <span class="p">{</span>
+				<span class="nf">gcFlushBgCredit</span><span class="p">(</span><span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span> <span class="o">-</span> <span class="nx">initScanWork</span><span class="p">)</span>
+				<span class="nx">initScanWork</span> <span class="p">=</span> <span class="mi">0</span>
+			<span class="p">}</span>
+			<span class="nx">checkWork</span> <span class="o">-=</span> <span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span>
+			<span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span> <span class="p">=</span> <span class="mi">0</span>
+
+			<span class="k">if</span> <span class="nx">checkWork</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
+				<span class="nx">checkWork</span> <span class="o">+=</span> <span class="nx">drainCheckThreshold</span>
+				<span class="k">if</span> <span class="nx">check</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="nf">check</span><span class="p">()</span> <span class="p">{</span>
+					<span class="k">break</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>扫描对象会使用<code>runtime.scanobject</code>，该函数会从传入的位置开始扫描，扫描期间会调用<code>runtime.greyobject</code>为找到的活跃对象上色。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcDrain</span><span class="p">(</span><span class="nx">gcw</span> <span class="o">*</span><span class="nx">gcWork</span><span class="p">,</span> <span class="nx">flags</span> <span class="nx">gcDrainFlags</span><span class="p">)</span> <span class="p">{</span>
+	<span class="o">...</span>
+<span class="nx">done</span><span class="p">:</span>
+	<span class="k">if</span> <span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">atomic</span><span class="p">.</span><span class="nf">Xaddint64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcController</span><span class="p">.</span><span class="nx">scanWork</span><span class="p">,</span> <span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">flushBgCredit</span> <span class="p">{</span>
+			<span class="nf">gcFlushBgCredit</span><span class="p">(</span><span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span> <span class="o">-</span> <span class="nx">initScanWork</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当本轮的扫描因为外部条件变化而中断时，该函数会通过<code>runtime.gcFlushBgCredit</code>记录这次扫描的内存字节数用于减少辅助标记的工作量。</p>
+<p>内存中对象的扫描和标记过程涉及很多位操作和指针操作，相关代码实现比较复杂，我们在这里就不展开介绍相关的内容了，感兴趣的读者可以将<code>runtime.gcDrain</code>作为入口研究三色标记的具体过程。</p>
+<p><strong>写屏障</strong></p>
+<p>写屏障是保证 Go 语言并发标记安全不可或缺的技术，我们需要使用混合写屏障维护对象图的弱三色不变性，然而写屏障的实现需要编译器和运行时的共同协作。在 SSA 中间代码生成阶段，编译器会使用<code>cmd/compile/internal/ssa.writebarrier</code>在<code>Store</code>、<code>Move</code>和<code>Zero</code>操作中加入写屏障，生成如下所示的代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">if</span> <span class="nx">writeBarrier</span><span class="p">.</span><span class="nx">enabled</span> <span class="p">{</span>
+  <span class="nf">gcWriteBarrier</span><span class="p">(</span><span class="nx">ptr</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="o">*</span><span class="nx">ptr</span> <span class="p">=</span> <span class="nx">val</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当 Go 语言进入垃圾收集阶段时，全局变量<code>runtime.writeBarrier</code>中的<code>enabled</code>字段会被置成开启，所有的写操作都会调用 <code>runtime.gcWriteBarrier</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">TEXT runtime·gcWriteBarrier<span class="o">(</span>SB<span class="o">)</span>,NOSPLIT,<span class="nv">$28</span>
+	...
+	get_tls<span class="o">(</span>BX<span class="o">)</span>
+	MOVL	g<span class="o">(</span>BX<span class="o">)</span>, BX
+	MOVL	g_m<span class="o">(</span>BX<span class="o">)</span>, BX
+	MOVL	m_p<span class="o">(</span>BX<span class="o">)</span>, BX
+	MOVL	<span class="o">(</span>p_wbBuf+wbBuf_next<span class="o">)(</span>BX<span class="o">)</span>, CX
+	LEAL	8<span class="o">(</span>CX<span class="o">)</span>, CX
+	MOVL	CX, <span class="o">(</span>p_wbBuf+wbBuf_next<span class="o">)(</span>BX<span class="o">)</span>
+	CMPL	CX, <span class="o">(</span>p_wbBuf+wbBuf_end<span class="o">)(</span>BX<span class="o">)</span>
+	MOVL	AX, -8<span class="o">(</span>CX<span class="o">)</span>	// 记录值
+	MOVL	<span class="o">(</span>DI<span class="o">)</span>, BX
+	MOVL	BX, -4<span class="o">(</span>CX<span class="o">)</span>	// 记录 *slot
+	JEQ	flush
+ret:
+	MOVL	20<span class="o">(</span>SP<span class="o">)</span>, CX
+	MOVL	24<span class="o">(</span>SP<span class="o">)</span>, BX
+	MOVL	AX, <span class="o">(</span>DI<span class="o">)</span> // 触发写操作
+	RET
+
+flush:
+  ...
+	CALL	runtime·wbBufFlush<span class="o">(</span>SB<span class="o">)</span>
+  ...
+	JMP	ret
+</code></pre></td></tr></table>
+</div>
+</div><p>在上述汇编函数中，DI 寄存器是写操作的目的地址，AX 寄存器中存储了被覆盖的值，该函数会覆盖原来的值并通过<code>runtime.wbBufFlush</code>通知垃圾收集器将原值和新值加入当前处理器的工作队列，因为该写屏障的实现比较复杂，所以写屏障对程序的性能还是有比较大的影响，之前只需要一条指令完成的工作，现在需要几十条指令。</p>
+<p>我们在上面提到过 Dijkstra 和 Yuasa 写屏障组成的混合写屏障在开启后，所有新创建的对象都需要被直接涂成黑色，这里的标记过程是由<code>runtime.gcmarknewobject</code>完成的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">mallocgc</span><span class="p">(</span><span class="nx">size</span> <span class="kt">uintptr</span><span class="p">,</span> <span class="nx">typ</span> <span class="o">*</span><span class="nx">_type</span><span class="p">,</span> <span class="nx">needzero</span> <span class="kt">bool</span><span class="p">)</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="k">if</span> <span class="nx">gcphase</span> <span class="o">!=</span> <span class="nx">_GCoff</span> <span class="p">{</span>
+		<span class="nf">gcmarknewobject</span><span class="p">(</span><span class="nx">span</span><span class="p">,</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">x</span><span class="p">),</span> <span class="nx">size</span><span class="p">,</span> <span class="nx">scanSize</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">gcmarknewobject</span><span class="p">(</span><span class="nx">span</span> <span class="o">*</span><span class="nx">mspan</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="nx">size</span><span class="p">,</span> <span class="nx">scanSize</span> <span class="kt">uintptr</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">objIndex</span> <span class="o">:=</span> <span class="nx">span</span><span class="p">.</span><span class="nf">objIndex</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span>
+	<span class="nx">span</span><span class="p">.</span><span class="nf">markBitsForIndex</span><span class="p">(</span><span class="nx">objIndex</span><span class="p">).</span><span class="nf">setMarked</span><span class="p">()</span>
+
+	<span class="nx">arena</span><span class="p">,</span> <span class="nx">pageIdx</span><span class="p">,</span> <span class="nx">pageMask</span> <span class="o">:=</span> <span class="nf">pageIndexOf</span><span class="p">(</span><span class="nx">span</span><span class="p">.</span><span class="nf">base</span><span class="p">())</span>
+	<span class="k">if</span> <span class="nx">arena</span><span class="p">.</span><span class="nx">pageMarks</span><span class="p">[</span><span class="nx">pageIdx</span><span class="p">]</span><span class="o">&amp;</span><span class="nx">pageMask</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">atomic</span><span class="p">.</span><span class="nf">Or8</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">arena</span><span class="p">.</span><span class="nx">pageMarks</span><span class="p">[</span><span class="nx">pageIdx</span><span class="p">],</span> <span class="nx">pageMask</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="nx">gcw</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nf">getg</span><span class="p">().</span><span class="nx">m</span><span class="p">.</span><span class="nx">p</span><span class="p">.</span><span class="nf">ptr</span><span class="p">().</span><span class="nx">gcw</span>
+	<span class="nx">gcw</span><span class="p">.</span><span class="nx">bytesMarked</span> <span class="o">+=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">size</span><span class="p">)</span>
+	<span class="nx">gcw</span><span class="p">.</span><span class="nx">scanWork</span> <span class="o">+=</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">scanSize</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>runtime.mallocgc</code>会在垃圾收集开始后调用该函数，获取对象对应的内存单元以及标记位<code>runtime.markBits</code>并调用<code>runtime.markBits.setMarked</code>直接将新的对象涂成黑色。</p>
+<p><strong>标记辅助</strong></p>
+<p>为了保证用户程序分配内存的速度不会超出后台任务的标记速度，运行时还引入了标记辅助技术，它遵循一条非常简单并且朴实的原则，<code>分配多少内存就需要完成多少标记任务</code>。每一个 Goroutine 都持有<code>gcAssistBytes</code>字段，这个字段存储了当前 Goroutine 辅助标记的对象字节数。在并发标记阶段期间，当 Goroutine 调用<code>runtime.mallocgc</code>分配新对象时，该函数会检查申请内存的 Goroutine 是否处于入不敷出的状态：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">mallocgc</span><span class="p">(</span><span class="nx">size</span> <span class="kt">uintptr</span><span class="p">,</span> <span class="nx">typ</span> <span class="o">*</span><span class="nx">_type</span><span class="p">,</span> <span class="nx">needzero</span> <span class="kt">bool</span><span class="p">)</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="kd">var</span> <span class="nx">assistG</span> <span class="o">*</span><span class="nx">g</span>
+	<span class="k">if</span> <span class="nx">gcBlackenEnabled</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">assistG</span> <span class="p">=</span> <span class="nf">getg</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">assistG</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nx">curg</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">assistG</span> <span class="p">=</span> <span class="nx">assistG</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nx">curg</span>
+		<span class="p">}</span>
+		<span class="nx">assistG</span><span class="p">.</span><span class="nx">gcAssistBytes</span> <span class="o">-=</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">size</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="nx">assistG</span><span class="p">.</span><span class="nx">gcAssistBytes</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="nf">gcAssistAlloc</span><span class="p">(</span><span class="nx">assistG</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+	<span class="k">return</span> <span class="nx">x</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>申请内存时调用的<code>runtime.gcAssistAlloc</code>和扫描内存时调用的<code>runtime.gcFlushBgCredit</code>分别负责借债和还债，通过这套债务管理系统，我们能够保证 Goroutine 在正常运行的同时不会为垃圾收集造成太多的压力，保证在达到堆大小目标时完成标记阶段。</p>
+<p><figure><a class="lightgallery" href="/images/gc-mutator-assist.png" title="&amp;ldquo;辅助标记的动态平衡&amp;rdquo;" data-thumbnail="/images/gc-mutator-assist.png" data-sub-html="<h2>辅助标记的动态平衡</h2><p>&amp;ldquo;辅助标记的动态平衡&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/gc-mutator-assist.png"
+            data-srcset="/images/gc-mutator-assist.png, /images/gc-mutator-assist.png 1.5x, /images/gc-mutator-assist.png 2x"
+            data-sizes="auto"
+            alt="/images/gc-mutator-assist.png" />
+    </a><figcaption class="image-caption">辅助标记的动态平衡</figcaption>
+    </figure></p>
+<p>每个 Goroutine 持有的<code>gcAssistBytes</code>表示当前协程辅助标记的字节数，全局垃圾收集控制器持有的<code>bgScanCredit</code>表示后台协程辅助标记的字节数，当本地 Goroutine 分配了较多对象时，可以使用公用的信用<code>bgScanCredit</code>偿还。我们先来分析<code>runtime.gcAssistAlloc</code>的实现：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcAssistAlloc</span><span class="p">(</span><span class="nx">gp</span> <span class="o">*</span><span class="nx">g</span><span class="p">)</span> <span class="p">{</span>
+	<span class="o">...</span>
+<span class="nx">retry</span><span class="p">:</span>
+	<span class="nx">debtBytes</span> <span class="o">:=</span> <span class="o">-</span><span class="nx">gp</span><span class="p">.</span><span class="nx">gcAssistBytes</span>
+	<span class="nx">scanWork</span> <span class="o">:=</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">gcController</span><span class="p">.</span><span class="nx">assistWorkPerByte</span> <span class="o">*</span> <span class="nb">float64</span><span class="p">(</span><span class="nx">debtBytes</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">scanWork</span> <span class="p">&lt;</span> <span class="nx">gcOverAssistWork</span> <span class="p">{</span>
+		<span class="nx">scanWork</span> <span class="p">=</span> <span class="nx">gcOverAssistWork</span>
+		<span class="nx">debtBytes</span> <span class="p">=</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">gcController</span><span class="p">.</span><span class="nx">assistBytesPerWork</span> <span class="o">*</span> <span class="nb">float64</span><span class="p">(</span><span class="nx">scanWork</span><span class="p">))</span>
+	<span class="p">}</span>
+
+	<span class="nx">bgScanCredit</span> <span class="o">:=</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Loadint64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcController</span><span class="p">.</span><span class="nx">bgScanCredit</span><span class="p">)</span>
+	<span class="nx">stolen</span> <span class="o">:=</span> <span class="nb">int64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">bgScanCredit</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">bgScanCredit</span> <span class="p">&lt;</span> <span class="nx">scanWork</span> <span class="p">{</span>
+			<span class="nx">stolen</span> <span class="p">=</span> <span class="nx">bgScanCredit</span>
+			<span class="nx">gp</span><span class="p">.</span><span class="nx">gcAssistBytes</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">gcController</span><span class="p">.</span><span class="nx">assistBytesPerWork</span><span class="o">*</span><span class="nb">float64</span><span class="p">(</span><span class="nx">stolen</span><span class="p">))</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="nx">stolen</span> <span class="p">=</span> <span class="nx">scanWork</span>
+			<span class="nx">gp</span><span class="p">.</span><span class="nx">gcAssistBytes</span> <span class="o">+=</span> <span class="nx">debtBytes</span>
+		<span class="p">}</span>
+		<span class="nx">atomic</span><span class="p">.</span><span class="nf">Xaddint64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcController</span><span class="p">.</span><span class="nx">bgScanCredit</span><span class="p">,</span> <span class="o">-</span><span class="nx">stolen</span><span class="p">)</span>
+		<span class="nx">scanWork</span> <span class="o">-=</span> <span class="nx">stolen</span>
+
+		<span class="k">if</span> <span class="nx">scanWork</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>该函数会先根据 Goroutine 的<code>gcAssistBytes</code>和垃圾收集控制器的配置计算需要完成的标记任务数量，如果全局信用<code>bgScanCredit</code>中有可用的点数，那么会减去该点数，因为并发执行没有加锁，所以全局信用可能会被更新成负值，然而在长期来看这不是一个比较重要的问题。</p>
+<p>如果全局信用不足以覆盖本地的债务，运行时会在系统栈中调用<code>runtime.gcAssistAlloc1</code>执行标记任务，它会直接调用<code>runtime.gcDrainN</code>完成指定数量的标记任务并返回：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcAssistAlloc</span><span class="p">(</span><span class="nx">gp</span> <span class="o">*</span><span class="nx">g</span><span class="p">)</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="nf">systemstack</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nf">gcAssistAlloc1</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="nx">scanWork</span><span class="p">)</span>
+	<span class="p">})</span>
+	<span class="o">...</span>
+	<span class="k">if</span> <span class="nx">gp</span><span class="p">.</span><span class="nx">gcAssistBytes</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">gp</span><span class="p">.</span><span class="nx">preempt</span> <span class="p">{</span>
+			<span class="nf">Gosched</span><span class="p">()</span>
+			<span class="k">goto</span> <span class="nx">retry</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="p">!</span><span class="nf">gcParkAssist</span><span class="p">()</span> <span class="p">{</span>
+			<span class="k">goto</span> <span class="nx">retry</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果在完成标记辅助任务后，当前 Goroutine 仍然入不敷出并且 Goroutine 没有被抢占，那么运行时会执行<code>runtime.gcParkAssist</code>；如果全局信用仍然不足，运行时会通过 runtime.gcParkAssist 将当前 Goroutine 陷入休眠、加入全局的辅助标记队列并等待后台标记任务的唤醒。</p>
+<p>用于还债的 runtime.gcFlushBgCredit 的实现比较简单，如果辅助队列中不存在等待的 Goroutine，那么当前的信用会直接加到全局信用 bgScanCredit 中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcFlushBgCredit</span><span class="p">(</span><span class="nx">scanWork</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">work</span><span class="p">.</span><span class="nx">assistQueue</span><span class="p">.</span><span class="nx">q</span><span class="p">.</span><span class="nf">empty</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">atomic</span><span class="p">.</span><span class="nf">Xaddint64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcController</span><span class="p">.</span><span class="nx">bgScanCredit</span><span class="p">,</span> <span class="nx">scanWork</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="nx">scanBytes</span> <span class="o">:=</span> <span class="nb">int64</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="nx">scanWork</span><span class="p">)</span> <span class="o">*</span> <span class="nx">gcController</span><span class="p">.</span><span class="nx">assistBytesPerWork</span><span class="p">)</span>
+	<span class="k">for</span> <span class="p">!</span><span class="nx">work</span><span class="p">.</span><span class="nx">assistQueue</span><span class="p">.</span><span class="nx">q</span><span class="p">.</span><span class="nf">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="nx">scanBytes</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">gp</span> <span class="o">:=</span> <span class="nx">work</span><span class="p">.</span><span class="nx">assistQueue</span><span class="p">.</span><span class="nx">q</span><span class="p">.</span><span class="nf">pop</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">scanBytes</span><span class="o">+</span><span class="nx">gp</span><span class="p">.</span><span class="nx">gcAssistBytes</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="nx">scanBytes</span> <span class="o">+=</span> <span class="nx">gp</span><span class="p">.</span><span class="nx">gcAssistBytes</span>
+			<span class="nx">gp</span><span class="p">.</span><span class="nx">gcAssistBytes</span> <span class="p">=</span> <span class="mi">0</span>
+			<span class="nf">ready</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="nx">gp</span><span class="p">.</span><span class="nx">gcAssistBytes</span> <span class="o">+=</span> <span class="nx">scanBytes</span>
+			<span class="nx">scanBytes</span> <span class="p">=</span> <span class="mi">0</span>
+			<span class="nx">work</span><span class="p">.</span><span class="nx">assistQueue</span><span class="p">.</span><span class="nx">q</span><span class="p">.</span><span class="nf">pushBack</span><span class="p">(</span><span class="nx">gp</span><span class="p">)</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">scanBytes</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">scanWork</span> <span class="p">=</span> <span class="nb">int64</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="nx">scanBytes</span><span class="p">)</span> <span class="o">*</span> <span class="nx">gcController</span><span class="p">.</span><span class="nx">assistWorkPerByte</span><span class="p">)</span>
+		<span class="nx">atomic</span><span class="p">.</span><span class="nf">Xaddint64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcController</span><span class="p">.</span><span class="nx">bgScanCredit</span><span class="p">,</span> <span class="nx">scanWork</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果辅助队列不为空，上述函数会根据每个 Goroutine 的债务数量和已完成的工作决定是否唤醒这些陷入休眠的 Goroutine；如果唤醒所有的 Goroutine 后，标记任务量仍然有剩余，这些标记任务都会加入全局信用中。</p>
+<p><figure><a class="lightgallery" href="/images/global-credit-and-assist-bytes.png" title="&amp;ldquo;全局信用与本地信用&amp;rdquo;" data-thumbnail="/images/global-credit-and-assist-bytes.png" data-sub-html="<h2>全局信用与本地信用</h2><p>&amp;ldquo;全局信用与本地信用&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/global-credit-and-assist-bytes.png"
+            data-srcset="/images/global-credit-and-assist-bytes.png, /images/global-credit-and-assist-bytes.png 1.5x, /images/global-credit-and-assist-bytes.png 2x"
+            data-sizes="auto"
+            alt="/images/global-credit-and-assist-bytes.png" />
+    </a><figcaption class="image-caption">全局信用与本地信用</figcaption>
+    </figure></p>
+<p>用户程序辅助标记的核心目的是避免用户程序分配内存影响垃圾收集器完成标记工作的期望时间，它通过维护账户体系保证用户程序不会对垃圾收集造成过多的负担，一旦用户程序分配了大量的内存，该用户程序就会通过辅助标记的方式平衡账本，这个过程会在最后达到相对平衡，保证标记任务在到达期望堆大小时完成。</p>
+<h3 id="标记终止">标记终止</h3>
+<p>当所有处理器的本地任务都完成并且不存在剩余的工作 Goroutine 时，后台并发任务或者辅助标记的用户程序会调用<code>runtime.gcMarkDone</code>通知垃圾收集器。当所有可达对象都被标记后，该函数会将垃圾收集的状态切换至<code>_GCmarktermination</code>；如果本地队列中仍然存在待处理的任务，当前方法会将所有的任务加入全局队列并等待其他 Goroutine 完成处理：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcMarkDone</span><span class="p">()</span> <span class="p">{</span>
+	<span class="o">...</span>
+<span class="nx">top</span><span class="p">:</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">gcphase</span> <span class="o">==</span> <span class="nx">_GCmark</span> <span class="o">&amp;&amp;</span> <span class="nx">work</span><span class="p">.</span><span class="nx">nwait</span> <span class="o">==</span> <span class="nx">work</span><span class="p">.</span><span class="nx">nproc</span> <span class="o">&amp;&amp;</span> <span class="p">!</span><span class="nf">gcMarkWorkAvailable</span><span class="p">(</span><span class="kc">nil</span><span class="p">))</span> <span class="p">{</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="nx">gcMarkDoneFlushed</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nf">systemstack</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">gp</span> <span class="o">:=</span> <span class="nf">getg</span><span class="p">().</span><span class="nx">m</span><span class="p">.</span><span class="nx">curg</span>
+		<span class="nf">casgstatus</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="nx">_Grunning</span><span class="p">,</span> <span class="nx">_Gwaiting</span><span class="p">)</span>
+		<span class="nf">forEachP</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">_p_</span> <span class="o">*</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nf">wbBufFlush1</span><span class="p">(</span><span class="nx">_p_</span><span class="p">)</span>
+			<span class="nx">_p_</span><span class="p">.</span><span class="nx">gcw</span><span class="p">.</span><span class="nf">dispose</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">_p_</span><span class="p">.</span><span class="nx">gcw</span><span class="p">.</span><span class="nx">flushedWork</span> <span class="p">{</span>
+				<span class="nx">atomic</span><span class="p">.</span><span class="nf">Xadd</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcMarkDoneFlushed</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+				<span class="nx">_p_</span><span class="p">.</span><span class="nx">gcw</span><span class="p">.</span><span class="nx">flushedWork</span> <span class="p">=</span> <span class="kc">false</span>
+			<span class="p">}</span>
+		<span class="p">})</span>
+		<span class="nf">casgstatus</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="nx">_Gwaiting</span><span class="p">,</span> <span class="nx">_Grunning</span><span class="p">)</span>
+	<span class="p">})</span>
+
+	<span class="k">if</span> <span class="nx">gcMarkDoneFlushed</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">goto</span> <span class="nx">top</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果运行时中不包含全局任务、处理器中也不存在本地任务，那么当前垃圾收集循环中的灰色对象也都标记成了黑色，我们就可以开始触发垃圾收集的阶段迁移了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcMarkDone</span><span class="p">()</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="nf">getg</span><span class="p">().</span><span class="nx">m</span><span class="p">.</span><span class="nx">preemptoff</span> <span class="p">=</span> <span class="s">&#34;gcing&#34;</span>
+	<span class="nf">systemstack</span><span class="p">(</span><span class="nx">stopTheWorldWithSema</span><span class="p">)</span>
+
+	<span class="o">...</span>
+
+	<span class="nx">atomic</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcBlackenEnabled</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="nf">gcWakeAllAssists</span><span class="p">()</span>
+	<span class="nf">schedEnableUser</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+	<span class="nx">nextTriggerRatio</span> <span class="o">:=</span> <span class="nx">gcController</span><span class="p">.</span><span class="nf">endCycle</span><span class="p">()</span>
+	<span class="nf">gcMarkTermination</span><span class="p">(</span><span class="nx">nextTriggerRatio</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述函数在最后会关闭混合写屏障、唤醒所有协助垃圾收集的用户程序、恢复用户 Goroutine 的调度并调用<code>runtime.gcMarkTermination</code>进入标记终止阶段：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">gcMarkTermination</span><span class="p">(</span><span class="nx">nextTriggerRatio</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">atomic</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">gcBlackenEnabled</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="nf">setGCPhase</span><span class="p">(</span><span class="nx">_GCmarktermination</span><span class="p">)</span>
+
+	<span class="nx">_g_</span> <span class="o">:=</span> <span class="nf">getg</span><span class="p">()</span>
+	<span class="nx">gp</span> <span class="o">:=</span> <span class="nx">_g_</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nx">curg</span>
+	<span class="nf">casgstatus</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="nx">_Grunning</span><span class="p">,</span> <span class="nx">_Gwaiting</span><span class="p">)</span>
+
+	<span class="nf">systemstack</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nf">gcMark</span><span class="p">(</span><span class="nx">startTime</span><span class="p">)</span>
+	<span class="p">})</span>
+	<span class="nf">systemstack</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nf">setGCPhase</span><span class="p">(</span><span class="nx">_GCoff</span><span class="p">)</span>
+		<span class="nf">gcSweep</span><span class="p">(</span><span class="nx">work</span><span class="p">.</span><span class="nx">mode</span><span class="p">)</span>
+	<span class="p">})</span>
+	<span class="nf">casgstatus</span><span class="p">(</span><span class="nx">gp</span><span class="p">,</span> <span class="nx">_Gwaiting</span><span class="p">,</span> <span class="nx">_Grunning</span><span class="p">)</span>
+	<span class="nf">gcSetTriggerRatio</span><span class="p">(</span><span class="nx">nextTriggerRatio</span><span class="p">)</span>
+	<span class="nf">wakeScavenger</span><span class="p">()</span>
+
+	<span class="o">...</span>
+
+	<span class="nf">injectglist</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">work</span><span class="p">.</span><span class="nx">sweepWaiters</span><span class="p">.</span><span class="nx">list</span><span class="p">)</span>
+	<span class="nf">systemstack</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nf">startTheWorldWithSema</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">})</span>
+	<span class="nf">prepareFreeWorkbufs</span><span class="p">()</span>
+	<span class="nf">systemstack</span><span class="p">(</span><span class="nx">freeStackSpans</span><span class="p">)</span>
+	<span class="nf">systemstack</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nf">forEachP</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">_p_</span> <span class="o">*</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">_p_</span><span class="p">.</span><span class="nx">mcache</span><span class="p">.</span><span class="nf">prepareForSweep</span><span class="p">()</span>
+		<span class="p">})</span>
+	<span class="p">})</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们省略了该函数中很多数据统计的代码，包括正在使用的内存大小、本轮垃圾收集的暂停时间、CPU 的利用率等数据，这些数据能够帮助控制器决定下一轮触发垃圾收集的堆大小，除了数据统计之外，该函数还会调用<code>runtime.gcSweep</code>重置清理阶段的相关状态并在需要时阻塞清理所有的内存管理单元；<code>_GCmarktermination</code>状态在垃圾收集中并不会持续太久，它会迅速转换至<code>_GCoff</code>并恢复应用程序，到这里垃圾收集的全过程基本上就结束了，用户程序在申请内存时才会惰性回收内存。</p>
+<h3 id="内存清理">内存清理</h3>
+<p>垃圾收集的清理中包含对象回收器（Reclaimer）和内存单元回收器，这两种回收器使用不同的算法清理堆内存：</p>
+<ul>
+<li>对象回收器在内存管理单元中查找并释放未被标记的对象，但是如果<code>runtime.mspan</code>中的所有对象都没有被标记，整个单元就会被直接回收，该过程会被<code>runtime.mcentral.cacheSpan</code>或者<code>runtime.sweepone</code>异步触发；</li>
+<li>内存单元回收器会在内存中查找所有的对象都未被标记的<code>runtime.mspan</code>，该过程会被<code>runtime.mheap.reclaim</code>触发；</li>
+</ul>
+<p><code>runtime.sweepone</code>是我们在垃圾收集过程中经常会见到的函数，它会在堆内存中查找待清理的内存管理单元：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">sweepone</span><span class="p">()</span> <span class="kt">uintptr</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="kd">var</span> <span class="nx">s</span> <span class="o">*</span><span class="nx">mspan</span>
+	<span class="nx">sg</span> <span class="o">:=</span> <span class="nx">mheap_</span><span class="p">.</span><span class="nx">sweepgen</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="nx">s</span> <span class="p">=</span> <span class="nx">mheap_</span><span class="p">.</span><span class="nf">nextSpanForSweep</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">s</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">state</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nf">get</span><span class="p">();</span> <span class="nx">state</span> <span class="o">!=</span> <span class="nx">mSpanInUse</span> <span class="p">{</span>
+			<span class="k">continue</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">s</span><span class="p">.</span><span class="nx">sweepgen</span> <span class="o">==</span> <span class="nx">sg</span><span class="o">-</span><span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">Cas</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">s</span><span class="p">.</span><span class="nx">sweepgen</span><span class="p">,</span> <span class="nx">sg</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="nx">sg</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="nx">npages</span> <span class="o">:=</span> <span class="p">^</span><span class="nb">uintptr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">s</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">npages</span> <span class="p">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">npages</span>
+		<span class="k">if</span> <span class="nx">s</span><span class="p">.</span><span class="nf">sweep</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">atomic</span><span class="p">.</span><span class="nf">Xadduintptr</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">mheap_</span><span class="p">.</span><span class="nx">reclaimCredit</span><span class="p">,</span> <span class="nx">npages</span><span class="p">)</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="nx">npages</span> <span class="p">=</span> <span class="mi">0</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="nx">_g_</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nx">locks</span><span class="o">--</span>
+	<span class="k">return</span> <span class="nx">npages</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查找内存管理单元时会通过<code>state</code>和<code>sweepgen</code>两个字段判断当前单元是否需要处理。如果内存单元的<code>sweepgen</code>等于<code>mheap.sweepgen - 2</code>那么意味着当前单元需要清理，如果等于<code>mheap.sweepgen - 1，</code>那么当前管理单元就正在清理。</p>
+<p>所有的回收工作最终都是靠<code>runtime.mspan.sweep</code>完成的，它会根据并发标记阶段回收内存单元中的垃圾并清除标记以免影响下一轮垃圾收集。</p>
+<h2 id="小结">小结</h2>
+<p>Go 语言垃圾收集器的实现非常复杂，作者认为这是编程语言中最复杂的模块，调度器的复杂度与垃圾收集器完全不是一个级别，我们在分析垃圾收集器的过程中不得不省略很多的实现细节，其中包括并发标记对象的过程、清扫垃圾的具体实现，这些过程设计大量底层的位操作和指针操作，本节中包含所有的相关代码的链接，感兴趣的读者可以自行探索。</p>
+<p>垃圾收集是一门非常古老的技术，它的执行速度和利用率很大程度上决定了程序的运行速度，Go 语言为了实现高性能的并发垃圾收集器，使用三色抽象、并发增量回收、混合写屏障、调步算法以及用户程序协助等机制将垃圾收集的暂停时间优化至毫秒级以下，从早期的版本看到今天，我们能体会到其中的工程设计和演进，作者觉得研究垃圾收集的是实现原理还是非常值得的。</p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
