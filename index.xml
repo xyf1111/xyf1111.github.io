@@ -3,9 +3,16 @@
         <title>CC&#39;s Blog</title>
         <link>http://example.org/</link>
         <description>这是我的全新 Hugo 网站</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 15 Nov 2021 11:37:06 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 21 Nov 2021 20:57:22 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Go Slice</title>
+    <link>http://example.org/go-slice/</link>
+    <pubDate>Sun, 21 Nov 2021 20:57:22 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-slice/</guid>
+    <description><![CDATA[数组在Go语言中没那么常用，更常用的数据结构是切片，即动态数组，其长度并不固定，我们可以向切片中追加元素，它会在容量不足时自动扩容。 在Go语]]></description>
+</item><item>
     <title>Go语言数组实现原理</title>
     <link>http://example.org/go-array/</link>
     <pubDate>Mon, 15 Nov 2021 11:37:06 &#43;0800</pubDate>
@@ -68,12 +75,5 @@
     <author>作者</author>
     <guid>http://example.org/rabbitmq6/</guid>
     <description><![CDATA[远程过程调用(RPC) 在第二个教程中，我们学会了如何使用工作队列在多个worker之间分配耗时的任务。 但是，如果我们需要在远程计算机上运行函]]></description>
-</item><item>
-    <title>RabbitMQ5</title>
-    <link>http://example.org/rabbitmq5/</link>
-    <pubDate>Sat, 25 Sep 2021 18:06:44 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/rabbitmq5/</guid>
-    <description><![CDATA[topic交换器(主题交换器) 发送到topic交换器的消息不能具有随意的routing_key &ndash; 它必须是单词列表，以点分割。这些词可以是任何]]></description>
 </item></channel>
 </rss>

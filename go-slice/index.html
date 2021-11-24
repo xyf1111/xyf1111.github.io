@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Go Slice - CC&#39;s Blog</title><meta name="Description" content="Go语言切片实现原理"><meta property="og:title" content="Go Slice" />
+<meta property="og:description" content="Go语言切片实现原理" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/go-slice/" />
+<meta property="og:image" content="http://example.org/logo.png"/>
+<meta property="article:published_time" content="2021-11-21T20:57:22+08:00" />
+<meta property="article:modified_time" content="2021-11-21T20:57:22+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Go Slice"/>
+<meta name="twitter:description" content="Go语言切片实现原理"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/go-slice/" /><link rel="prev" href="http://example.org/go-array/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go Slice",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/go-slice\/"
+        },"genre": "posts","keywords": "go","wordcount":  6072 ,
+        "url": "http:\/\/example.org\/go-slice\/","datePublished": "2021-11-21T20:57:22+08:00","dateModified": "2021-11-21T20:57:22+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "CC"
+            },"description": "Go语言切片实现原理"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="CC&#39;s Blog">CC&#39;Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Go Slice</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-21">2021-11-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6072 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 13 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#数据结构">数据结构</a></li>
+    <li><a href="#初始化">初始化</a></li>
+    <li><a href="#访问元素">访问元素</a></li>
+    <li><a href="#追加和扩容">追加和扩容</a></li>
+    <li><a href="#拷贝切片">拷贝切片</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>数组在Go语言中没那么常用，更常用的数据结构是切片，即动态数组，其长度并不固定，我们可以向切片中追加元素，它会在容量不足时自动扩容。</p>
+<p>在Go语言中，切片类型的声明方式和数组有一些相似，不过由于切片的长度是动态的，所以声明时只需要指定切片中的元素类型</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="p">[]</span><span class="kt">int</span>
+<span class="p">[]</span><span class="kd">interface</span><span class="p">{}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>从切片的定义我们能推测出，切片在编译期间生成的类型会包含切片中的元素类型，即<code>int</code>或者<code>interface()</code>等。<code>cmd/compile/internal/type.NewSlice</code>就是编译期间用于创建切片类型的函数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">NewSlice</span><span class="p">(</span><span class="nx">elem</span> <span class="o">*</span><span class="nx">Type</span><span class="p">)</span> <span class="o">*</span><span class="nx">Type</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">t</span> <span class="o">:=</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">Cache</span><span class="p">.</span><span class="nx">slice</span><span class="p">;</span> <span class="nx">t</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="nx">t</span><span class="p">.</span><span class="nf">Elem</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">elem</span> <span class="p">{</span>
+            <span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;elem mismatch&#34;</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">t</span>
+    <span class="p">}</span>
+
+    <span class="nx">t</span> <span class="o">:=</span> <span class="nf">New</span><span class="p">(</span><span class="nx">TSLICE</span><span class="p">)</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">Extra</span> <span class="p">=</span> <span class="nx">Slice</span><span class="p">{</span>
+        <span class="nx">Elem</span><span class="p">:</span> <span class="nx">elem</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="nx">elem</span><span class="p">.</span><span class="nx">Cache</span><span class="p">.</span><span class="nx">slice</span> <span class="p">=</span> <span class="nx">t</span>
+    <span class="k">return</span> <span class="nx">t</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述方法返回结构体重的<code>Extra</code>字段是一个只包含切片内元素类型的结构，也就是说切片内元素的类型都是在编译期间确定的，编译器确定了类型之后，会将类型存储在<code>Extra</code>字段中帮助程序在运行时动态获取。</p>
+<h2 id="数据结构">数据结构</h2>
+<p>编译期间的切片是<code>cmd/compile/internal/type.Slice</code>类型的，但是在运行时切片可以由如下<code>reflect.SliceHeader</code>结构体表示，其中</p>
+<ul>
+<li><code>Data</code> 是指向数组的指针</li>
+<li><code>Len</code> 是当前切片的长度</li>
+<li><code>Cap</code> 是当前切片的容量，即<code>Data</code>数组的大小</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">SliceHeader</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Data</span>    <span class="kt">uintptr</span>
+    <span class="nx">Len</span>     <span class="kt">int</span>
+    <span class="nx">Cap</span>     <span class="kt">int</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>Data</code>是一片连续的内存空间，这片内存空间可以用于存储切片中的全部元素，数组中的元素只是逻辑上的概念，底层存储其实都是连续的，所以我们可以将切片理解成一片连续的内存空间加上长度和容量的标识</p>
+<p><figure><a class="lightgallery" href="/images/golang-slice-struct.png" title="&amp;ldquo;Go语言切片结构体&amp;rdquo;" data-thumbnail="/images/golang-slice-struct.png" data-sub-html="<h2>Go语言切片结构体</h2><p>&amp;ldquo;Go语言切片结构体&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/golang-slice-struct.png"
+            data-srcset="/images/golang-slice-struct.png, /images/golang-slice-struct.png 1.5x, /images/golang-slice-struct.png 2x"
+            data-sizes="auto"
+            alt="/images/golang-slice-struct.png" />
+    </a><figcaption class="image-caption">Go语言切片结构体</figcaption>
+    </figure></p>
+<p>从上图中，我们会发现切片和数组的关系非常密切，切片引入了一个抽象层，提供了对数组中部分连续片段的引用，而作为数组的引用，我们可以在运行区间修改它的长度和范围。当切片底层的数组长度不足时就会触发扩容，切片指向的数组可能会发生变化，不过在上层看来切片是没有变化的，上层只需要与切片打交道不需要关心数组的变化</p>
+<p>编译器在编译期间简化了获取数组大小、读写数组中的元素等操作：因为数组的内存固定且连续，多数操作都会直接读写内存的特定位置。但是切片是运行时才会确定内容的结构，所有操作还需要依赖Go语言的运行时。</p>
+<h2 id="初始化">初始化</h2>
+<p>Go语言包含三种初始化切片的方式</p>
+<ol>
+<li>通过下标的方式获得数组或者切片的一部分</li>
+<li>使用字面量初始化新的切片</li>
+<li>使用关键字<code>make</code>创建切片</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="nx">or</span> <span class="nx">slice</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+<span class="nx">slice</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+<span class="nx">slice</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>使用下标</strong></p>
+<p>使用下标创建切片是最原始也最接近汇编语言的方式，它是所有方法中最为底层的一种，编译器会将<code>arr[0:3]</code>或者<code>slice[0:3]</code>等语句转换成<code>OpSliceMake</code>操作，可以通过下面代码来验证</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">opslicemake</span>
+
+<span class="kd">func</span> <span class="nf">newSlice</span><span class="p">()</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{</span>
+    <span class="nx">arr</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="nx">slice</span> <span class="o">:=</span> <span class="nx">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nx">slice</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>通过<code>GOSSAFUNC</code>变量编译上述代码可以得到一系列SSA中间代码，其中<code>slice := arr[0:1]</code>语句在&quot;decompose builtin&quot;阶段对应的代码如下所示</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nf">v27</span> <span class="p">(</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span> <span class="p">=</span> <span class="nx">SliceMake</span> <span class="p">&lt;[]</span><span class="kt">int</span><span class="p">&gt;</span> <span class="nx">v11</span> <span class="nx">v14</span> <span class="nx">v17</span>
+
+<span class="nx">name</span> <span class="o">&amp;</span><span class="nx">arr</span><span class="p">[</span><span class="o">*</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">]:</span> <span class="nx">v11</span>
+<span class="nx">name</span> <span class="nx">slice</span><span class="p">.</span><span class="nx">ptr</span><span class="p">[</span><span class="o">*</span><span class="kt">int</span><span class="p">]:</span> <span class="nx">v11</span>
+<span class="nx">name</span> <span class="nx">slice</span><span class="p">.</span><span class="nx">len</span><span class="p">[</span><span class="kt">int</span><span class="p">]:</span> <span class="nx">v14</span>
+<span class="nx">name</span> <span class="nx">slice</span><span class="p">.</span><span class="nx">cap</span><span class="p">[</span><span class="kt">int</span><span class="p">]:</span> <span class="nx">v17</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>SliceMake</code>操作会接受四个参数创建新的切片，元素类型、数组指针、切片大小和容量，这也是我们在数据结构一节中提到的切片的几个字段，需要注意的是使用下标初始化切片不会拷贝原数组或者切片中的数据，它只会创建一个指向原数组的切片结构体，所以修改新切片的数据也会修改原切片</p>
+<p><strong>字面量</strong></p>
+<p>当使用字面量<code>[]int{1, 2, 3}</code>创建新的切片时，<code>cmd/compile/internal/gc.slicelit</code>函数会在编译期间将它展开成如下所示的代码片段</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">vstat</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span>
+<span class="nx">vstat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">1</span>
+<span class="nx">vstat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="mi">2</span>
+<span class="nx">vstat</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="kd">var</span> <span class="nx">vauto</span> <span class="o">*</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span> <span class="p">=</span> <span class="nb">new</span><span class="p">([</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+<span class="o">*</span><span class="nx">vauto</span> <span class="p">=</span> <span class="nx">vstat</span>
+<span class="nx">slice</span> <span class="o">:=</span> <span class="nx">vauto</span><span class="p">[:]</span>
+</code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>根绝切片中的元素数量对底层数据的大小进行推断并创建一个数组</li>
+<li>将这些字面量元素存储到初始化的数组中</li>
+<li>创建一个同样指向<code>[3]int</code>类型的数组指针</li>
+<li>将静态存储区的数组<code>vstat</code>赋值给<code>vauto</code>指针所在的地址</li>
+<li>通过<code>[:]</code>操作获取一个底层使用<code>vauto</code>的切片</li>
+</ol>
+<p>第五步中的<code>[:]</code>就是使用下标创建切片的方法，从这一点我们也能看出<code>[:]</code>操作切片最底层的一种方法</p>
+<p><strong>关键字</strong></p>
+<p>如果使用字面量的方式创建切片，大部分工作都会在编译期间完成。但是当我们使用<code>make</code>关键字创建切片时，很多工作都需要运行时参与；调用方必须向<code>make</code>函数传入切片的大小以及可选的容量，类型检查期间的<code>cmd/compile/internal/gc.typecheck1</code>函数会校验入参</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">typecheck1</span><span class="p">(</span><span class="nx">n</span> <span class="o">*</span><span class="nx">Node</span><span class="p">,</span> <span class="nx">top</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">res</span> <span class="o">*</span><span class="nx">Node</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">switch</span> <span class="nx">n</span><span class="p">.</span><span class="nx">Op</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="k">case</span> <span class="nx">OMAKE</span><span class="p">:</span>
+		<span class="nx">args</span> <span class="o">:=</span> <span class="nx">n</span><span class="p">.</span><span class="nx">List</span><span class="p">.</span><span class="nf">Slice</span><span class="p">()</span>
+
+		<span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span>
+		<span class="k">switch</span> <span class="nx">t</span><span class="p">.</span><span class="nx">Etype</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">TSLICE</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nf">yyerror</span><span class="p">(</span><span class="s">&#34;missing len argument to make(%v)&#34;</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span>
+				<span class="k">return</span> <span class="nx">n</span>
+			<span class="p">}</span>
+
+			<span class="nx">l</span> <span class="p">=</span> <span class="nx">args</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+			<span class="nx">i</span><span class="o">++</span>
+			<span class="kd">var</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">Node</span>
+			<span class="k">if</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">r</span> <span class="p">=</span> <span class="nx">args</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+			<span class="p">}</span>
+			<span class="o">...</span>
+			<span class="k">if</span> <span class="nf">Isconst</span><span class="p">(</span><span class="nx">l</span><span class="p">,</span> <span class="nx">CTINT</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">r</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="nf">Isconst</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">CTINT</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span><span class="p">.</span><span class="nf">Val</span><span class="p">().</span><span class="nx">U</span><span class="p">.(</span><span class="o">*</span><span class="nx">Mpint</span><span class="p">).</span><span class="nf">Cmp</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nf">Val</span><span class="p">().</span><span class="nx">U</span><span class="p">.(</span><span class="o">*</span><span class="nx">Mpint</span><span class="p">))</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+				<span class="nf">yyerror</span><span class="p">(</span><span class="s">&#34;len larger than cap in make(%v)&#34;</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span>
+				<span class="k">return</span> <span class="nx">n</span>
+			<span class="p">}</span>
+
+			<span class="nx">n</span><span class="p">.</span><span class="nx">Left</span> <span class="p">=</span> <span class="nx">l</span>
+			<span class="nx">n</span><span class="p">.</span><span class="nx">Right</span> <span class="p">=</span> <span class="nx">r</span>
+			<span class="nx">n</span><span class="p">.</span><span class="nx">Op</span> <span class="p">=</span> <span class="nx">OMAKESLICE</span>
+		<span class="p">}</span>
+	<span class="o">...</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的函数不仅会检查<code>len</code>是否传入，还会保证传入的容量<code>cap</code>一定大于或者等于<code>len</code>。除了校验参数之外，当前函数会将<code>OMAKE</code>节点转换成<code>OMAKESLICE</code>，中间代码生成的<code>cmd/compile/internal/gc.walkexpr</code>函数会依据下面两个条件转换<code>OMAKESLICE</code>类型的节点：</p>
+<ol>
+<li>切片的大小和容量是否足够小</li>
+<li>切片是否发生了逃逸，最终在堆上初始化</li>
+</ol>
+<p>当切片发生逃逸或者非常大时，运行时需要<code>runtime.makeslice</code>在堆上初始化切片，如果当前的切片不会发生逃逸并且切片非常小的时候，<code>make([]int, 3, 4)</code>会被直接转换成如下所示的代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">arr</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="kt">int</span>
+<span class="nx">n</span> <span class="o">:=</span> <span class="nx">arr</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述代码会初始化数组并通过下标<code>[:3]</code>得到数组对应的切片，这两部分都会在编译阶段完成，编译器会在栈上或者静态存储区创建数组并将<code>[:3]</code>转换成上一节提到的<code>OpSliceMake</code>操作</p>
+<p>分析了主要由编译器处理的分支后，我们回到用于创建切片时的运行时函数<code>runtime.makeslice</code>，这个函数的实现很简单：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">makeslice</span><span class="p">(</span><span class="nx">et</span> <span class="o">*</span><span class="nx">_type</span><span class="p">,</span> <span class="nx">len</span><span class="p">,</span> <span class="nx">cap</span> <span class="kt">int</span><span class="p">)</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span> <span class="p">{</span>
+	<span class="nx">mem</span><span class="p">,</span> <span class="nx">overflow</span> <span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nf">MulUintptr</span><span class="p">(</span><span class="nx">et</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">cap</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">overflow</span> <span class="o">||</span> <span class="nx">mem</span> <span class="p">&gt;</span> <span class="nx">maxAlloc</span> <span class="o">||</span> <span class="nx">len</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">len</span> <span class="p">&gt;</span> <span class="nx">cap</span> <span class="p">{</span>
+		<span class="nx">mem</span><span class="p">,</span> <span class="nx">overflow</span> <span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nf">MulUintptr</span><span class="p">(</span><span class="nx">et</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">len</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">overflow</span> <span class="o">||</span> <span class="nx">mem</span> <span class="p">&gt;</span> <span class="nx">maxAlloc</span> <span class="o">||</span> <span class="nx">len</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="nf">panicmakeslicelen</span><span class="p">()</span>
+		<span class="p">}</span>
+		<span class="nf">panicmakeslicecap</span><span class="p">()</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nf">mallocgc</span><span class="p">(</span><span class="nx">mem</span><span class="p">,</span> <span class="nx">et</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述函数的主要工作是计算切片占用的内存空间并在堆上申请一片连续的内存，它使用如下的方式计算占用的内存</p>
+<p>内存空间=切片中元素大小×切片容量</p>
+<p>虽然编译期间可以检查出很多错误，但是在创建切片的过程中如果发生了以下错误会直接出发运行时错误并崩溃：</p>
+<ol>
+<li>内存空间的大小发生了溢出</li>
+<li>申请的内存大于最大可支配的内存</li>
+<li>传入的长度小于0或者长度大于容量</li>
+</ol>
+<p><code>runtime.makeslice</code>在最后调用的<code>runtime.mallocgc</code>是用于申请内存的函数，这个函数的实现还是比较复杂的，如果遇到了比较小的对象会直接初始化在Go语言调度器里面的P结构中，而大于32KB的对象会在堆上初始化。</p>
+<p>在之前版本的Go语言中，数组指针、长度和容量会被合成一个<code>runtime.slice</code>结构，但是从<code>cmd/compile:move slice construction to callers of makeslice</code>提交之后，构建结构体<code>reflect.SliceHeader</code>的工作就交给了<code>runtime.makeslice</code>的调用方，该函数仅会返回指向底层数组的指针，调用方会在编译期间构建切片结构体：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">typecheck1</span><span class="p">(</span><span class="nx">n</span> <span class="o">*</span><span class="nx">Node</span><span class="p">,</span> <span class="nx">top</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">res</span> <span class="o">*</span><span class="nx">Node</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">switch</span> <span class="nx">n</span><span class="p">.</span><span class="nx">Op</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="k">case</span> <span class="nx">OSLICEHEADER</span><span class="p">:</span>
+	<span class="k">switch</span> 
+		<span class="nx">t</span> <span class="o">:=</span> <span class="nx">n</span><span class="p">.</span><span class="nx">Type</span>
+		<span class="nx">n</span><span class="p">.</span><span class="nx">Left</span> <span class="p">=</span> <span class="nf">typecheck</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Left</span><span class="p">,</span> <span class="nx">ctxExpr</span><span class="p">)</span>
+		<span class="nx">l</span> <span class="o">:=</span> <span class="nf">typecheck</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">List</span><span class="p">.</span><span class="nf">First</span><span class="p">(),</span> <span class="nx">ctxExpr</span><span class="p">)</span>
+		<span class="nx">c</span> <span class="o">:=</span> <span class="nf">typecheck</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">List</span><span class="p">.</span><span class="nf">Second</span><span class="p">(),</span> <span class="nx">ctxExpr</span><span class="p">)</span>
+		<span class="nx">l</span> <span class="p">=</span> <span class="nf">defaultlit</span><span class="p">(</span><span class="nx">l</span><span class="p">,</span> <span class="nx">types</span><span class="p">.</span><span class="nx">Types</span><span class="p">[</span><span class="nx">TINT</span><span class="p">])</span>
+		<span class="nx">c</span> <span class="p">=</span> <span class="nf">defaultlit</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">types</span><span class="p">.</span><span class="nx">Types</span><span class="p">[</span><span class="nx">TINT</span><span class="p">])</span>
+
+		<span class="nx">n</span><span class="p">.</span><span class="nx">List</span><span class="p">.</span><span class="nf">SetFirst</span><span class="p">(</span><span class="nx">l</span><span class="p">)</span>
+		<span class="nx">n</span><span class="p">.</span><span class="nx">List</span><span class="p">.</span><span class="nf">SetSecond</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+	<span class="o">...</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>OSLICEHEADER</code>操作会创建<code>reflect.SliceHeader</code>结构体，其中包含切片的长度和容量，它是切片在运行时的表示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">SliceHeader</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Data</span>    <span class="kt">uintptr</span>
+    <span class="nx">Len</span>     <span class="kt">int</span>
+    <span class="nx">Cap</span>     <span class="kt">int</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>正是因为大多数对切片类型的操作并不需要直接操作原来的<code>runtime.slice</code>结构体，所以<code>reflect.SliceHeader</code>的引入能够减少切片初始化时的少量开销，该改动不仅能够减少~0.2%的Go语言包大小，还能够减少92个<code>runtime.panicIndex</code>的调用，占Go语言二进制的~3.5%</p>
+<h2 id="访问元素">访问元素</h2>
+<p>使用<code>len</code>和<code>cap</code>获取长度或者容量是切片最常见的操作，编译器将它们看成两种特殊操作，即<code>OLEN</code>和<code>OCAP</code>，<code>cmd/compile/internal/gc.state.expr</code>函数会在SSA生成阶段将它们分别转换成<code>OpSliceLen</code>和<code>OpSliceCap</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">state</span><span class="p">)</span> <span class="nf">expr</span><span class="p">(</span><span class="nx">n</span> <span class="o">*</span><span class="nx">Node</span><span class="p">)</span> <span class="o">*</span><span class="nx">ssa</span><span class="p">.</span><span class="nx">Value</span> <span class="p">{</span>
+	<span class="k">switch</span> <span class="nx">n</span><span class="p">.</span><span class="nx">Op</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="nx">OLEN</span><span class="p">,</span> <span class="nx">OCAP</span><span class="p">:</span>
+		<span class="k">switch</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">n</span><span class="p">.</span><span class="nx">Left</span><span class="p">.</span><span class="nx">Type</span><span class="p">.</span><span class="nf">IsSlice</span><span class="p">():</span>
+			<span class="nx">op</span> <span class="o">:=</span> <span class="nx">ssa</span><span class="p">.</span><span class="nx">OpSliceLen</span>
+			<span class="k">if</span> <span class="nx">n</span><span class="p">.</span><span class="nx">Op</span> <span class="o">==</span> <span class="nx">OCAP</span> <span class="p">{</span>
+				<span class="nx">op</span> <span class="p">=</span> <span class="nx">ssa</span><span class="p">.</span><span class="nx">OpSliceCap</span>
+			<span class="p">}</span>
+			<span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nf">newValue1</span><span class="p">(</span><span class="nx">op</span><span class="p">,</span> <span class="nx">types</span><span class="p">.</span><span class="nx">Types</span><span class="p">[</span><span class="nx">TINT</span><span class="p">],</span> <span class="nx">s</span><span class="p">.</span><span class="nf">expr</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Left</span><span class="p">))</span>
+		<span class="o">...</span>
+		<span class="p">}</span>
+	<span class="o">...</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>访问切片中的字段可能会触发&quot;decompose builtin&quot;阶段的优化，<code>len(slice)</code>或者<code>cap(slice)</code>在一些情况下会直接替换成切片的长度或者容量，不需要在运行时获取</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="p">(</span><span class="nf">SlicePtr</span> <span class="p">(</span><span class="nx">SliceMake</span> <span class="nx">ptr</span> <span class="nx">_</span> <span class="nx">_</span> <span class="p">))</span> <span class="o">-</span><span class="p">&gt;</span> <span class="nf">ptr</span>
+<span class="p">(</span><span class="nf">SliceLen</span> <span class="p">(</span><span class="nx">SliceMake</span> <span class="nx">_</span> <span class="nx">len</span> <span class="nx">_</span><span class="p">))</span> <span class="o">-</span><span class="p">&gt;</span> <span class="nf">len</span>
+<span class="p">(</span><span class="nf">SliceCap</span> <span class="p">(</span><span class="nx">SliceMake</span> <span class="nx">_</span> <span class="nx">_</span> <span class="nx">cap</span><span class="p">))</span> <span class="o">-</span><span class="p">&gt;</span> <span class="nx">cap</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>除了直接获取切片的长度和容量之外，访问切片中元素使用<code>OINDEX</code>操作也会在中间代码生成期间转换成对地址的直接访问</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">state</span><span class="p">)</span> <span class="nf">expr</span><span class="p">(</span><span class="nx">n</span> <span class="o">*</span><span class="nx">Node</span><span class="p">)</span> <span class="o">*</span><span class="nx">ssa</span><span class="p">.</span><span class="nx">Value</span> <span class="p">{</span>
+	<span class="k">switch</span> <span class="nx">n</span><span class="p">.</span><span class="nx">Op</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="nx">OINDEX</span><span class="p">:</span>
+		<span class="k">switch</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">n</span><span class="p">.</span><span class="nx">Left</span><span class="p">.</span><span class="nx">Type</span><span class="p">.</span><span class="nf">IsSlice</span><span class="p">():</span>
+			<span class="nx">p</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nf">addr</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+			<span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">Left</span><span class="p">.</span><span class="nx">Type</span><span class="p">.</span><span class="nf">Elem</span><span class="p">(),</span> <span class="nx">p</span><span class="p">)</span>
+		<span class="o">...</span>
+		<span class="p">}</span>
+	<span class="o">...</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>切片的操作基本都是在编译期间完成的，除了访问切片的长度、容量或者其中的元素之外，编译期间也会将包含<code>range</code>关键字的遍历转换成形式更简单的循环</p>
+<h2 id="追加和扩容">追加和扩容</h2>
+<p>使用<code>append</code>关键字向切片中追加元素也是常见的切片操作，中间代码生成阶段的<code>cmd/compile/internal/gc.state.append</code>方法会根据返回值是否会覆盖原变量，选择进入两种流程，如果<code>append</code>返回的新切片不需要赋值回原有的变量，就会进入如下的处理流程：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// append(slice, 1, 2, 3)
+</span><span class="c1"></span><span class="nx">ptr</span><span class="p">,</span> <span class="nx">len</span><span class="p">,</span> <span class="nx">cap</span> <span class="o">:=</span> <span class="nx">slice</span>
+<span class="nx">newlen</span> <span class="o">:=</span> <span class="nx">len</span> <span class="o">+</span> <span class="mi">3</span>
+<span class="k">if</span> <span class="nx">newlen</span> <span class="p">&gt;</span> <span class="nx">cap</span> <span class="p">{</span>
+    <span class="nx">ptr</span><span class="p">,</span> <span class="nx">len</span><span class="p">,</span> <span class="nx">cap</span> <span class="p">=</span> <span class="nf">growslice</span><span class="p">(</span><span class="nx">slice</span><span class="p">,</span> <span class="nx">newlen</span><span class="p">)</span>
+    <span class="nx">newlen</span> <span class="p">=</span> <span class="nx">len</span> <span class="o">+</span> <span class="mi">3</span>
+<span class="p">}</span>
+<span class="o">*</span><span class="p">(</span><span class="nx">ptr</span><span class="o">+</span><span class="nx">len</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span>
+<span class="o">*</span><span class="p">(</span><span class="nx">ptr</span><span class="o">+</span><span class="nx">len</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span>
+<span class="o">*</span><span class="p">(</span><span class="nx">ptr</span><span class="o">+</span><span class="nx">len</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="k">return</span> <span class="nf">makeslice</span><span class="p">(</span><span class="nx">ptr</span><span class="p">,</span> <span class="nx">newlen</span><span class="p">,</span> <span class="nx">cap</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们会先解构切片结构体获取它的数组指针、大小和容量，如果在追加元素后切片的大小大于容量，那么就会调用<code>runtime.growslice</code>对切片进行扩容并将新的元素依次加入切片。</p>
+<p>如果使用<code>slice = append(slice, 1, 2, 3)</code>语句，那么 append 后的切片会覆盖原切片，这时<code>cmd/compile/internal/gc.state.append</code>方法会使用另一种方式展开关键字：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// slice = append(slice, 1, 2, 3)
+</span><span class="c1"></span><span class="nx">a</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">slice</span>
+<span class="nx">ptr</span><span class="p">,</span> <span class="nx">len</span><span class="p">,</span> <span class="nx">cap</span> <span class="o">:=</span> <span class="nx">slice</span>
+<span class="nx">newlen</span> <span class="o">:=</span> <span class="nx">len</span> <span class="o">+</span> <span class="mi">3</span>
+<span class="k">if</span> <span class="nb">uint</span><span class="p">(</span><span class="nx">newlen</span><span class="p">)</span> <span class="p">&gt;</span> <span class="nb">uint</span><span class="p">(</span><span class="nx">cap</span><span class="p">)</span> <span class="p">{</span>
+   <span class="nx">newptr</span><span class="p">,</span> <span class="nx">len</span><span class="p">,</span> <span class="nx">newcap</span> <span class="p">=</span> <span class="nf">growslice</span><span class="p">(</span><span class="nx">slice</span><span class="p">,</span> <span class="nx">newlen</span><span class="p">)</span>
+   <span class="nf">vardef</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+   <span class="o">*</span><span class="nx">a</span><span class="p">.</span><span class="nx">cap</span> <span class="p">=</span> <span class="nx">newcap</span>
+   <span class="o">*</span><span class="nx">a</span><span class="p">.</span><span class="nx">ptr</span> <span class="p">=</span> <span class="nx">newptr</span>
+<span class="p">}</span>
+<span class="nx">newlen</span> <span class="p">=</span> <span class="nx">len</span> <span class="o">+</span> <span class="mi">3</span>
+<span class="o">*</span><span class="nx">a</span><span class="p">.</span><span class="nx">len</span> <span class="p">=</span> <span class="nx">newlen</span>
+<span class="o">*</span><span class="p">(</span><span class="nx">ptr</span><span class="o">+</span><span class="nx">len</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span>
+<span class="o">*</span><span class="p">(</span><span class="nx">ptr</span><span class="o">+</span><span class="nx">len</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span>
+<span class="o">*</span><span class="p">(</span><span class="nx">ptr</span><span class="o">+</span><span class="nx">len</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="p">=</span> <span class="mi">3</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>是否覆盖原变量的逻辑其实差不多，最大的区别在于得到的新切片是否会赋值回原变量。如果我们选择覆盖原有的变量，就不需要担心切片发生拷贝影响性能，因为Go语言编译器已经对这种常见的情况做出了优化。</p>
+<p><figure><a class="lightgallery" href="/images/golang-slice-append.png" title="&amp;ldquo;Go语言的切片追加元素&amp;rdquo;" data-thumbnail="/images/golang-slice-append.png" data-sub-html="<h2>Go语言的切片追加元素</h2><p>&amp;ldquo;Go语言的切片追加元素&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/golang-slice-append.png"
+            data-srcset="/images/golang-slice-append.png, /images/golang-slice-append.png 1.5x, /images/golang-slice-append.png 2x"
+            data-sizes="auto"
+            alt="/images/golang-slice-append.png" />
+    </a><figcaption class="image-caption">Go语言的切片追加元素</figcaption>
+    </figure></p>
+<p>到这里我们已经清楚了Go语言如何在切片容量足够时向切片中追加元素，不过仍然需要研究切片容量不足时的处理流程。当切片的容量不足时，我们会调用<code>runtime.growslice</code>函数为切片扩容，扩容是为切片分配新的内存空间并拷贝原切片中元素的过程，我们先来看新切片的容量是如何确定的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">growslice</span><span class="p">(</span><span class="nx">et</span> <span class="o">*</span><span class="nx">_type</span><span class="p">,</span> <span class="nx">old</span> <span class="nx">slice</span><span class="p">,</span> <span class="nx">cap</span> <span class="kt">int</span><span class="p">)</span> <span class="nx">slice</span> <span class="p">{</span>
+	<span class="nx">newcap</span> <span class="o">:=</span> <span class="nx">old</span><span class="p">.</span><span class="nx">cap</span>
+	<span class="nx">doublecap</span> <span class="o">:=</span> <span class="nx">newcap</span> <span class="o">+</span> <span class="nx">newcap</span>
+	<span class="k">if</span> <span class="nx">cap</span> <span class="p">&gt;</span> <span class="nx">doublecap</span> <span class="p">{</span>
+		<span class="nx">newcap</span> <span class="p">=</span> <span class="nx">cap</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">old</span><span class="p">.</span><span class="nx">len</span> <span class="p">&lt;</span> <span class="mi">1024</span> <span class="p">{</span>
+			<span class="nx">newcap</span> <span class="p">=</span> <span class="nx">doublecap</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="k">for</span> <span class="mi">0</span> <span class="p">&lt;</span> <span class="nx">newcap</span> <span class="o">&amp;&amp;</span> <span class="nx">newcap</span> <span class="p">&lt;</span> <span class="nx">cap</span> <span class="p">{</span>
+				<span class="nx">newcap</span> <span class="o">+=</span> <span class="nx">newcap</span> <span class="o">/</span> <span class="mi">4</span>
+			<span class="p">}</span>
+			<span class="k">if</span> <span class="nx">newcap</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
+				<span class="nx">newcap</span> <span class="p">=</span> <span class="nx">cap</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在分配内存空间之前需要先确定新的切片容量，运行时根据切片的当前容量选择不同的策略进行扩容：</p>
+<ol>
+<li>如果期望容量大于当前容量的两倍就会使用期望容量；</li>
+<li>如果当前切片的长度小于 1024 就会将容量翻倍；</li>
+<li>如果当前切片的长度大于 1024 就会每次增加 25% 的容量，直到新容量大于期望容量；</li>
+</ol>
+<p>上述代码片段仅会确定切片的大致容量，下面还需要根据切片中的元素大小对齐内存，当数组中元素所占的字节大小为 1、8 或者 2 的倍数时，运行时会使用如下所示的代码对齐内存：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="kd">var</span> <span class="nx">overflow</span> <span class="kt">bool</span>
+	<span class="kd">var</span> <span class="nx">lenmem</span><span class="p">,</span> <span class="nx">newlenmem</span><span class="p">,</span> <span class="nx">capmem</span> <span class="kt">uintptr</span>
+	<span class="k">switch</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="nx">et</span><span class="p">.</span><span class="nx">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+		<span class="nx">lenmem</span> <span class="p">=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">old</span><span class="p">.</span><span class="nx">len</span><span class="p">)</span>
+		<span class="nx">newlenmem</span> <span class="p">=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">cap</span><span class="p">)</span>
+		<span class="nx">capmem</span> <span class="p">=</span> <span class="nf">roundupsize</span><span class="p">(</span><span class="nb">uintptr</span><span class="p">(</span><span class="nx">newcap</span><span class="p">))</span>
+		<span class="nx">overflow</span> <span class="p">=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">newcap</span><span class="p">)</span> <span class="p">&gt;</span> <span class="nx">maxAlloc</span>
+		<span class="nx">newcap</span> <span class="p">=</span> <span class="nb">int</span><span class="p">(</span><span class="nx">capmem</span><span class="p">)</span>
+	<span class="k">case</span> <span class="nx">et</span><span class="p">.</span><span class="nx">size</span> <span class="o">==</span> <span class="nx">sys</span><span class="p">.</span><span class="nx">PtrSize</span><span class="p">:</span>
+		<span class="nx">lenmem</span> <span class="p">=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">old</span><span class="p">.</span><span class="nx">len</span><span class="p">)</span> <span class="o">*</span> <span class="nx">sys</span><span class="p">.</span><span class="nx">PtrSize</span>
+		<span class="nx">newlenmem</span> <span class="p">=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">cap</span><span class="p">)</span> <span class="o">*</span> <span class="nx">sys</span><span class="p">.</span><span class="nx">PtrSize</span>
+		<span class="nx">capmem</span> <span class="p">=</span> <span class="nf">roundupsize</span><span class="p">(</span><span class="nb">uintptr</span><span class="p">(</span><span class="nx">newcap</span><span class="p">)</span> <span class="o">*</span> <span class="nx">sys</span><span class="p">.</span><span class="nx">PtrSize</span><span class="p">)</span>
+		<span class="nx">overflow</span> <span class="p">=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">newcap</span><span class="p">)</span> <span class="p">&gt;</span> <span class="nx">maxAlloc</span><span class="o">/</span><span class="nx">sys</span><span class="p">.</span><span class="nx">PtrSize</span>
+		<span class="nx">newcap</span> <span class="p">=</span> <span class="nb">int</span><span class="p">(</span><span class="nx">capmem</span> <span class="o">/</span> <span class="nx">sys</span><span class="p">.</span><span class="nx">PtrSize</span><span class="p">)</span>
+	<span class="k">case</span> <span class="nf">isPowerOfTwo</span><span class="p">(</span><span class="nx">et</span><span class="p">.</span><span class="nx">size</span><span class="p">):</span>
+		<span class="o">...</span>
+	<span class="k">default</span><span class="p">:</span>
+		<span class="o">...</span>
+	<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>runtime.roundupsize</code>函数会将待申请的内存向上取整，取整时会使用<code>runtime.class_to_size</code>数组，使用该数组中的整数可以提高内存的分配效率并减少碎片，我们会在内存分配一节详细介绍该数组的作用：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">class_to_size</span> <span class="p">=</span> <span class="p">[</span><span class="nx">_NumSizeClasses</span><span class="p">]</span><span class="kt">uint16</span><span class="p">{</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="mi">8</span><span class="p">,</span>
+    <span class="mi">16</span><span class="p">,</span>
+    <span class="mi">32</span><span class="p">,</span>
+    <span class="mi">48</span><span class="p">,</span>
+    <span class="mi">64</span><span class="p">,</span>
+    <span class="mi">80</span><span class="p">,</span>
+    <span class="o">...</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在默认情况下，我们会将目标容量和元素大小相乘得到占用的内存。如果计算新容量时发生了内存溢出或者请求内存超过上限，就会直接崩溃退出程序，不过这里为了减少理解的成本，将相关的代码省略了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="kd">var</span> <span class="nx">overflow</span> <span class="kt">bool</span>
+	<span class="kd">var</span> <span class="nx">newlenmem</span><span class="p">,</span> <span class="nx">capmem</span> <span class="kt">uintptr</span>
+	<span class="k">switch</span> <span class="p">{</span>
+	<span class="o">...</span>
+	<span class="k">default</span><span class="p">:</span>
+		<span class="nx">lenmem</span> <span class="p">=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">old</span><span class="p">.</span><span class="nx">len</span><span class="p">)</span> <span class="o">*</span> <span class="nx">et</span><span class="p">.</span><span class="nx">size</span>
+		<span class="nx">newlenmem</span> <span class="p">=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">cap</span><span class="p">)</span> <span class="o">*</span> <span class="nx">et</span><span class="p">.</span><span class="nx">size</span>
+		<span class="nx">capmem</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">math</span><span class="p">.</span><span class="nf">MulUintptr</span><span class="p">(</span><span class="nx">et</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">newcap</span><span class="p">))</span>
+		<span class="nx">capmem</span> <span class="p">=</span> <span class="nf">roundupsize</span><span class="p">(</span><span class="nx">capmem</span><span class="p">)</span>
+		<span class="nx">newcap</span> <span class="p">=</span> <span class="nb">int</span><span class="p">(</span><span class="nx">capmem</span> <span class="o">/</span> <span class="nx">et</span><span class="p">.</span><span class="nx">size</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+	<span class="kd">var</span> <span class="nx">p</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span>
+	<span class="k">if</span> <span class="nx">et</span><span class="p">.</span><span class="nx">kind</span><span class="o">&amp;</span><span class="nx">kindNoPointers</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">p</span> <span class="p">=</span> <span class="nf">mallocgc</span><span class="p">(</span><span class="nx">capmem</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+		<span class="nf">memclrNoHeapPointers</span><span class="p">(</span><span class="nf">add</span><span class="p">(</span><span class="nx">p</span><span class="p">,</span> <span class="nx">newlenmem</span><span class="p">),</span> <span class="nx">capmem</span><span class="o">-</span><span class="nx">newlenmem</span><span class="p">)</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="nx">p</span> <span class="p">=</span> <span class="nf">mallocgc</span><span class="p">(</span><span class="nx">capmem</span><span class="p">,</span> <span class="nx">et</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">writeBarrier</span><span class="p">.</span><span class="nx">enabled</span> <span class="p">{</span>
+			<span class="nf">bulkBarrierPreWriteSrcOnly</span><span class="p">(</span><span class="nb">uintptr</span><span class="p">(</span><span class="nx">p</span><span class="p">),</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">old</span><span class="p">.</span><span class="nx">array</span><span class="p">),</span> <span class="nx">lenmem</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="nf">memmove</span><span class="p">(</span><span class="nx">p</span><span class="p">,</span> <span class="nx">old</span><span class="p">.</span><span class="nx">array</span><span class="p">,</span> <span class="nx">lenmem</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">slice</span><span class="p">{</span><span class="nx">p</span><span class="p">,</span> <span class="nx">old</span><span class="p">.</span><span class="nx">len</span><span class="p">,</span> <span class="nx">newcap</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>如果切片中的元素不是指针类型，那么会调用<code>runtime.memclrNoHeapPointers</code>将超出切片当前长度的位置清空并在最后使用<code>runtime.memmove</code>将原数组内存中的内容拷贝到新申请的内存中。</p>
+<p><code>runtime.growslice</code>函数最终会返回一个新的切片，其中包含了新的数组指针、大小和容量，这个返回的三元组最终会覆盖原切片</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">arr</span> <span class="p">[]</span><span class="kt">int64</span>
+<span class="nx">arr</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>简单总结一下扩容的过程，当我们执行上述代码时，会触发<code>runtime.growslice</code>函数扩容<code>arr</code>切片并传入期望的新容量5，这时期望分配的内存大小为40字节；不过因为切片中的元素大小等于<code>sys.PtrSize</code>，所以运行时会调用<code>runtime.roundupsize</code>向上取整内存的大小到48字节，所以心切片的容量为48/8=6。</p>
+<h2 id="拷贝切片">拷贝切片</h2>
+<p>切片的拷贝虽然不是常见的操作，但是确实我们学习切片实现原理必须要涉及的。当我们使用<code>copy(a, b)</code>的形式对切片进行拷贝时，编译期间的<code>cmd/compile/internal/gc.copyany</code>也会分两种情况进行处理拷贝操作，如果当前<code>copy</code>不是在运行时调用的，<code>copy(a, b)</code>会被直接转换成下面的代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">n</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<span class="k">if</span> <span class="nx">n</span> <span class="p">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">n</span> <span class="p">=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="nx">a</span><span class="p">.</span><span class="nx">ptr</span> <span class="o">!=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">ptr</span> <span class="p">{</span>
+    <span class="nf">memmove</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">ptr</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">ptr</span><span class="p">,</span> <span class="nx">n</span><span class="o">*</span><span class="nf">sizeof</span><span class="p">(</span><span class="nf">elem</span><span class="p">(</span><span class="nx">a</span><span class="p">)))</span> 
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述代码中的<code>runtime.memmove</code>会负责拷贝内存。而如果拷贝是在运行时发生的，例如<code>go copy(a, b)</code>，编译器会使用<code>runtime.slicecopy</code>替换运行期间调用的<code>copy</code>，该函数的实现很简单：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">slicecopy</span><span class="p">(</span><span class="nx">to</span><span class="p">,</span> <span class="nx">fm</span> <span class="nx">slice</span><span class="p">,</span> <span class="nx">width</span> <span class="kt">uintptr</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">fm</span><span class="p">.</span><span class="nx">len</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">to</span><span class="p">.</span><span class="nx">len</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">0</span>
+	<span class="p">}</span>
+	<span class="nx">n</span> <span class="o">:=</span> <span class="nx">fm</span><span class="p">.</span><span class="nx">len</span>
+	<span class="k">if</span> <span class="nx">to</span><span class="p">.</span><span class="nx">len</span> <span class="p">&lt;</span> <span class="nx">n</span> <span class="p">{</span>
+		<span class="nx">n</span> <span class="p">=</span> <span class="nx">to</span><span class="p">.</span><span class="nx">len</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="nx">width</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">n</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+
+	<span class="nx">size</span> <span class="o">:=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="o">*</span> <span class="nx">width</span>
+	<span class="k">if</span> <span class="nx">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">{</span>
+		<span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="kt">byte</span><span class="p">)(</span><span class="nx">to</span><span class="p">.</span><span class="nx">array</span><span class="p">)</span> <span class="p">=</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="kt">byte</span><span class="p">)(</span><span class="nx">fm</span><span class="p">.</span><span class="nx">array</span><span class="p">)</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="nf">memmove</span><span class="p">(</span><span class="nx">to</span><span class="p">.</span><span class="nx">array</span><span class="p">,</span> <span class="nx">fm</span><span class="p">.</span><span class="nx">array</span><span class="p">,</span> <span class="nx">size</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">n</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>无论是编译期间拷贝还是运行时拷贝，两种拷贝方式都会通过<code>runtime.memmove</code>将整块内存的内容拷贝到目标的内存区域中：</p>
+<p><figure><a class="lightgallery" href="/images/golang-slice-copy.png" title="&amp;ldquo;Go语言切片的拷贝&amp;rdquo;" data-thumbnail="/images/golang-slice-copy.png" data-sub-html="<h2>Go语言切片的拷贝</h2><p>&amp;ldquo;Go语言切片的拷贝&amp;rdquo;</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/golang-slice-copy.png"
+            data-srcset="/images/golang-slice-copy.png, /images/golang-slice-copy.png 1.5x, /images/golang-slice-copy.png 2x"
+            data-sizes="auto"
+            alt="/images/golang-slice-copy.png" />
+    </a><figcaption class="image-caption">Go语言切片的拷贝</figcaption>
+    </figure></p>
+<p>相比于依次拷贝元素，<code>runtime.memmove</code>能够提供更好的性能。需要注意的是，整块拷贝内存仍然会占用非常多的资源，在大切片上执行拷贝操作时一定要注意对性能的影响</p>
+<h2 id="小结">小结</h2>
+<p>切片的很多功能都是由运行时实现的，无论是初始化切片，还是对切片进行追加或扩容都需要运行时的支持，需要注意的是在遇到大切片扩容或者复制时可能会发生大规模的内存拷贝，一定要减少类似操作避免影响程序的性能</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-11-21</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/go-slice/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/go-slice/" data-title="Go Slice" data-via="xxxx" data-hashtags="go"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://example.org/go-slice/" data-hashtag="go"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 WhatsApp" data-sharer="whatsapp" data-url="http://example.org/go-slice/" data-title="Go Slice" data-web><i class="fab fa-whatsapp fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/go-slice/" data-title="Go Slice"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/go-slice/" data-title="Go Slice"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Myspace" data-sharer="myspace" data-url="http://example.org/go-slice/" data-title="Go Slice" data-description="Go语言切片实现原理"><i data-svg-src="/lib/simple-icons/icons/myspace.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/go-slice/" data-title="Go Slice" data-description="Go语言切片实现原理"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/go-slice/" data-title="Go Slice"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/go/">go</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/go-array/" class="prev" rel="prev" title="Go语言数组实现原理"><i class="fas fa-angle-left fa-fw"></i>Go语言数组实现原理</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">CC</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
