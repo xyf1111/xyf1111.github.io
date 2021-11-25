@@ -3,7 +3,14 @@
         <title>所有文章 - CC&#39;s Blog</title>
         <link>http://example.org/posts/</link>
         <description>所有文章 | CC&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 21 Nov 2021 20:57:22 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 24 Nov 2021 16:03:46 &#43;0800</lastBuildDate><atom:link href="http://example.org/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Go Hash</title>
+    <link>http://example.org/go-hash/</link>
+    <pubDate>Wed, 24 Nov 2021 16:03:46 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/go-hash/</guid>
+    <description><![CDATA[本节会介绍Go语言的哈希的实现原理，哈希是除了数组之外，最常见的数据结构。几乎所有的语言都会有数组和哈希表两种集合元素，有的语言将数组实现成]]></description>
+</item><item>
     <title>Go Slice</title>
     <link>http://example.org/go-slice/</link>
     <pubDate>Sun, 21 Nov 2021 20:57:22 &#43;0800</pubDate>
@@ -66,12 +73,5 @@
     <author>作者</author>
     <guid>http://example.org/20211028sighwithemotion/</guid>
     <description><![CDATA[刺激的周一下午 日常开发的周一下午（2021年10月25日），午睡完之后怀疑人生的一段悠闲时光过后，刚要把一个commit提交。忽然一声大喝：]]></description>
-</item><item>
-    <title>RabbitMQ6</title>
-    <link>http://example.org/rabbitmq6/</link>
-    <pubDate>Wed, 29 Sep 2021 20:49:11 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>http://example.org/rabbitmq6/</guid>
-    <description><![CDATA[远程过程调用(RPC) 在第二个教程中，我们学会了如何使用工作队列在多个worker之间分配耗时的任务。 但是，如果我们需要在远程计算机上运行函]]></description>
 </item></channel>
 </rss>
