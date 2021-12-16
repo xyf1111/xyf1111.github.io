@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/interview-2021-04-06\/"
-        },"genre": "posts","keywords": "面试","wordcount":  147 ,
+        },"genre": "posts","keywords": "面试","wordcount":  989 ,
         "url": "http:\/\/example.org\/interview-2021-04-06\/","datePublished": "2021-04-06T12:38:56+08:00","dateModified": "2021-04-06T12:38:56+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,8 +106,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Interview 2021 04 06</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E9%9D%A2%E8%AF%95/"><i class="far fa-folder fa-fw"></i>面试</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-06">2021-04-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 147 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 1 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-06">2021-04-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 989 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -128,21 +128,79 @@
     <li><a href="#orm使用的什么">orm使用的什么</a></li>
     <li><a href="#mysql的存储引擎">mysql的存储引擎</a></li>
     <li><a href="#go读写锁的使用">go读写锁的使用</a></li>
+    <li><a href="#redis分布式锁">redis分布式锁</a></li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="自我介绍">自我介绍</h2>
 <h2 id="说一下mvc架构">说一下MVC架构</h2>
 <h2 id="slice切片的概念">slice切片的概念</h2>
+<p>在Go中slice不仅是一个切片动作，还是一种数据结构。</p>
+<p>slice结构都由三部分组成：容量，长度和指向底层数组某元素的指针。</p>
+<p>虽然nil slice和空slice的长度和容量虽然都为0，输出结果也都为[]，且都不存储任何数据，但是它们是不同的。nil slice不会指向底层数组，而空slice会指向底层数组，只不过这个底层数组暂时是空数组</p>
 <h2 id="一个生产者多个消费者怎么使用channel">一个生产者多个消费者怎么使用channel</h2>
 <h2 id="双重for循环怎么跳出">双重for循环怎么跳出</h2>
+<p>方法1：内层for循环赋值一个bool，break跳出，外层for判断bool，break跳出
+方法2：使用goto+标签跳出多层循环（label标签）
+方法3：使用break+标签跳出循环</p>
 <h2 id="redis五种数据结构">redis五种数据结构</h2>
+<p>string list set zset hash</p>
 <h2 id="经常使用redis的哪种数据结构">经常使用redis的哪种数据结构</h2>
 <h2 id="gin框架的了解">Gin框架的了解</h2>
 <h2 id="map和slice分别怎么删除元素">map和slice分别怎么删除元素</h2>
+<p>map直接使用delete</p>
+<p>slice取需要删除的元素其他切片元素</p>
 <h2 id="go中interface的概念">go中interface的概念</h2>
+<p>接口是一种抽象类型，是多个方法声明的集合。在Go中只要目标类型实现了接口要求的所有方法，就说它实现了这个接口</p>
+<p>使用type关键词定义接口</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Duck</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">Eat</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>接口赋值分为两种情况</p>
+<ol>
+<li>将对象实例赋值给接口</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">c</span> <span class="nx">Duck</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">Cat</span><span class="p">{}</span>
+<span class="nx">c</span><span class="p">.</span><span class="nf">Eat</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>将对象实例赋值给接口时，一定要传结构体指针，如果直接传结构体会报错
+2. 将一个接口赋值给另一个接口
+已经初始化的接口变量c1直接赋值给另一个接口变量c2，要求c2的方法集是c
+1方法集的子集</p>
+<p>具有0个方法的接口称为空接口，它的表示为interface{}。由于空接口有0个方法，所以所有类型都实现了空接口</p>
+<p>类型断言</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">x</span><span class="p">.(</span><span class="nx">T</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中x是接口类型的表达式，T是断言类型。作用是判断操作数的动态类型是否满足指定的断言类型。如果断言只返回一个值，类型错误报panic，如果返回两个值，类型错误另一个值为false。</p>
 <h2 id="orm使用的什么">orm使用的什么</h2>
 <h2 id="mysql的存储引擎">mysql的存储引擎</h2>
-<h2 id="go读写锁的使用">go读写锁的使用</h2></div><div class="post-footer" id="post-footer">
+<h2 id="go读写锁的使用">go读写锁的使用</h2>
+<p>读写锁sync.RWMutex，写锁Lock和Unlock，读锁RLock和RUnlock</p>
+<p>读写锁可以让多个读同时进行，同时读取，但对于写操作是完全互斥的。也就是说，当一个goroutine进行写操作时，其他的goroutine既不能进行读操作，也不能进行写操作。</p>
+<h2 id="redis分布式锁">redis分布式锁</h2>
+<p>设置锁setnx key value，设置锁的过期时间setex key second value。</p>
+<p>当redis为集群，获取到多数节点的获取锁。</p></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">

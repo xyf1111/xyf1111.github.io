@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>resume-2021-12-06.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<!--more-->
+<h2 id="%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF">个人信息</h2>
+<hr>
+<ul>
+<li>姓名：陈进煌
+                                                        
+性别：男</li>
+<li>年龄：24
+                                                               
+手机号：18759882615</li>
+<li>邮箱：2219316464@qq.com
+                                
+专业：计算机科学与技术</li>
+<li>应聘岗位：Golang开发工程师</li>
+</ul>
+<h2 id="%E5%B7%A5%E4%BD%9C%E5%8F%8A%E6%95%99%E8%82%B2%E7%BB%8F%E5%8E%86">工作及教育经历</h2>
+<hr>
+<ul>
+<li>福建省花开传媒科技有限公司
+        
+2021-04~至今
+            
+软件研发部-golang开发工程师</li>
+<li>厦门美城行动科技有限公司
+            
+2019-08~2021-03
+      
+软件研发部-后端开发</li>
+<li>厦门青叶软件股份有限公司
+            
+2019-03~2019-07
+      
+软件研发部-后端开发</li>
+<li>厦门通元微智能科技有限公司
+        
+2018-03~2018~11
+     
+软件研发部-软件测试</li>
+<li>三明学院
+                                         
+2014-09~2018-07
+      
+计算机科学与技术</li>
+</ul>
+<h2 id="%E4%B8%93%E4%B8%9A%E6%8A%80%E8%83%BD">专业技能</h2>
+<hr>
+<ul>
+<li>熟悉Golang，了解Java等编程语言</li>
+<li>了解Beego，Gin框架</li>
+<li>熟悉MySQL数据库，了解MongoDB，Elasticsearch</li>
+<li>了解缓存系统Redis</li>
+<li>了解Git版本控制</li>
+<li>了解网络编程，TCP/IP协议</li>
+<li>了解React和Ant Design</li>
+</ul>
+<h2 id="%E9%A1%B9%E7%9B%AE%E7%BB%8F%E5%8E%86">项目经历</h2>
+<hr>
+<ol>
+<li>花开APP
+      
+golang开发
+      
+2021-04~至今</li>
+</ol>
+<ul>
+<li>
+<p>项目介绍：这个项目是自主研发的社交聊天APP。其中主要的功能包括动态广场、语音视频搭讪聊天、任务、个人信息设置以及充值提现等。采用经过封装的Gin框架，部分功能逐步拆分为微服务。数据库方面主要使用了MySQL、MongoDB和Elasticsearch，缓存方面使用Redis。</p>
+</li>
+<li>
+<p>我的职责：</p>
+</li>
+</ul>
+<ol>
+<li>根据tapd了解对应任务需求，对于不确定需求进行讨论。</li>
+<li>依据具体功能进行数据表的设计。</li>
+<li>根据具体需求完成代码编写。</li>
+<li>编写代码的单元测试。</li>
+<li>提交Git，将任务交付测试进行测试。</li>
+<li>根据测试提交的bug对代码进行调试修改。
+<br/><br/><br/><br/></li>
+</ol>
+<ul>
+<li>主要实现功能：</li>
+</ul>
+<pre class="hljs"><code><div>动态模块（类似朋友圈）
+1、发送的文字图片视屏等需经过数美的审核以及后台的人工审核。
+2、对动态进行点赞评论。 
+3、收集附近的人对自动发送的动态进行随机点赞。
+
+用户等级模块
+1、根据用户的充值消费情况升级等级。
+2、升级后进行消息推送。
+
+任务模块
+1、通过用户性别展示任务。
+2、使用数值判断任务完成与否。
+3、完成任务消息推送。
+</div></code></pre>
+<hr>
+<ol start="2">
+<li>厦门美城行动管理系统
+      
+后端开发
+      
+2019-08~2021-03</li>
+</ol>
+<ul>
+<li>
+<p>项目介绍：这个项目是公司的后台管理系统。该系统主要是对公司对应的小程序和app提供数据的统计展示和管理等。系统后端是采用Beego框架，数据库使用MySQL，部分功能使用到Redis进行缓存。系统前端采用React框架，大部分使用Ant Design的UI组件。</p>
+</li>
+<li>
+<p>我的职责：</p>
+</li>
+</ul>
+<ol>
+<li>根据实际业务需求，与产品经理确定具体功能及展现方式。</li>
+<li>依据具体功能进行数据表的设计。</li>
+<li>实现具体功能编写管理系统前端展示代码，与产品进行确认。</li>
+<li>根据前端界面确定后台的接口，进行后台代码数据操作代码的编写。</li>
+<li>若小程序，app有该功能相关的，为其提供相应的接口。</li>
+<li>提交Git，交付测试进行测试。</li>
+<li>根据测试提交的bug对代码进行调试修改。</li>
+</ol>
+<hr>
+<ol start="3">
+<li>船人网管理系统
+      
+后端开发
+      
+2019-03~2019-07</li>
+</ol>
+<ul>
+<li>
+<p>项目介绍：这个项目是一个关于船舶的后台管理系统。该系统主要是船舶及其周边产品的租赁及售卖网站的后台管理。系统后端是用的SpringMVC+SpringBoot+Mybatis，数据库使用MySQL，前端采用Vue框架。</p>
+</li>
+<li>
+<p>我的职责</p>
+</li>
+</ul>
+<ol>
+<li>根据测试提交的对代码进行调试修改</li>
+<li>根据产品需求实现Vue页面展示</li>
+<li>实现接口功能</li>
+</ol>
+
+</body>
+</html>

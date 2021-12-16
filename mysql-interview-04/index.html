@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/mysql-interview-04\/"
-        },"genre": "posts","keywords": "mysql","wordcount":  2888 ,
+        },"genre": "posts","keywords": "mysql","wordcount":  2887 ,
         "url": "http:\/\/example.org\/mysql-interview-04\/","datePublished": "2021-03-10T11:10:43+08:00","dateModified": "2021-03-10T11:10:43+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,7 +106,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Mysql Interview 04</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>学习</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-10">2021-03-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2888 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-10">2021-03-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2887 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
@@ -129,7 +129,7 @@
 </nav></div>
             </div><div class="content" id="content"><h2 id="mysql锁">MySQL锁</h2>
 <h3 id="mvcc总结">MVCC总结</h3>
-<p>MVCC（多版本并发控制）指的就是在使用READ COMMITTED，REPEATABLE READ这两种隔离级别的事务在执行普通的select操作时访问记录的版本链的过程。可以使不同事务的读-写，写-读操作并发执行，从而提升系统性能。READ COMMITTED、REPEATABLE READ这两个隔离级别一个很大的不同就是：生成ReadView的时机不同，READ COMMITTED是每一次进行普通SELECT操作前都会生成一次ReadView。而REPEATABLE READ只会在第一次进行普通SELECT的时候偶生成ReadView。之后的查询重复使用这个ReadView。</p>
+<p>MVCC（多版本并发控制）指的就是在使用READ COMMITTED，REPEATABLE READ这两种隔离级别的事务在执行普通的select操作时访问记录的版本链的过程。可以使不同事务的读-写，写-读操作并发执行，从而提升系统性能。READ COMMITTED、REPEATABLE READ这两个隔离级别一个很大的不同就是：生成ReadView的时机不同，READ COMMITTED是每一次进行普通SELECT操作前都会生成一次ReadView。而REPEATABLE READ只会在第一次进行普通SELECT的时候生成ReadView。之后的查询重复使用这个ReadView。</p>
 <h3 id="mysql锁的介绍">MySQL锁的介绍</h3>
 <ol>
 <li>按照锁的粒度来说，MySQL主要包含三种锁：全局锁，表级锁，行级锁</li>

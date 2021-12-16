@@ -3,7 +3,7 @@
 <!--more-->
 ## MySQL锁
 ### MVCC总结
-MVCC（多版本并发控制）指的就是在使用READ COMMITTED，REPEATABLE READ这两种隔离级别的事务在执行普通的select操作时访问记录的版本链的过程。可以使不同事务的读-写，写-读操作并发执行，从而提升系统性能。READ COMMITTED、REPEATABLE READ这两个隔离级别一个很大的不同就是：生成ReadView的时机不同，READ COMMITTED是每一次进行普通SELECT操作前都会生成一次ReadView。而REPEATABLE READ只会在第一次进行普通SELECT的时候偶生成ReadView。之后的查询重复使用这个ReadView。
+MVCC（多版本并发控制）指的就是在使用READ COMMITTED，REPEATABLE READ这两种隔离级别的事务在执行普通的select操作时访问记录的版本链的过程。可以使不同事务的读-写，写-读操作并发执行，从而提升系统性能。READ COMMITTED、REPEATABLE READ这两个隔离级别一个很大的不同就是：生成ReadView的时机不同，READ COMMITTED是每一次进行普通SELECT操作前都会生成一次ReadView。而REPEATABLE READ只会在第一次进行普通SELECT的时候生成ReadView。之后的查询重复使用这个ReadView。
 ### MySQL锁的介绍
 1. 按照锁的粒度来说，MySQL主要包含三种锁：全局锁，表级锁，行级锁
 - 全局锁，锁的是整个database，由MySQL的Sql layer层实现
