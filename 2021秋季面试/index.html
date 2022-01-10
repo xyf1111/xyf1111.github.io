@@ -29,7 +29,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/2021%E7%A7%8B%E5%AD%A3%E9%9D%A2%E8%AF%95\/"
-        },"genre": "posts","keywords": "生活","wordcount":  5057 ,
+        },"genre": "posts","keywords": "生活","wordcount":  5049 ,
         "url": "http:\/\/example.org\/2021%E7%A7%8B%E5%AD%A3%E9%9D%A2%E8%AF%95\/","datePublished": "2021-12-26T16:08:14+08:00","dateModified": "2021-12-26T16:08:14+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -106,7 +106,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">2021秋季面试</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>CC</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E9%9D%A2%E8%AF%95/"><i class="far fa-folder fa-fw"></i>面试</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-12-26">2021-12-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5057 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-12-26">2021-12-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5049 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 11 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
@@ -135,26 +135,36 @@
             </div><div class="content" id="content"><h2 id="gin和beego的区别中捷">gin和beego的区别(中捷)</h2>
 <p>Beego是典型的MVC框架</p>
 <ul>
-<li>M：Model，即beego ORM，对象关系映射，以及对象的持久化
-特性：</li>
+<li>M：Model，即beego ORM，对象关系映射，以及对象的持久化</li>
+</ul>
+<p>特性：</p>
+<ul>
 <li>支持Go的所有类型存储</li>
 <li>更简单的curd风格(增删改查)</li>
 <li>完整实现健壮稳定的ORM</li>
 <li>支持正则路由</li>
-<li>支持session
-Gin不支持MVC</li>
-<li>需要开发者自己实现MVC
-特性：</li>
+<li>支持session</li>
+</ul>
+<p>Gin不支持MVC</p>
+<ul>
+<li>需要开发者自己实现MVC</li>
+</ul>
+<p>特性：</p>
+<ul>
 <li>HTML渲染和模板</li>
 <li>静态文件服务</li>
 <li>不支持正则路由</li>
-<li>不支持session(需要安装另外的包)
-适用场景
-Beego在业务方面较Gin支持的更多</li>
+<li>不支持session(需要安装另外的包)</li>
+</ul>
+<p>适用场景</p>
+<p>Beego在业务方面较Gin支持的更多</p>
+<ul>
 <li>在业务更加复杂的项目中，适用Beego</li>
 <li>在需要快速开发的项目中，适用Beego</li>
-<li>在1.0项目中，适用Beego
-Gin在性能方面较Beego更好</li>
+<li>在1.0项目中，适用Beego</li>
+</ul>
+<p>Gin在性能方面较Beego更好</p>
+<ul>
 <li>当某个接口性能遭到巨大挑战的时候，考虑使用Gin重写接口</li>
 <li>如果项目的规模不大，业务相对简单，适用Gin</li>
 </ul>
@@ -166,22 +176,26 @@ Gin在性能方面较Beego更好</li>
 <li>支持通过Replication进行数据复制，通过master-slave机制，可以实时进行数据的同步复制，支持多级复制和增量复制，master-slave机制是redis进行HA的重要手段</li>
 <li>单线程请求，所有命令串行化执行，并发情况下不需要考虑数据一致性问题</li>
 <li>支持pub/sub消息订阅机制，可以用来进行消息订阅和通知</li>
-<li>支持简单的事务需求，但业务使用场景很少，并不成熟
-Redis的局限性</li>
+<li>支持简单的事务需求，但业务使用场景很少，并不成熟</li>
+</ul>
+<p>Redis的局限性</p>
+<ul>
 <li>Redis只能使用单线程，性能受限于CPU性能，故单实例CPU最高才可能达到5-6wQPS每秒(取决于数据结构，数据大小以及服务器硬件性能，日常环境中QPS高峰大约在1-2w左右)</li>
-<li>Redis在string类型上会消耗较多内存，可以使用hash压缩存储以降低内存耗用
-MongoDB
+<li>Redis在string类型上会消耗较多内存，可以使用hash压缩存储以降低内存耗用</li>
+</ul>
+<p>MongoDB
 mongoDB是一种文档型数据库，可以存放xml，json，bson类型
 这些数据具备自述性，呈现分层的树状数据结构。redis可以用hash存放简单关系型数据
 MongoDB存放json格式数据
-适合场景：事件记录、内容管理或博客平台，比如评论系统</li>
-</ul>
+适合场景：事件记录、内容管理或博客平台，比如评论系统</p>
 <ol>
-<li>MongoDB持久化原理
-mongodb与mysql不同，mysql的每一次更新操作都会直接写入硬盘，但是mongo不会，做为内存型数据库，数据操作会先写入内存，然后再会持久化到硬盘中去，那么mongo是如何持久化的呢</li>
-</ol>
-<p>mongodb在启动时，专门初始化一个线程不断循环（除非应用crash掉），用于在一定时间周期内来从defer队列中获取要持久化的数据并写入到磁盘的journal(日志)和mongofile(数据)处，当然因为它不是在用户添加记录时就写到磁盘上，所以按mongodb开发者说，它不会造成性能上的损耗，因为看过代码发现，当进行CUD操作时，记录(Record类型)都被放入到defer队列中以供延时批量（groupcommit）提交写入，但相信其中时间周期参数是个要认真考量的参数，系统为90毫秒，如果该值更低的话，可能会造成频繁磁盘操作，过高又会造成系统宕机时数据丢失过。
-2. MongoDB的特点</p>
+<li>
+<p>MongoDB持久化原理</p>
+<p>mongodb与mysql不同，mysql的每一次更新操作都会直接写入硬盘，但是mongo不会，做为内存型数据库，数据操作会先写入内存，然后再会持久化到硬盘中去，那么mongo是如何持久化的呢</p>
+<p>mongodb在启动时，专门初始化一个线程不断循环（除非应用crash掉），用于在一定时间周期内来从defer队列中获取要持久化的数据并写入到磁盘的journal(日志)和mongofile(数据)处，当然因为它不是在用户添加记录时就写到磁盘上，所以按mongodb开发者说，它不会造成性能上的损耗，因为看过代码发现，当进行CUD操作时，记录(Record类型)都被放入到defer队列中以供延时批量（groupcommit）提交写入，但相信其中时间周期参数是个要认真考量的参数，系统为90毫秒，如果该值更低的话，可能会造成频繁磁盘操作，过高又会造成系统宕机时数据丢失过。</p>
+</li>
+<li>
+<p>MongoDB的特点</p>
 <ul>
 <li>面向文档</li>
 <li>高性能</li>
@@ -189,38 +203,55 @@ mongodb与mysql不同，mysql的每一次更新操作都会直接写入硬盘，
 <li>易扩展</li>
 <li>丰富的查询语言</li>
 </ul>
-<ol start="3">
-<li>为什么MongoDB的数据文件很大
-MongoDB采用的预分配空间的方式来防止文件碎片</li>
+</li>
+<li>
+<p>为什么MongoDB的数据文件很大</p>
+<p>MongoDB采用的预分配空间的方式来防止文件碎片</p>
+</li>
 </ol>
 <h2 id="redis和mongodb的区别">Redis和MongoDB的区别</h2>
 <ol>
-<li>性能
-都比较高，性能对我们来说应该都不是瓶颈。总体来讲，TPS方面redis要大于mongodb</li>
-<li>操作的便利性
-redis丰富一些，数据操作方面，redis更好一些，较少的网络IO次数</li>
-</ol>
-<p>mongodb支持丰富的数据表达，索引，最类似关系型数据库，支持的查询语言非常丰富
-3. 内存空间的大小和数据量的大小
-redis在2.0版本后增加了自己的VM特性，突破物理内存的限制；可以对key value设置过期时间（类似memcache）</p>
-<p>mongoDB适合大数据量的存储，依赖操作系统VM做内存管理，吃内存也比较厉害，服务不要和别的服务在一起
-4. 可用性(单点问题)
-对于单点问题，</p>
-<p>redis，依赖客户端来实现分布式读写；主从复制时，每次从节点重新连接主节点都要依赖整个快照,无增量复制，因性能和效率问题，所以单点问题比较复杂；不支持自动sharding,需要依赖程序设定一致hash 机制。</p>
+<li>
+<p>性能</p>
+<p>都比较高，性能对我们来说应该都不是瓶颈。总体来讲，TPS方面redis要大于mongodb</p>
+</li>
+<li>
+<p>操作的便利性</p>
+<p>redis丰富一些，数据操作方面，redis更好一些，较少的网络IO次数</p>
+<p>mongodb支持丰富的数据表达，索引，最类似关系型数据库，支持的查询语言非常丰富</p>
+</li>
+<li>
+<p>内存空间的大小和数据量的大小</p>
+<p>redis在2.0版本后增加了自己的VM特性，突破物理内存的限制；可以对key value设置过期时间（类似memcache）</p>
+<p>mongoDB适合大数据量的存储，依赖操作系统VM做内存管理，吃内存也比较厉害，服务不要和别的服务在一起</p>
+</li>
+<li>
+<p>可用性(单点问题)</p>
+<p>对于单点问题，redis，依赖客户端来实现分布式读写；主从复制时，每次从节点重新连接主节点都要依赖整个快照,无增量复制，因性能和效率问题，所以单点问题比较复杂；不支持自动sharding,需要依赖程序设定一致hash 机制。</p>
 <p>一种替代方案是，不用redis本身的复制机制，采用自己做主动复制（多份存储），或者改成增量复制的方式（需要自己实现），一致性问题和性能的权衡</p>
-<p>mongoDB支持master-slave,replicaset（内部采用paxos选举算法，自动故障恢复）,auto sharding机制，对客户端屏蔽了故障转移和切分机制。
-5. 可靠性(持久化)
-对于数据持久化和数据恢复，</p>
+<p>mongoDB支持master-slave,replicaset（内部采用paxos选举算法，自动故障恢复）,auto sharding机制，对客户端屏蔽了故障转移和切分机制。</p>
+</li>
+<li>
+<p>可靠性(持久化)</p>
+<p>对于数据持久化和数据恢复</p>
 <p>redis支持（快照、AOF）：依赖快照进行持久化，aof增强了可靠性的同时，对性能有所影响</p>
-<p>MongoDB从1.8版本开始采用binlog方式支持持久化的可靠性
-6. 数据一致性(事务支持)
-redis事务支持比较弱，只能保证事务中的每个操作连续执行</p>
-<p>MongoDB不支持事务
-7. 数据分析
-MongoDB内置了数据分析的功能，其他不支持
-8. 应用场景
-redis：数据量较小的性能操作和运算上</p>
+<p>MongoDB从1.8版本开始采用binlog方式支持持久化的可靠性</p>
+</li>
+<li>
+<p>数据一致性(事务支持)</p>
+<p>redis事务支持比较弱，只能保证事务中的每个操作连续执行</p>
+<p>MongoDB不支持事务</p>
+</li>
+<li>
+<p>数据分析</p>
+<p>MongoDB内置了数据分析的功能，其他不支持</p>
+</li>
+<li>
+<p>应用场景</p>
+<p>redis：数据量较小的性能操作和运算上</p>
 <p>MongoDB：主要解决海量数据的访问效率问题</p>
+</li>
+</ol>
 <h2 id="mongo和mysql的区别中捷">mongo和mysql的区别(中捷)</h2>
 <p>MySQL是关系型数据库
 优点：</p>
@@ -229,8 +260,10 @@ redis：数据量较小的性能操作和运算上</p>
 <li>查询语句是使用传统的sql语句，拥有较为成熟的体系，成熟度很高</li>
 <li>开源数据库份额在不断增加，MySQL的份额页在持续增长
 缺点：</li>
-<li>在海量数据处理的时候效率会显著变慢
-MongoDB是非关系型数据库，属于文档型数据库。文档是MongoDB中数据的基本单元，类似关系数据库的行，多个键值对有序地放置在一起就是文档，语法有点类似JavaScript面向对象的语言，它是一个面向集合的，模式自由的文档数据库。</li>
+<li>在海量数据处理的时候效率会显著变慢</li>
+</ul>
+<p>MongoDB是非关系型数据库，属于文档型数据库。文档是MongoDB中数据的基本单元，类似关系数据库的行，多个键值对有序地放置在一起就是文档，语法有点类似JavaScript面向对象的语言，它是一个面向集合的，模式自由的文档数据库。</p>
+<ul>
 <li>存储方式：虚拟内存+持久化</li>
 <li>查询语句：是独特的MongoDB查询方式</li>
 <li>适合场景：事件的记录，内容管理或者博客平台等等</li>
